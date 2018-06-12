@@ -19,10 +19,10 @@ dflts = {'' '' 0};
 if ~isempty(wdir) && ~strcmp(wdir(end),'/')
     wdir(end+1) = '/';
 end
-addpath(rdir);
-% if ~strcmp(rdir(end),'/')
-%     wdir(end+1) = '/';
-% end
+% addpath(rdir);
+if ~strcmp(rdir(end),'/')
+    wdir(end+1) = '/';
+end
 
 %% Process inputs
 if isnumeric(num)
@@ -53,9 +53,10 @@ if numel(idx) ~= numel(varlist)
 end
 
 %% Find system size
-fid = fopen(['p3d.stdout' num]);
+filename = [rdir 'p3d.stdout' num];
+fid = fopen(filename);
 if fid == -1
-    error(['Failed to open file p3d.stdout.' num]);
+    error(['Failed to open file ' filename]);
 end
 
 nvals = cell2mat(textscan(fid, '%*[^=] %*1s %d',3)); % [nx ny nz]
