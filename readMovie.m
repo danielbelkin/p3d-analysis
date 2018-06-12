@@ -2,21 +2,27 @@ function varargout = readMovie(num, varlist,varargin)
 % NUM is a 3-digit integer indicating the filenumber to read
 % VARLIST is a cell array of strings indicating variables to read
 % 
-% Options to add:
+% Options added:
 % File to find movie in
 % File to save matfiles to
 % Number of frames to skip
+% 
+% To add:
 % Option to downsample or otherwise compress?
+% Option to grab only a few timesteps?
 
 okargs = {'rdir','wdir', 'skip'};
 dflts = {'' '' 0};
 
 [rdir, wdir, skip] = internal.stats.parseArgs(okargs,dflts,varargin{:});
-addpath(rdir);
 
-if ~strcmp(wdir(end),'/')
+if ~isempty(wdir) && ~strcmp(wdir(end),'/')
     wdir(end+1) = '/';
 end
+addpath(rdir);
+% if ~strcmp(rdir(end),'/')
+%     wdir(end+1) = '/';
+% end
 
 %% Process inputs
 if isnumeric(num)
