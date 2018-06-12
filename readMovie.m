@@ -1,11 +1,13 @@
 function varargout = readMovie(num, varlist,varargin)
+% readMovie(NUM, VARLIST,'NAME',VALUE) reads a movie from the p3d output
+% format into a .mat file. 
 % NUM is a 3-digit integer indicating the filenumber to read
 % VARLIST is a cell array of strings indicating variables to read
-% 
-% Options added:
-% File to find movie in
-% File to save matfiles to
-% Number of frames to skip
+% If VARLIST is 'all', then all variables are read.
+% Optional arguments:
+% 'rdir'    Directory path from which to read files
+% 'wdir'    Directory path to which to write files
+% 'skip'    Number of frames to skip
 % 
 % To add:
 % Option to downsample or otherwise compress?
@@ -43,13 +45,17 @@ varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
     'pexz'; 'ni'; 'jix'; 'jiy'; 'jiz'; 'pixx'; 'piyy';'pizz'; 'pixy';
     'piyz'; 'pixz'};
 
-idx = zeros(size(varlist(:)));
-for i = 1:numel(varlist)
-    idx(i) = find(strcmpi(varnames,varlist{i})); % List of where each variable is located in the order
-end
-
-if numel(idx) ~= numel(varlist)
-    error('At least one variable name appears to be wrong')
+if strcmpi(varlist{1},'all')
+    idx = 1:length(varnames);
+else
+    idx = zeros(size(varlist(:)));
+    for i = 1:numel(varlist)
+        idx(i) = find(strcmpi(varnames,varlist{i})); % List of where each variable is located in the order
+    end
+    
+    if numel(idx) ~= numel(varlist)
+        error('At least one variable name appears to be wrong')
+    end
 end
 
 %% Find system size
@@ -68,6 +74,7 @@ nx = nvals(1); ny = nvals(2); nz = nvals(3);
 %% Read integer data
 
 disp('Reading data...')
+data = cell{1,
 tic
 for i = 1:numel(varlist)
     filename = [rdir 'movie.' varlist{i} '.' num];
@@ -78,13 +85,6 @@ for i = 1:numel(varlist)
     end
     
     data{i} = reshape(fread(fid,Inf,[num2str(nx*ny*nz) '*uint16'],2*nx*ny*nz*skip),nx,ny,nz,[]); 
-    % Could make this a matfile, do everything from here on out in memory:
-    % data{i} = matfile([varlist{i} '.' num '.mat'])
-    % data{i}.vals = reshape ...
-    % But that appears to be much slower, so let's avoid if possible.
-    % But we're probably gonna have an array with 10^8 elements, so that
-    % may be unavoidable. 
-    % Question: How do we check how much space is available?
     fclose(fid);
     toc
 end
