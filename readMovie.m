@@ -21,7 +21,7 @@ if ~isempty(wdir) && ~strcmp(wdir(end),'/')
 end
 % addpath(rdir);
 if ~strcmp(rdir(end),'/')
-    wdir(end+1) = '/';
+    rdir(end+1) = '/';
 end
 
 %% Process inputs
