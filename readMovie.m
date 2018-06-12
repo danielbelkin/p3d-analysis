@@ -53,7 +53,11 @@ if numel(idx) ~= numel(varlist)
 end
 
 %% Find system size
-fid = fopen('p3d.stdout');
+fid = fopen(['p3d.stdout' num]);
+if fid == -1
+    error(['Failed to open file p3d.stdout.' num]);
+end
+
 nvals = cell2mat(textscan(fid, '%*[^=] %*1s %d',3)); % [nx ny nz]
 fclose(fid);
 
