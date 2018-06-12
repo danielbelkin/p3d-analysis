@@ -53,7 +53,7 @@ if numel(idx) ~= numel(varlist)
 end
 
 %% Find system size
-filename = [rdir 'p3d.stdout' num];
+filename = [rdir 'p3d.stdout.' num];
 fid = fopen(filename);
 if fid == -1
     error(['Failed to open file ' filename]);
