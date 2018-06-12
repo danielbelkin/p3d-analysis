@@ -6,7 +6,9 @@ function x = cconv3(x,h)
 % transform methods are more efficient.
 
 n = size(h,1);
-if any(size(h{1}) ~= n)
+if length(size(x)) ~= 3 || length(size(h)) ~= 3
+    error('X and H must be 3-dimensional')
+elseif any(size(h) ~= n)
     error('Cubic kernels only')
 elseif ~mod(n,2) % if n is even
     error('Kernel must have odd side length')

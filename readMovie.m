@@ -1,6 +1,6 @@
 function varargout = readMovie(num, varlist,varargin)
-% run is a 3-digit integer indicating the filenumber to read
-% varlist is a cell array of strings indicating variables to read
+% NUM is a 3-digit integer indicating the filenumber to read
+% VARLIST is a cell array of strings indicating variables to read
 % 
 % Options to add:
 % File to find movie in
@@ -8,7 +8,15 @@ function varargout = readMovie(num, varlist,varargin)
 % Number of frames to skip
 % Option to downsample or otherwise compress?
 
-% okargs = {'path',
+okargs = {'rdir','wdir', 'skip'};
+dflts = {'' '' 0};
+
+[rdir, wdir, skip] = internal.stats.parseArgs(okargs,dflts,varargin{:});
+addpath(rdir);
+
+if ~strcmp(wdir(end),'/')
+    wdir(end+1) = '/';
+end
 
 %% Process inputs
 if isInteger(num)
@@ -48,9 +56,7 @@ nx = nvals(1); ny = nvals(2); nz = nvals(3);
 
 %% Read integer data
 
-
-skip = 0; % Number of frames to skip
-% TODO: Add an option to skip. 
+disp('Reading data...')
 tic
 for i = 1:numel(varlist)
     fid = fopen(['movie.' varlist{i} '.' num]);
@@ -70,6 +76,8 @@ end
 %% Normalize
 % TODO: Add an option to skip normalization?
 % Won't need it e.g. for LE calculation
+
+disp('Normalizing data...')
 tic
 ranges = reshape(dlmread(['movie.log.' num]),1,1,1,[],2);
 for i = 1:numel(varlist)
@@ -85,9 +93,11 @@ end
 % Only if no outputs were requested?
 if nargout ~= 1 % I don't expect us to need any more than this ever
     for i = 1:numel(varlist)
-        m = matfile([varlist{i} '.' num '.mat']);
+        m = matfile([wdir varlist{i} '.' num '.mat']);
         m.(varlist{i}) = data{i};
     end
 else
     varargout{1} = data;
 end
+
+disp('Done')
