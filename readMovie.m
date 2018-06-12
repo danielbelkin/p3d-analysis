@@ -100,8 +100,15 @@ end
 disp('Normalizing data...')
 tic
 ranges = reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2);
+
+size(ranges)
+
 for i = 1:numel(varlist)
     nt = size(data{i},4);
+    
+    disp(varlist{i})
+    idx(i) + (0:nt-1)*length(varnames)
+    
     r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames),:); % min-max data for the current variable
     A = 2^16./diff(r,1,5); % 1st coefficient for normalization
     B = -A.*r(:,:,:,:,1); % 2nd coefficient for normalization
