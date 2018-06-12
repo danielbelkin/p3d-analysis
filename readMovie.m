@@ -77,7 +77,7 @@ nx = nvals(1); ny = nvals(2); nz = nvals(3);
 %% Read integer data
 
 disp('Reading data...')
-data = cell{1,
+data = cell(size(varlist));
 tic
 for i = 1:numel(varlist)
     filename = [rdir 'movie.' varlist{i} '.' num];
