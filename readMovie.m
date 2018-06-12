@@ -19,7 +19,7 @@ dflts = {'' '' 0};
 if ~isempty(wdir) && ~strcmp(wdir(end),'/')
     wdir(end+1) = '/';
 end
-% addpath(rdir);
+
 if ~strcmp(rdir(end),'/')
     rdir(end+1) = '/';
 end
@@ -70,7 +70,13 @@ nx = nvals(1); ny = nvals(2); nz = nvals(3);
 disp('Reading data...')
 tic
 for i = 1:numel(varlist)
-    fid = fopen(['movie.' varlist{i} '.' num]);
+    filename = [rdir 'movie.' varlist{i} '.' num];
+    fid = fopen(filename);
+    
+    if fid == -1
+        error(['Failed to open ' filename]);
+    end
+    
     data{i} = reshape(fread(fid,Inf,[num2str(nx*ny*nz) '*uint16'],2*nx*ny*nz*skip),nx,ny,nz,[]); 
     % Could make this a matfile, do everything from here on out in memory:
     % data{i} = matfile([varlist{i} '.' num '.mat'])
@@ -90,7 +96,7 @@ end
 
 disp('Normalizing data...')
 tic
-ranges = reshape(dlmread(['movie.log.' num]),1,1,1,[],2);
+ranges = reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2);
 for i = 1:numel(varlist)
     nt = size(data{i},4);
     r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames),:); % min-max data for the current variable
