@@ -19,7 +19,7 @@ if ~strcmp(wdir(end),'/')
 end
 
 %% Process inputs
-if isInteger(num)
+if isnumeric(num)
     num = num2str(num,'%0.3i');
 elseif ~ischar(num) || numel(num) ~= 3
     error('Input RUN must be a string or integer')
