@@ -16,15 +16,15 @@ if ~iscell(vect)
     vect = {vect};
 end
 
-vect = reshape(vect{:},1,1,1,[]);
+vect = reshape(vect(:),1,1,1,[]);
 
 signChange = false([size(vect{1}) numel(vect)]); % Logical array
 v = cell2mat(cellfun(@(x) circExpand(x,1),vect,'UniformOutput',false)); % Double array
 
-for i = 1:size(v,1)
-    for j = 1:size(v,2)
-        for k = 1:size(v,3)
-            for l = 1:size(v,4
+for i = 1:size(signChange,1)
+    for j = 1:size(signChange,2)
+        for k = 1:size(signChange,3)
+            for l = 1:size(signChange,4)
                 vals = v(i:i+1,j:j+1,k:k+1,l); % Get the eight corners
                 signChange(i,j,k,l) = ~(abs(sum(sign(vals(:)))) == 8); % True if they're not all the same sign
             end
@@ -39,12 +39,12 @@ end
 
 % -------------------------------------------------------------------------
 
-function v = circExpand(a,m)
+function v = circExpand(x,m)
 % Takes an array x and an integer m.
 % Returns an array that is x padded with partial copies of itself out to a
 % distance m in 3 dimensions
+% TODO: Extend to 4d arrays or something
 
-x = 
 v = zeros(size(x) + 2*m);
 
 % Center
