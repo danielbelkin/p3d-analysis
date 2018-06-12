@@ -1,22 +1,26 @@
-function varargout = readMovie(num, varlist,varargin)
+function data = readMovie(num, varlist,varargin)
 % readMovie(NUM, VARLIST,'NAME',VALUE) reads a movie from the p3d output
 % format into a .mat file. 
 % NUM is a 3-digit integer indicating the filenumber to read
 % VARLIST is a cell array of strings indicating variables to read
 % If VARLIST is 'all', then all variables are read.
-% Optional arguments:
-% 'rdir'    Directory path from which to read files
-% 'wdir'    Directory path to which to write files
-% 'skip'    Number of frames to skip
+% Optional arguments and defaults:
+% 'rdir' = ''    Directory path from which to read files
+% 'wdir' = ''    Directory path to which to write files
+% 'skip' = 0     Number of frames to skip
+% 'save' = true  Do we save resulting files? 
 % 
 % To add:
 % Option to downsample or otherwise compress?
 % Option to grab only a few timesteps?
 
-okargs = {'rdir','wdir', 'skip'};
-dflts = {'' '' 0};
 
-[rdir, wdir, skip] = internal.stats.parseArgs(okargs,dflts,varargin{:});
+
+%% Process inputs
+okargs = {'rdir','wdir', 'skip', 'save'};
+dflts = {'' '' 0 true};
+
+[rdir, wdir, skip, saveq] = internal.stats.parseArgs(okargs,dflts,varargin{:});
 
 if ~isempty(wdir) && ~strcmp(wdir(end),'/')
     wdir(end+1) = '/';
@@ -26,7 +30,6 @@ if ~strcmp(rdir(end),'/')
     rdir(end+1) = '/';
 end
 
-%% Process inputs
 if isnumeric(num)
     num = num2str(num,'%0.3i');
 elseif ~ischar(num) || numel(num) ~= 3
@@ -108,13 +111,11 @@ end
 
 %% Save the files
 % Only if no outputs were requested?
-if nargout ~= 1 % I don't expect us to need any more than this ever
+if saveq
     for i = 1:numel(varlist)
         m = matfile([wdir varlist{i} '.' num '.mat']);
         m.(varlist{i}) = data{i};
     end
-else
-    varargout{1} = data;
 end
 
 disp('Done')
