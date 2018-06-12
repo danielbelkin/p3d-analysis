@@ -107,7 +107,9 @@ for i = 1:numel(varlist)
     nt = size(data{i},4);
     
     disp(varlist{i})
-    idx(i) + (0:nt-1)*length(varnames)
+    idx(i)
+    nt
+    length(varnames)
     
     r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames),:); % min-max data for the current variable
     A = 2^16./diff(r,1,5); % 1st coefficient for normalization
