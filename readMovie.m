@@ -1,16 +1,26 @@
-function varargout = readMovie(num, varlist)
+function varargout = readMovie(num, varlist,varargin)
 % run is a 3-digit integer indicating the filenumber to read
 % varlist is a cell array of strings indicating variables to read
+% 
 % Options to add:
 % File to find movie in
 % File to save matfiles to
 % Number of frames to skip
 % Option to downsample or otherwise compress?
 
+% okargs = {'path',
+
+%% Process inputs
 if isInteger(num)
     num = num2str(num,'%0.3i');
-elseif ~ischar(num)
+elseif ~ischar(num) || numel(num) ~= 3
     error('Input RUN must be a string or integer')
+end
+
+if ischar(varlist)
+    varlist = {varlist};
+elseif ~iscell(varlist)
+    error('Input VARLIST must be either a string or cell array')
 end
 
 %% Locate the variables we need
@@ -22,6 +32,10 @@ varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
 idx = zeros(size(varlist(:)));
 for i = 1:numel(varlist)
     idx(i) = find(strcmpi(varnames,varlist{i})); % List of where each variable is located in the order
+end
+
+if numel(idx) ~= numel(varlist)
+    error('At least one variable name appears to be wrong')
 end
 
 %% Find system size
@@ -45,6 +59,9 @@ for i = 1:numel(varlist)
     % data{i} = matfile([varlist{i} '.' num '.mat'])
     % data{i}.vals = reshape ...
     % But that appears to be much slower, so let's avoid if possible.
+    % But we're probably gonna have an array with 10^8 elements, so that
+    % may be unavoidable. 
+    % Question: How do we check how much space is available?
     fclose(fid);
     toc
 end
@@ -66,12 +83,11 @@ end
 
 %% Save the files
 % Only if no outputs were requested?
-% Or maybe better to do this without.
-if nargout == 0
+if nargout ~= 1 % I don't expect us to need any more than this ever
     for i = 1:numel(varlist)
-        assignin('caller',varlist{i},data{i});
-        save([varlist{i} '.' num '.mat'],varlist{i})
+        m = matfile([varlist{i} '.' num '.mat']);
+        m.(varlist{i}) = data{i};
     end
 else
-    varargout = data;
+    varargout{1} = data;
 end
