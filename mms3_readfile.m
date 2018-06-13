@@ -12,10 +12,12 @@ names = {'bx' 'by' 'bz'};
 % nums = {'000' '001' '002' '003' '004'};
 nums = {'000'};
 
-[indx1,indx2] = meshgrid(length(nums),length(names));
+[indx1,indx2] = meshgrid(1:length(nums),1:length(names));
 
 t0 = tic;
 parfor i = 1:numel(indx1)
     readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir);
 end
+% A concern: It doesn't actually appear to be running in parallel. Any
+% guesses as to why not? Could it be a case of resource locking somehow?
 toc(t0)

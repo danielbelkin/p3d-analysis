@@ -15,6 +15,11 @@ function data = readMovie(num, varlist,varargin)
 % Or use -append to add it frame-by-frame, with each frame a new variable.
 % Or just make it possible to read only an arbitrary frame somewhere.
 %
+% Also, make it so only one variable is accepted as an input argument -
+% it's not that hard to write another shell function if I really want to
+% read multiple. 
+% And perhaps make it read/save frame-by-frame, at least for very large
+% data. 
 % 
 % To add:
 % Option to downsample or otherwise compress?
