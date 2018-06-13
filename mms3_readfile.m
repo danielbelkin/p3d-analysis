@@ -15,7 +15,7 @@ nums = {'003'};
 [indx1,indx2] = meshgrid(1:length(nums),1:length(names));
 
 t0 = tic;
-parfor i = 1:numel(indx1)
+for i = 1:numel(indx1)
     readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir,'skip',Inf);
 end
 toc(t0)
