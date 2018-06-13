@@ -12,7 +12,7 @@ names = {'bx' 'by' 'bz'};
 % nums = {'000' '001' '002' '003' '004'};
 nums = {'000'};
 
-[indx1,indx2] = meshgrid(1:5,1:3);
+[indx1,indx2] = meshgrid(length(nums),length(names));
 
 t0 = tic;
 parfor i = 1:numel(indx1)
