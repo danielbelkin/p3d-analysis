@@ -18,6 +18,4 @@ t0 = tic;
 parfor i = 1:numel(indx1)
     readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir);
 end
-% A concern: It doesn't actually appear to be running in parallel. Any
-% guesses as to why not? Could it be a case of resource locking somehow?
 toc(t0)

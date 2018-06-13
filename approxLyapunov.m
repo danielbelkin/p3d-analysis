@@ -11,7 +11,7 @@ function lambda = approxLyapunov(bfiles, N, t)
 
 %% Sample N points at random
 s = size(bfiles{1},'val');
-samp = zeros(3,N);
+samp = zeros(N,3);
 
 for i=1:3
     samp(:,i) = randi([2 s(i)-1],N,1); % Just ignore the edges for now
