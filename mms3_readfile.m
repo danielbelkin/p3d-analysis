@@ -5,6 +5,6 @@
 rdir = '/project/projectdirs/reconn/lorajm/mms3d';
 wdir = '/global/u2/d/dbelkin/matlab/mms3d-matfiles';
 
-for num = 0
+for num = 0:4
     readMovie(num,{'bx' 'by' 'bz'},'rdir',rdir,'wdir',wdir);
 end
