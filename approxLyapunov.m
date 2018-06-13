@@ -34,17 +34,18 @@ for n = 1:N
         bfiles{3}.bz(i-1:i+1, j-1:j+1, k-1:k+1)); % Pull out relevant field vector
     
     B = sqrt(sum(Bv.^2,4)); % Get magnitude at each field point
-    B = mean(B(:)); % And average it (Could also just take center point)
+    % B = mean(B(:)); % And average it (Could also just take center point)
     
     for a = 1:3
         for b = 1:3
-            J(a,b) = sum(Bv(:,:,:,a).*grad(:,:,:,b))/2; % Estimate the derivatives
+            y = Bv(:,:,:,a)./B.*grad(:,:,:,b); % Estimated gradient
+            J(a,b) = sum(y(:))/2; % Estimate the derivatives
         end
     end
     
     % Add these to the sum
-    netB = netB + B;
-    netJ = netJ + J.*B;
+    netB = netB + mean(B(:));
+    netJ = netJ + J.*mean(B(:));
 end
 Lambda = netJ/netB; % Normalize appropriately
 lambda = real(eig(Lambda)); % Could also return the matrix, I guess.
