@@ -1,9 +1,9 @@
 function val = readMovie(num, varname,varargin)
-% readMovie(NUM, VARLIST,'NAME',VALUE) reads a movie from the p3d output
+% readMovie(NUM, VARNAME,'NAME',VALUE) reads a movie from the p3d output
 % format into a .mat file. 
 % NUM is a 3-digit integer indicating the filenumber to read
-% VARLIST is a cell array of strings indicating variables to read
-% If VARLIST is 'all', then all variables are read.
+% VARNAME is a cell array of strings indicating variables to read
+% If VARNAME is 'all', then all variables are read.
 % Optional arguments and defaults:
 % 'rdir' = ''    Directory path from which to read files
 % 'wdir' = ''    Directory path to which to write files
