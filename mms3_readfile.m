@@ -6,8 +6,11 @@ rdir = '/project/projectdirs/reconn/lorajm/mms3d';
 % wdir = '/global/u2/d/dbelkin/matlab/mms3d-matfiles';
 wdir = '/scratch2/scratchdirs/dbelkin/mms3d-matfiles';
 
+
+
 names = {'bx' 'by' 'bz'};
-nums = {'000' '001' '002' '003' '004'};
+% nums = {'000' '001' '002' '003' '004'};
+nums = {'000'};
 
 [indx1,indx2] = meshgrid(1:5,1:3);
 

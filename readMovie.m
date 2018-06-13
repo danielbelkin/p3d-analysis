@@ -106,20 +106,13 @@ for i = 1:numel(varlist)
     toc
 end
 
-% At this point, save the variable?
-% This is integer data, so it's probably pretty small. 
-
-
 %% Normalize
-% TODO: Add an option to skip normalization?
-% Won't need it e.g. for LE calculation
-
 disp('Normalizing data...')
 tic
 ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
 for i = 1:numel(varlist)
     nt = size(data{i},4);
-    r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames),:); % min-max data for the current variable
+    r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
     A = -diff(r,1,5)*2^-16; % Scale to maximum
     B = r(:,:,:,:,1); % Add in minimum
     data{i} = A.*data{i} + B;
@@ -128,6 +121,7 @@ end
 
 % I strongly suspect that the memory error occurs when we convert from
 % double to single. 
+
 
 %% Save the files
 if saveq
