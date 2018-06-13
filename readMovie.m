@@ -109,18 +109,18 @@ nt = size(val,4);
 
 
 
-% So... size(val,4) should be appropriate. 
+% So... size(val,4) should be appropriate.
 try
-r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
-A = -diff(r,1,5)*2^-16; % Scale to maximum
-B = r(:,:,:,:,1); % Add in minimum
-val = A.*val + B;
+    r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
+    A = -diff(r,1,5)*2^-16; % Scale to maximum
+    B = r(:,:,:,:,1); % Add in minimum
+    val = A.*val + B;
 catch
     idx + (0:nt-1)*length(varnames)*(skip + 1)
     idx
     skip
     nt
-    size(r)
+    size(ranges) % So... can't find r?
     error('huh')
 end
 toc
