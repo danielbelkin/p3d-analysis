@@ -1,4 +1,4 @@
-function data = readMovie(num, varname,varargin)
+function val = readMovie(num, varname,varargin)
 % readMovie(NUM, VARLIST,'NAME',VALUE) reads a movie from the p3d output
 % format into a .mat file. 
 % NUM is a 3-digit integer indicating the filenumber to read
@@ -119,15 +119,12 @@ toc
 %% Save the files
 if saveq
     tic
-    for i = 1:numel(varlist)
-        % m = matfile([wdir varlist{i} '.' num '.mat']);
-        % m.(varlist{i}) = data{i};
-        save([wdir varlist{i} '.' num '.mat'],'val','-v7.3')
-        toc
-    end
+    % m = matfile([wdir varlist{i} '.' num '.mat']);
+    % m.(varlist{i}) = data{i};
+    save([wdir varname '.' num '.mat'],'val','-v7.3')
+    toc
 end
-
-disp('Done')
+disp(['Done reading ' filename])
 
 %% Below: Old version, which takes an argument VARLIST.
 
