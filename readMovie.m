@@ -9,12 +9,19 @@ function data = readMovie(num, varlist,varargin)
 % 'wdir' = ''    Directory path to which to write files
 % 'skip' = 0     Number of frames to skip
 % 'save' = true  Do we save resulting files? 
+%
+% TODO: Add smarter memory management. Use matfiles (very slow) to save the
+% data in very large chunks. Also, save it as 'single'
 % 
 % To add:
 % Option to downsample or otherwise compress?
 % e.g. I might want to 
 % Option to grab only a few timesteps?
-
+%
+% Possible alternative approaches:
+% A Tall array?
+% Memory mapping on the original file - but this makes normalization kinda
+% hard
 
 
 %% Process inputs
@@ -95,6 +102,9 @@ for i = 1:numel(varlist)
     toc
 end
 
+% At this point, save the variable?
+% This is integer data, so it's probably pretty small. 
+
 
 %% Normalize
 % TODO: Add an option to skip normalization?
@@ -102,7 +112,7 @@ end
 
 disp('Normalizing data...')
 tic
-ranges = reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2);
+ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
 for i = 1:numel(varlist)
     nt = size(data{i},4);
     r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames),:); % min-max data for the current variable
@@ -112,8 +122,10 @@ for i = 1:numel(varlist)
     toc
 end
 
+% I strongly suspect that the memory error occurs when we convert from
+% double to single. 
+
 %% Save the files
-% Only if no outputs were requested?
 if saveq
     tic
     for i = 1:numel(varlist)
