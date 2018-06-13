@@ -7,7 +7,11 @@ function y = ccompress(x,N,varargin)
 % say. 
 % And let's stick with single precision.
 %
-% Next steps: Write a function taking ans
+% Problem: This doesn't run efficiently on a matfile, which takes forever
+% to load into memory.
+% Options: Make it parallelizeable? Have one processor handle each chunk of
+% the parfor, then 
+
 
 y = zeros(size(x)/N); 
 h = normpdf(-N:N,0,N/2);

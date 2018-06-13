@@ -7,9 +7,6 @@ function x = cconv3(x,h)
 %
 % TODO: Make it possible to do multiple kernels in one run.
 % e.g. take H as a cell array.
-% Actually, that's probably gonna be too much data to handle unless we save
-% as we go. 
-% 
 
 n = size(h,1);
 if length(size(x)) ~= 3 || length(size(h)) ~= 3

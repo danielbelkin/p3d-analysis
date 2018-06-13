@@ -12,6 +12,8 @@ function data = readMovie(num, varlist,varargin)
 %
 % TODO: Add smarter memory management. Use matfiles (very slow) to save the
 % data in very large chunks. Also, save it as 'single'
+% Or use -append to add it frame-by-frame, with each frame a new variable.
+% In either case, 
 % 
 % To add:
 % Option to downsample or otherwise compress?
@@ -22,6 +24,7 @@ function data = readMovie(num, varlist,varargin)
 % A Tall array?
 % Memory mapping on the original file - but this makes normalization kinda
 % hard
+% 
 
 
 %% Process inputs
