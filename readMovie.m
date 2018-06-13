@@ -85,33 +85,32 @@ nz = nvals(3);
 %% Read integer data
 
 disp('Reading data...')
-data = cell(size(varlist));
 tic
-for i = 1:numel(varlist)
-    filename = [rdir 'movie.' varlist{i} '.' num];
-    fid = fopen(filename);
-    
-    if fid == -1
-        error(['Failed to open ' filename]);
-    end
-    
-    data{i} = reshape(fread(fid,Inf,[num2str(nx*ny*nz) '*uint16'],2*nx*ny*nz*skip),nx,ny,nz,[]); 
-    fclose(fid);
-    toc
+
+filename = [rdir 'movie.' varname '.' num];
+fid = fopen(filename);
+
+if fid == -1
+    error(['Failed to open ' filename]);
 end
+
+val = reshape(fread(fid,Inf,[num2str(nx*ny*nz) '*uint16'],2*nx*ny*nz*skip),nx,ny,nz,[]);
+fclose(fid);
+
+toc
 
 %% Normalize
 disp('Normalizing data...')
 tic
 ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
-for i = 1:numel(varlist)
-    nt = size(data{i},4);
-    r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
-    A = -diff(r,1,5)*2^-16; % Scale to maximum
-    B = r(:,:,:,:,1); % Add in minimum
-    data{i} = A.*data{i} + B;
-    toc
-end
+
+nt = size(val,4);
+r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
+A = -diff(r,1,5)*2^-16; % Scale to maximum
+B = r(:,:,:,:,1); % Add in minimum
+val = A.*val + B;
+toc
+
 
 % I strongly suspect that the memory error occurs when we convert from
 % double to single. 
@@ -123,7 +122,6 @@ if saveq
     for i = 1:numel(varlist)
         % m = matfile([wdir varlist{i} '.' num '.mat']);
         % m.(varlist{i}) = data{i};
-        val = data{i};
         save([wdir varlist{i} '.' num '.mat'],'val','-v7.3')
         toc
     end
