@@ -120,7 +120,7 @@ catch
     idx
     skip
     nt
-    error('huh').
+    error('huh')
 end
 toc
 
