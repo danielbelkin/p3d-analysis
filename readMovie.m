@@ -68,10 +68,12 @@ if fid == -1
     error(['Failed to open file ' filename]);
 end
 
-nvals = cell2mat(textscan(fid, '%*[^=] %*1s %d',3)); % [nx ny nz]
+nvals = textscan(fid, '%*[^=] %*1s %d',3).*textscan(fid, '%*[^=] %*1s %d',3); % pex times nx, etc
 fclose(fid);
 
-nx = nvals(1); ny = nvals(2); nz = nvals(3); 
+nx = nvals(1);
+ny = nvals(2);
+nz = nvals(3);
 
 
 %% Read integer data
@@ -100,17 +102,8 @@ end
 disp('Normalizing data...')
 tic
 ranges = reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2);
-
-size(ranges)
-
 for i = 1:numel(varlist)
     nt = size(data{i},4);
-    
-    disp(varlist{i})
-    idx(i)
-    nt
-    length(varnames)
-    
     r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames),:); % min-max data for the current variable
     A = 2^16./diff(r,1,5); % 1st coefficient for normalization
     B = -A.*r(:,:,:,:,1); % 2nd coefficient for normalization
