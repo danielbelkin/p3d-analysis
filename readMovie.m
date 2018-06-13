@@ -120,8 +120,8 @@ ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-
 for i = 1:numel(varlist)
     nt = size(data{i},4);
     r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames),:); % min-max data for the current variable
-    A = 2^16./diff(r,1,5); % 1st coefficient for normalization
-    B = -A.*r(:,:,:,:,1); % 2nd coefficient for normalization
+    A = -diff(r,1,5)*2^-16; % Scale to maximum
+    B = r(:,:,:,:,1); % Add in minimum
     data{i} = A.*data{i} + B;
     toc
 end

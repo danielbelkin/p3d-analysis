@@ -9,8 +9,8 @@ function y = ccompress(x,N,varargin)
 %
 % Problem: This doesn't run efficiently on a matfile, which takes forever
 % to load into memory.
-% Options: Make it parallelizeable? Have one processor handle each chunk of
-% the parfor, then 
+% Options: Make it parallelizeable? Want to split it up by space. 
+% Write a function to circExpand and also split up into a number of chunks
 
 
 y = zeros(size(x)/N); 

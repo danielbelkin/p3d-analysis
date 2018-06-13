@@ -1,4 +1,4 @@
-function lambda = approxLyapunov(bfiles, N)
+function lambda = approxLyapunov(bfiles, N, t)
 % Approximate version, using averaging over a random sample of points.
 % Vect is a vector of matfile data, {bx by bz}, with fieldnames 
 % currently .bx, .by, .bz, but plan to make it .val
@@ -7,10 +7,11 @@ function lambda = approxLyapunov(bfiles, N)
 % lot of averaging
 % Ignores edges, which is conceptually a no-no but in practice shouldn't
 % matter at all
+% t is the timestep at which we look
 
 %% Sample N points at random
 s = size(bfiles{1},'bx');
-samp = zeros(length(s),N);
+samp = zeros(3,N);
 
 for i=1:3
     samp(:,i) = randi([2 s(i)-1],N,1); % Just ignore the edges for now
@@ -29,21 +30,17 @@ for n = 1:N
     j = samp(n,2);
     k = samp(n,3);
     
-    Bv = cat(4,bfiles{1}.bx(i-1:i+1, j-1:j+1, k-1:k+1),...
-        bfiles{2}.by(i-1:i+1, j-1:j+1, k-1:k+1),...
-        bfiles{3}.bz(i-1:i+1, j-1:j+1, k-1:k+1)); % Pull out relevant field vector
+    Bv = cat(4,bfiles{1}.bx(i-1:i+1, j-1:j+1, k-1:k+1,t),...
+        bfiles{2}.by(i-1:i+1, j-1:j+1, k-1:k+1,t),...
+        bfiles{3}.bz(i-1:i+1, j-1:j+1, k-1:k+1,t)); % Pull out relevant field vector
     
     B = sqrt(sum(Bv.^2,4)); % Get magnitude at each field point
     % B = mean(B(:)); % And average it (Could also just take center point)
     
+    
     for a = 1:3
         for b = 1:3
             y = Bv(:,:,:,a)./B.*grad(:,:,:,b); % Estimated gradient
-            if any(~isfinite(y(:)))
-                Bv
-                B
-                error('Here')
-            end
             J(a,b) = sum(y(:))/2; % Estimate the derivatives
         end
     end
