@@ -68,7 +68,7 @@ if fid == -1
     error(['Failed to open file ' filename]);
 end
 
-nvals = textscan(fid, '%*[^=] %*1s %d',3).*textscan(fid, '%*[^=] %*1s %d',3); % pex times nx, etc
+nvals = cell2mat(textscan(fid, '%*[^=] %*1s %d',3)).*cell2mat(textscan(fid, '%*[^=] %*1s %d',3)); % pex times nx, etc
 fclose(fid);
 
 nx = nvals(1);
