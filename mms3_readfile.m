@@ -16,6 +16,6 @@ nums = {'003'};
 
 t0 = tic;
 parfor i = 1:numel(indx1)
-    readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir,'skip',100);
+    readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir,'skip',300);
 end
 toc(t0)
