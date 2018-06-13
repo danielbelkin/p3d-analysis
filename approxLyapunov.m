@@ -39,6 +39,11 @@ for n = 1:N
     for a = 1:3
         for b = 1:3
             y = Bv(:,:,:,a)./B.*grad(:,:,:,b); % Estimated gradient
+            if any(~isfinite(y(:)))
+                Bv
+                B
+                error('Here')
+            end
             J(a,b) = sum(y(:))/2; % Estimate the derivatives
         end
     end
@@ -49,5 +54,6 @@ for n = 1:N
 end
 Lambda = netJ/netB; % Normalize appropriately
 lambda = real(eig(Lambda)); % Could also return the matrix, I guess.
+
 
 end
