@@ -1,4 +1,4 @@
-function data = readMovie(num, varlist,varargin)
+function data = readMovie(num, varname,varargin)
 % readMovie(NUM, VARLIST,'NAME',VALUE) reads a movie from the p3d output
 % format into a .mat file. 
 % NUM is a 3-digit integer indicating the filenumber to read
@@ -31,8 +31,6 @@ function data = readMovie(num, varlist,varargin)
 % Memory mapping on the original file - but this makes normalization kinda
 % hard
 % 
-
-
 %% Process inputs
 okargs = {'rdir','wdir', 'skip', 'save'};
 dflts = {'' '' 0 true};
@@ -53,10 +51,8 @@ elseif ~ischar(num) || numel(num) ~= 3
     error('Input RUN must be a string or integer')
 end
 
-if ischar(varlist)
-    varlist = {varlist};
-elseif ~iscell(varlist)
-    error('Input VARLIST must be either a string or cell array')
+if ~ischar(varname)
+    error('Input VARLIST must be a char array')
 end
 
 %% Locate the variables we need
@@ -65,17 +61,10 @@ varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
     'pexz'; 'ni'; 'jix'; 'jiy'; 'jiz'; 'pixx'; 'piyy';'pizz'; 'pixy';
     'piyz'; 'pixz'};
 
-if strcmpi(varlist{1},'all')
-    idx = 1:length(varnames);
-else
-    idx = zeros(size(varlist(:)));
-    for i = 1:numel(varlist)
-        idx(i) = find(strcmpi(varnames,varlist{i})); % List of where each variable is located in the order
-    end
+idx = find(strcmpi(varnames,varname)); % Index of where desired variable is located in the order
     
-    if numel(idx) ~= numel(varlist)
-        error('At least one variable name appears to be wrong')
-    end
+if isempty(idx)
+    error('At least one variable name appears to be wrong')
 end
 
 %% Find system size
@@ -141,3 +130,114 @@ if saveq
 end
 
 disp('Done')
+
+%% Below: Old version, which takes an argument VARLIST.
+
+% %% Process inputs
+% okargs = {'rdir','wdir', 'skip', 'save'};
+% dflts = {'' '' 0 true};
+% 
+% [rdir, wdir, skip, saveq] = internal.stats.parseArgs(okargs,dflts,varargin{:});
+% 
+% if ~isempty(wdir) && ~strcmp(wdir(end),'/')
+%     wdir(end+1) = '/';
+% end
+% 
+% if ~strcmp(rdir(end),'/')
+%     rdir(end+1) = '/';
+% end
+% 
+% if isnumeric(num)
+%     num = num2str(num,'%0.3i');
+% elseif ~ischar(num) || numel(num) ~= 3
+%     error('Input RUN must be a string or integer')
+% end
+% 
+% if ischar(varlist)
+%     varlist = {varlist};
+% elseif ~iscell(varlist)
+%     error('Input VARLIST must be either a string or cell array')
+% end
+% 
+% %% Locate the variables we need
+% varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
+%     'ne'; 'jex';'jey'; 'jez'; 'pexx'; 'peyy'; 'pezz'; 'pexy'; 'peyz';
+%     'pexz'; 'ni'; 'jix'; 'jiy'; 'jiz'; 'pixx'; 'piyy';'pizz'; 'pixy';
+%     'piyz'; 'pixz'};
+% 
+% if strcmpi(varlist{1},'all')
+%     idx = 1:length(varnames);
+% else
+%     idx = zeros(size(varlist(:)));
+%     for i = 1:numel(varlist)
+%         idx(i) = find(strcmpi(varnames,varlist{i})); % List of where each variable is located in the order
+%     end
+%     
+%     if numel(idx) ~= numel(varlist)
+%         error('At least one variable name appears to be wrong')
+%     end
+% end
+% 
+% %% Find system size
+% filename = [rdir 'p3d.stdout.' num];
+% fid = fopen(filename);
+% if fid == -1
+%     error(['Failed to open file ' filename]);
+% end
+% 
+% nvals = cell2mat(textscan(fid, '%*[^=] %*1s %d',3)).*cell2mat(textscan(fid, '%*[^=] %*1s %d',3)); % pex times nx, etc
+% fclose(fid);
+% 
+% nx = nvals(1);
+% ny = nvals(2);
+% nz = nvals(3);
+% 
+% 
+% %% Read integer data
+% 
+% disp('Reading data...')
+% data = cell(size(varlist));
+% tic
+% for i = 1:numel(varlist)
+%     filename = [rdir 'movie.' varlist{i} '.' num];
+%     fid = fopen(filename);
+%     
+%     if fid == -1
+%         error(['Failed to open ' filename]);
+%     end
+%     
+%     data{i} = reshape(fread(fid,Inf,[num2str(nx*ny*nz) '*uint16'],2*nx*ny*nz*skip),nx,ny,nz,[]); 
+%     fclose(fid);
+%     toc
+% end
+% 
+% %% Normalize
+% disp('Normalizing data...')
+% tic
+% ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
+% for i = 1:numel(varlist)
+%     nt = size(data{i},4);
+%     r = ranges(:,:,:,idx(i) + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
+%     A = -diff(r,1,5)*2^-16; % Scale to maximum
+%     B = r(:,:,:,:,1); % Add in minimum
+%     data{i} = A.*data{i} + B;
+%     toc
+% end
+% 
+% % I strongly suspect that the memory error occurs when we convert from
+% % double to single. 
+% 
+% 
+% %% Save the files
+% if saveq
+%     tic
+%     for i = 1:numel(varlist)
+%         % m = matfile([wdir varlist{i} '.' num '.mat']);
+%         % m.(varlist{i}) = data{i};
+%         val = data{i};
+%         save([wdir varlist{i} '.' num '.mat'],'val','-v7.3')
+%         toc
+%     end
+% end
+% 
+% disp('Done')
