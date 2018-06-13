@@ -10,7 +10,7 @@ function lambda = approxLyapunov(bfiles, N, t)
 % t is the timestep at which we look
 
 %% Sample N points at random
-s = size(bfiles{1},'bx');
+s = size(bfiles{1},'val');
 samp = zeros(3,N);
 
 for i=1:3
@@ -30,9 +30,9 @@ for n = 1:N
     j = samp(n,2);
     k = samp(n,3);
     
-    Bv = cat(4,bfiles{1}.bx(i-1:i+1, j-1:j+1, k-1:k+1,t),...
-        bfiles{2}.by(i-1:i+1, j-1:j+1, k-1:k+1,t),...
-        bfiles{3}.bz(i-1:i+1, j-1:j+1, k-1:k+1,t)); % Pull out relevant field vector
+    Bv = cat(4,bfiles{1}.val(i-1:i+1, j-1:j+1, k-1:k+1,t),...
+        bfiles{2}.val(i-1:i+1, j-1:j+1, k-1:k+1,t),...
+        bfiles{3}.val(i-1:i+1, j-1:j+1, k-1:k+1,t)); % Pull out relevant field vector
     
     B = sqrt(sum(Bv.^2,4)); % Get magnitude at each field point
     % B = mean(B(:)); % And average it (Could also just take center point)
