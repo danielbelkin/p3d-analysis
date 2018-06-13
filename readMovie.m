@@ -15,6 +15,7 @@ function val = readMovie(num, varname,varargin)
 % Or use -append to add it frame-by-frame, with each frame a new variable.
 % Or just make it possible to read only an arbitrary frame somewhere.
 %
+% TODO: Add a .params field to the saved data
 % Also, make it so only one variable is accepted as an input argument -
 % it's not that hard to write another shell function if I really want to
 % read multiple. 
@@ -105,15 +106,27 @@ tic
 ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
 
 nt = size(val,4);
+
+
+
+% So... size(val,4) should be appropriate. 
+try
 r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
 A = -diff(r,1,5)*2^-16; % Scale to maximum
 B = r(:,:,:,:,1); % Add in minimum
 val = A.*val + B;
+catch
+    idx + (0:nt-1)*length(varnames)*(skip + 1)
+    idx
+    skip
+    nt
+    error('huh').
+end
 toc
 
 
 % I strongly suspect that the memory error occurs when we convert from
-% double to single. 
+% integer to float. 
 
 
 %% Save the files
