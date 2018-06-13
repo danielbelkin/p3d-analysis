@@ -12,6 +12,7 @@ function data = readMovie(num, varlist,varargin)
 % 
 % To add:
 % Option to downsample or otherwise compress?
+% e.g. I might want to 
 % Option to grab only a few timesteps?
 
 
@@ -114,9 +115,13 @@ end
 %% Save the files
 % Only if no outputs were requested?
 if saveq
+    tic
     for i = 1:numel(varlist)
-        m = matfile([wdir varlist{i} '.' num '.mat']);
-        m.(varlist{i}) = data{i};
+        % m = matfile([wdir varlist{i} '.' num '.mat']);
+        % m.(varlist{i}) = data{i};
+        val = data{i};
+        save([wdir varlist{i} '.' num '.mat'],'val','-v7.3')
+        toc
     end
 end
 
