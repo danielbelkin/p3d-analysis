@@ -20,15 +20,17 @@ function lambda = approxLyapunov(bfiles, N, t)
 
 
 %% Find LEs at these points
+
 s = size(bfiles{1},'val');
 
 % Construct the gradient operator
 d = cat(3,-ones(3),zeros(3),ones(3)); % This gives twice the gradient.
-grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3));
+grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3)); 
+% Or should this be constructed inside the loop?
+% One option: Construct it as int8, then convert to double
 
 netB = 0;
 netJ = zeros(3);
-J = zeros(3);
 parfor n = 1:N
     i = randi([2 s(1)-1],N,1);
     j = randi([2 s(2)-1],N,1);
@@ -41,7 +43,7 @@ parfor n = 1:N
     B = sqrt(sum(Bv.^2,4)); % Get magnitude at each field point
     % B = mean(B(:)); % And average it (Could also just take center point)
     
-    
+    J = zeros(3);
     for a = 1:3
         for b = 1:3
             y = Bv(:,:,:,a)./B.*grad(:,:,:,b); % Estimated gradient
