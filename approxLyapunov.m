@@ -16,6 +16,7 @@ function lambda = approxLyapunov(bfiles, N, t)
 % random?
 % And averaging along those lines, but only the center part. 
 % Or: Parallelize this. 
+%
 
 %% Sample N points at random
 s = size(bfiles{1},'val');
