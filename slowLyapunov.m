@@ -18,20 +18,19 @@ netB = sum(B(:));
 d = cat(3,-ones(3),zeros(3),ones(3)); % This gives twice the gradient.
 grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3));
 
-netJ = zeros(3);
-netJ2 = netJ;
+avgJ = zeros(3);
+stdJ = avgJ;
 tic
 for i = 1:3
     for j = 1:3
         Jij = cconv3(Bfield(:,:,:,i),grad(:,:,:,j))/2; % Something wrong here
-        netJ(i,j) = sum(Jij(:).*B(:));
-        netJ2(i,j) = sum(Jij(:).^2.*B(:));
+        avgJ(i,j) = sum(Jij(:).*B(:))./netB; % The weighted average
+        stdJ(i,j) = sqrt(sum(Jij(:).^2.*B(:))./netB - avgJ(i,j)^2);
         toc
     end
 end
 
-avgJ = netJ/netB; % This is allowed because infintesimal matrices commute
-stdJ = sqrt(netJ2 - netJ.^2)/netB;
+stdJ = sqrt(netJ2 - avgJ.^2)/netB;
 Lambda = 1/2*logm(expm(avgJ)*expm(avgJ)'); % But non-infintesimal matrices don't.
 lambda = sort(eig(Lambda)); 
 
