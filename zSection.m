@@ -1,11 +1,16 @@
-function crossings = zSection(Bfield, nsteps, npts)
+function crossings = zSection(bfield, nsteps, npts)
 % CROSSINGS = zSection(BX,BY,BZ,NSTEPS,NPTS)
 % produces data for a Poincaré section of the magnetic field lines using an
 % x-y plane at the midpoint of the z-axis. 
 % CROSSINGS(2,10,4) is the Y coordinate of the 4th test point at the 10th
 % crossing of the plane.
-B = sum(Bfield.^2,4);
-bfield = Bfield./B;
+%
+% TODO: Write another, similar function that just traces out and plots a
+% single field line for a large number of timesteps. 
+
+% Don't normalize
+% B = sum(bfield.^2,4);
+% bfield = bfield./B;
 
 s = size(bfield);
 zCut = s(3)/2; % The plain at which to cut
