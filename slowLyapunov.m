@@ -23,9 +23,9 @@ netJ2 = netJ;
 tic
 for i = 1:3
     for j = 1:3
-        J = cconv3(Bfield(:,:,:,i),grad(:,:,:,j))/2; % Something wrong here
-        netJ(i,j) = sum(J(:).*B(:));
-        netJ2(i,j) = netJ(i,j).^2;
+        Jij = cconv3(Bfield(:,:,:,i),grad(:,:,:,j))/2; % Something wrong here
+        netJ(i,j) = sum(Jij(:).*B(:));
+        netJ2(i,j) = sum(Jij(:).^2.*B(:));
         toc
     end
 end
