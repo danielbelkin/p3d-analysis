@@ -25,5 +25,5 @@ f = @(~,x) [interp3(bfield(:,:,:,1), mod(x(1),s(1))+1,mod(x(2),s(2))+1,mod(x(3),
             interp3(bfield(:,:,:,3), mod(x(1),s(1))+1,mod(x(2),s(2))+1,mod(x(3),s(3))+1)];
 
 
-[~,x] = ode45(f,[0 tmax],x0,options); 
+[~,x] = ode45(f,[0 tmax],x0); 
 end
