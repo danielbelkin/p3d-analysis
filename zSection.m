@@ -32,7 +32,7 @@ f = @(~,x) [interp3(bfield(:,:,:,1), mod(x(1),s(1))+1,mod(x(2),s(2))+1,mod(x(3),
             interp3(bfield(:,:,:,3), mod(x(1),s(1))+1,mod(x(2),s(2))+1,mod(x(3),s(3))+1)];
 
 
-tmax = 1e3*nsteps/s(3)/mbz; % Give it 1000 times longer than we expect it to need
+tmax = 1e4*nsteps/s(3)/mbz; % Give it 1000 times longer than we expect it to need
 
 options = odeset('Events',@isCross);
 

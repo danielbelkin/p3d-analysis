@@ -23,7 +23,7 @@ bVal = .5*ones(size(rVal)); % Whatever looks best
 colors = [rVal gVal bVal];
 
 figure(1); clf; hold on;
-whitebg('black')
+whitebg('black'
 for i = 1:size(xt,3)
     plot(xt(1,1,i),xt(2,1,i),'o','Color',colors(i,:));
 end
