@@ -66,6 +66,9 @@ parfor n = 1:N
     netB = netB + mean(B(:));
     netJ = netJ + J.*mean(B(:));
 end
-Lambda = netJ/netB; % Normalize appropriately
-lambda = real(eig(Lambda)); % Could also return the matrix, I guess.
+avgJ = netJ/netB;
+Lambda = 1/2*logm(expm(avgJ)*expm(avgJ)'); % Normalize appropriately
+lambda = sort(eig(Lambda)); % Could also return the matrix, I guess.
+
+% Earlier formula was incorrect because of non-commutivity of matrix math
 end
