@@ -14,9 +14,8 @@ function y = ccompress(x,N,varargin)
 
 
 y = zeros(size(x)/N); 
-h = normpdf(-N:N,0,N/2);
-h = h.*reshape(h,1,[]).*reshape(h,1,1,[]); % Make the kernel 3d;
-h = single(h); 
+
+h = processInputs(varargin{:});
 n = size(h,1); % We'll use this later. 
 
 v = circExpand(x,N);
@@ -31,6 +30,12 @@ for i = 1:size(y,1)
         end
     end
 end
+end
+% ------------------------------------------------------------------------%
+function h = processInputs(varargin)
+h = normpdf(-N:N,0,N/2);
+h = h.*reshape(h,1,[]).*reshape(h,1,1,[]); % Make the kernel 3d;
+h = single(h); 
 end
 
 
