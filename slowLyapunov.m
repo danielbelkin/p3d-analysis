@@ -14,16 +14,15 @@ tic;
 B = sqrt(sum(Bfield.^2,4));
 netB = sum(B(:));
 
-grad = cell(1,3);
-grad{3} = cat(3,-ones(3),zeros(3),ones(3)); % Dz
-grad{1} = shiftdim(grad{3},1); % Dx
-grad{2} = shiftdim(grad{2},1); % Dy
+% Construct the gradient operator
+d = cat(3,-ones(3),zeros(3),ones(3)); % This gives twice the gradient.
+grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3));
 
 netJ = zeros(3);
 tic
 for i = 1:3
     for j = 1:3
-        J = cconv3(Bfield(:,:,:,i),grad{j}); % Something wrong here
+        J = cconv3(Bfield(:,:,:,i),grad(:,:,:,j))/2; % Something wrong here
         netJ(i,j) = sum(J(:).*B(:));
         toc
     end
