@@ -18,7 +18,7 @@ y = zeros(size(x)/N);
 h = processInputs(varargin{:});
 n = size(h,1); % We'll use this later. 
 
-v = circExpand(x,N);
+v = circExpand(x,N); 
 for i = 1:size(y,1)
     for j = 1:size(y,2)
         for k = 1:size(y,3)

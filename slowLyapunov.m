@@ -8,11 +8,12 @@ function [lambda, stats] = slowLyapunov(Bfield)
 % 
 % 
 % Based on the assumption that the ergodic measure is unique. 
-% TODO: Make it possible for bx, by, bz to be matfiles? 
+% Actually not slow with compressed data.
 disp('Running slowLyapunov...')
 tic;
 B = sqrt(sum(Bfield.^2,4));
 netB = sum(B(:));
+bfield = Bfield./B;
 
 % Construct the gradient operator
 d = cat(3,-ones(3),zeros(3),ones(3)); % This gives twice the gradient.
@@ -23,13 +24,14 @@ stdJ = avgJ;
 tic
 for i = 1:3
     for j = 1:3
-        Jij = cconv3(Bfield(:,:,:,i),grad(:,:,:,j))/2; % Something wrong here
+        Jij = cconv3(bfield(:,:,:,i),grad(:,:,:,j))/2; % WROND, want gradB.
         avgJ(i,j) = sum(Jij(:).*B(:))./netB; % The weighted average
         stdJ(i,j) = sqrt(sum(Jij(:).^2.*B(:))./netB - avgJ(i,j)^2);
         toc
     end
 end
 
+stdJ = stdJ/sqrt(numel(B)); % Account for sample size
 Lambda = 1/2*logm(expm(avgJ)*expm(avgJ)'); % But non-infintesimal matrices don't.
 lambda = sort(eig(Lambda)); 
 
@@ -41,8 +43,3 @@ if nargout == 2
 end
 disp('Done')
 end
-
-
-
-
-
