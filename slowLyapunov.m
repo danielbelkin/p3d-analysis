@@ -30,7 +30,6 @@ for i = 1:3
     end
 end
 
-stdJ = sqrt(netJ2 - avgJ.^2)/netB;
 Lambda = 1/2*logm(expm(avgJ)*expm(avgJ)'); % But non-infintesimal matrices don't.
 lambda = sort(eig(Lambda)); 
 
