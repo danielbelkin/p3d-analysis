@@ -95,16 +95,27 @@ if fid == -1
     error(['Failed to open ' filename]);
 end
 
-% val = reshape(...
-%     fread(fid,Inf,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),...
-%     nx,ny,nz,[]);
+class(nx)
+class(ny)
+class(nz)
+class(skip)
+nx = double(nx);
+ny = double(ny);
+nz = double(nz);
+skip = double(skip);
 
-val = fread(fid,Inf,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
-[num2str(nx*ny*nz) '*uint16=>single']
-2*nx*ny*nz*skip
-size(val)
-val = reshape(val,nx,ny,nz,[]);
-size(val)
+
+val = reshape(...
+     fread(fid,Inf,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),...
+     nx,ny,nz,[]);
+
+
+% val = fread(fid,Inf,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
+% [num2str(nx*ny*nz) '*uint16=>single']
+% 2*nx*ny*nz*skip %  2147483647: OVERFLOWING.
+% size(val) % 5*2^30 - seems correct
+% val = reshape(val,nx,ny,nz,[]);
+% size(val)
 
 
 fclose(fid);
@@ -136,15 +147,15 @@ try
     B = r(:,:,:,:,1); % Add in minimum
     val = A.*val + B;
 catch
-    idx + (0:nt-1)*length(varnames)*(skip + 1)
-    idx % 7
-    skip % 300
-    nt % 5
-    size(val) % 2048 1024 512 5
-    size(ranges) % [1 1 1 270 2]
-    % The file contains a total of 9 timesteps. With skip = 300, we read 5
-    % timesteps. Why?
-    size(val,4)
+%     idx + (0:nt-1)*length(varnames)*(skip + 1)
+%     idx % 7
+%     skip % 300
+%     nt % 5
+%     size(val) % 2048 1024 512 5
+%     size(ranges) % [1 1 1 270 2]
+%     % The file contains a total of 9 timesteps. With skip = 300, we read 5
+%     % timesteps. Why?
+%     size(val,4)
     error('huh')
 end
 toc
