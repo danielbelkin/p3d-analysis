@@ -19,11 +19,12 @@ grad{3} = cat(3,-ones(3),zeros(3),ones(3)); % Dz
 grad{1} = shiftdim(grad{3},1); % Dx
 grad{2} = shiftdim(grad{2},1); % Dy
 
+netJ = zeros(3);
 tic
 for i = 1:3
     for j = 1:3
-        J = cconv3(Bfield(:,:,:,i),grad{j});
-        netJ = sum(J./B(:));
+        J = cconv3(Bfield(:,:,:,i),grad{j}); % Something wrong here
+        netJ(i,j) = sum(J(:).*B(:));
         toc
     end
 end
