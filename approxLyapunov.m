@@ -1,9 +1,8 @@
 function lambda = approxLyapunov(bfiles, N, t)
 % Approximate version, using averaging over a random sample of points.
-% Vect is a vector of matfile data, {bx by bz}, with fieldnames
-% currently .bx, .by, .bz, but plan to make it .val
+% Vect is a vector of matfiles, {bx by bz}, with fieldnames .val
+%
 % TODO: Add option to also return uncertainty.
-% Because uncertainty is important
 % This should work ok without smoothing, I think, since there's already a
 % lot of averaging
 % Ignores edges, which is conceptually a no-no but in practice shouldn't
