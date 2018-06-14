@@ -95,8 +95,16 @@ if fid == -1
     error(['Failed to open ' filename]);
 end
 
-val = reshape(fread(fid,Inf,[num2str(nx*ny*nz) '*uint16'],2*nx*ny*nz*skip),nx,ny,nz,[]);
+val = reshape(...
+    fread(fid,Inf,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),...
+    nx,ny,nz,[]);
 fclose(fid);
+% Ok, so 3rd argument gives # of bytes to skip. There are 2*nx*ny*nz bytes
+% in every frame. 
+% TODO: Can avoid reshape call. Probably worth doing. 
+% TODO: Columns are lined up incorrectly, I believe. Need to ask Marc about
+% the proper ordering. 
+% Instead of Inf, have it be
 
 toc
 
@@ -120,9 +128,10 @@ catch
     idx % 7
     skip % 300
     nt % 5
-    size(val)
+    size(val) % as expected?
     size(ranges) % [1 1 1 270 2]
-    % Ok, so there are 270 timesteps. But we think there are 5. Why?
+    % The file contains a total of 9 timesteps. With skip = 300, we read 5
+    % timesteps. Why?
     size(val,4)
     error('huh')
 end
