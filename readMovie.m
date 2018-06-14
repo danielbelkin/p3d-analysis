@@ -117,10 +117,13 @@ try
     val = A.*val + B;
 catch
     idx + (0:nt-1)*length(varnames)*(skip + 1)
-    idx
-    skip
-    nt
-    size(ranges) % So... can't find r?
+    idx % 7
+    skip % 300
+    nt % 5
+    size(val)
+    size(ranges) % [1 1 1 270 2]
+    % Ok, so there are 270 timesteps. But we think there are 5. Why?
+    size(val,4)
     error('huh')
 end
 toc
