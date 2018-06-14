@@ -106,7 +106,15 @@ fclose(fid);
 % TODO: Can avoid reshape call. Probably worth doing. 
 % TODO: Columns are lined up incorrectly, I believe. Need to ask Marc about
 % the proper ordering. 
-% Instead of Inf, have it be
+% Guess: In x-y space, we fill up each y-value(row) from bottom to top,
+% then fill rows up the columns.
+% So if nx = 2048, ny = 1024, then we want to put 2048 values in,
+% then wrap around, then put 2048 values in... etx
+% So, a guess: Column
+%
+% Let's say we want nx = 5, ny = 4, nz = 3
+% So it seems like this is correct, just flipped.
+
 
 toc
 
@@ -114,7 +122,6 @@ toc
 disp('Normalizing data...')
 tic
 ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
-
 nt = size(val,4);
 
 r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
@@ -122,7 +129,6 @@ A = -diff(r,1,5)*2^-16; % Scale to maximum
 B = r(:,:,:,:,1); % Add in minimum
 val = A.*val + B;
 toc
-
 
 % I strongly suspect that the memory error occurs when we convert from
 % integer to float. 
