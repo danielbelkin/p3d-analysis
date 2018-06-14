@@ -18,15 +18,10 @@ function lambda = approxLyapunov(bfiles, N, t)
 % Or: Parallelize this. 
 %
 
-%% Sample N points at random
-s = size(bfiles{1},'val');
-samp = zeros(N,3);
-
-for i=1:3
-    samp(:,i) = randi([2 s(i)-1],N,1); % Just ignore the edges for now
-end
 
 %% Find LEs at these points
+s = size(bfiles{1},'val');
+
 % Construct the gradient operator
 d = cat(3,-ones(3),zeros(3),ones(3)); % This gives twice the gradient.
 grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3));
@@ -34,10 +29,10 @@ grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3));
 netB = 0;
 netJ = zeros(3);
 J = zeros(3);
-for n = 1:N
-    i = samp(n,1);
-    j = samp(n,2);
-    k = samp(n,3);
+parfor n = 1:N
+    i = randi([2 s(1)-1],N,1);
+    j = randi([2 s(2)-1],N,1);
+    k = randi([2 s(3)-1],N,1);
     
     Bv = cat(4,bfiles{1}.val(i-1:i+1, j-1:j+1, k-1:k+1,t),...
         bfiles{2}.val(i-1:i+1, j-1:j+1, k-1:k+1,t),...
