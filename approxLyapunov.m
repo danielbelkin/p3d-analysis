@@ -1,4 +1,4 @@
-function lambda = approxLyapunov(bfiles, N, t)
+function [lambda, Lambda, netB] = approxLyapunov(bfiles, N, t)
 % Approximate version, using averaging over a random sample of points.
 % Vect is a vector of matfiles, {bx by bz}, with fieldnames .val
 %
@@ -66,8 +66,8 @@ parfor n = 1:N
     netB = netB + mean(B(:));
     netJ = netJ + J.*mean(B(:));
 end
-avgJ = netJ/netB;
-Lambda = 1/2*logm(expm(avgJ)*expm(avgJ)'); % Normalize appropriately
+avgJ = netJ/netB; % This is allowed because infintesimal matrices commute
+Lambda = 1/2*logm(expm(avgJ)*expm(avgJ)'); % But non-infintesimal matrices don't.
 lambda = sort(eig(Lambda)); % Could also return the matrix, I guess.
 
 % Earlier formula was incorrect because of non-commutivity of matrix math
