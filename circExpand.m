@@ -1,15 +1,10 @@
-function v = circExpand(x,m)
-% Takes an array x and an integer m.
-% Returns an array that is x padded with partial copies of itself out to a
-% distance m. 
-% Now works with arrays of arbitrary dimension.
-% Also, will create a version that produces only indices for  matfile.
+function indx = circExpand(s,m)
+% Takes a size s and an integer m.
+% Returns a cell array such that x
 
-s = size(x);
-d = numel(s);
-indx = cell(1,d);
-for i = 1:d
-    indx{i} = [s(i)-m+1:s(i), 1:s(i), 1:m]; % This is some cleverness. I'm proud.
+dim = numel(s);
+indx = cell(1,dim);
+for d = 1:dim
+    indx{d} = [s(d)-m+1:s(d), 1:s(d), 1:m];
 end
-v = x(indx{:});
 end
