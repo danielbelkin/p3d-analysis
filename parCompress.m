@@ -42,7 +42,7 @@ h = h./sum(h(:)); % Renormalize
 
 %% Convolve
 sections = splitIndx(s(1:3),(size(h,1) - 1)/2, p); % Split the indices
-frames = cell(1,1,1,T);
+frames = cell(1,1,1,numel(T));
 disp('Splitting data...')
 for t = T % For each frame requested
     sectResult = cell(size(sections));  % Holds the result from each section
