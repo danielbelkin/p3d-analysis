@@ -1,7 +1,7 @@
 function sections = splitIndx(s,m,n)
 % SECTIONS = parCircExpand(S,M,N)
-% is used to break an array of size S into N chunks, each overlapping by M
-% elements on every edge. This is useful for parallelizing access to
+% is used to break an array of size S into 2^N chunks, each overlapping by
+% M elements on every edge. This is useful for parallelizing access to
 % matfiles. 
 % SECTIONS is a cell array. SECTIONS{P}{D} is the list of indices for
 % processor P along dimension D. To access the desired chunk of a variable
