@@ -12,6 +12,7 @@ function y = parCompress(x,n,p,T)
 %
 % TODO: Conside making this parallelizeable.
 % TODO: Add more options for the kernel, etc
+% PROBELM: Not currently working in parallel form. 
 
 if ~isa(x,'matlab.io.MatFile')
     error('This function is inefficient with non-matfile inputs. Try ccompress')
@@ -30,7 +31,7 @@ if nargin < 3
 end
 
 if nargin < 4
-    T = s(4); % Number of timesteps to do
+    T = 1:s(4); % Timesteps to do
 end
 
 
@@ -39,22 +40,25 @@ end
 kernel = @(x) normpdf(x,0,n/2);
 w = n; % Width = 2*w + 1, actually.
 h = kernel(-w:w);
-h = h.*reshape(h,1,[]).*reshape(h,1,1,[]); % Make it 3d;
+h = h.*reshape(h,[],1).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
+h = h./sum(h(:)); % Renormalize
+
 
 sections = splitIndx(s(1:3),(size(h,1) - 1)/2, p); % Split the indices
 frames = cell(1,1,1,T);
-for t=1:T % For each frame
+for t = T % For each frame requested
     sectResult = cell(size(sections));  % Holds the result from each section
     disp('Splitting data...')
-    parfor i = 1:numel(sections)
-        v = convn(x.val(sections{i}{:},t),h,'valid');
+    for i = 1:numel(sections) % TODO: Make parfor
+        data = mfileIndx(x,sections{i},t);
+        v = convn(data,h,'valid');
         sectResult{i} = single(v(1:n:end,1:n:end,1:n:end)); % And downsample
     end
     disp('Recombining data...')
-    frames{t} = cell2mat(sectResult); % Recombine results
+    frames{t} = cell2mat(sectResult); % Combine sections to form a frame
 end
-y = cell2mat(frames); % And combine all frames to return.
+y = cell2mat(frames); % And combine all frames to form a movie.
 end
 
 
