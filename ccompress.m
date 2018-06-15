@@ -1,17 +1,18 @@
-function y = ccompress(x,N,varargin)
-% Goal: Take an array x and a number N to downsample by.
-% Compress every N by N by N cube of X into one point of y
-% Default kernel is gaussian with standard deviation n/2 and width 2*n + 1
-% And let's stick with single precision.
+function y = ccompress(x,N)
+% Y = ccompress(X,N) takes a 3-dimensional array X and downsamples it by a
+% factor N along each dimension. 
+% Default kernel is Gaussian with standard deviation N/2 and width 2*N + 1
+% Returned array is single-precision.
 %
 % TODO: Conside making this parallelizeable.
 % TODO: Add more options for the kernel, etc
 
+% Construct the kernel
 h = normpdf(-N:N,0,N/2);
 h = h.*reshape(h,1,[]).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
 
-% Expand:
+% Expand the data
 m = size(h,1);
 s = size(x);
 dim = numel(s);
@@ -21,7 +22,7 @@ for d = 1:dim
 end
 
 x = convn(x(indx{:}),h,'valid');
-y = x(1:N:end,1:N:end,1:N:end);
+y = single(x(1:N:end,1:N:end,1:N:end)); % This way is faster.
 end
 
 
