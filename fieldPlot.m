@@ -1,4 +1,4 @@
-function [x,f] = fieldPlot(bfield, n, x0)
+function x = fieldPlot(bfield, n, x0)
 % x = fieldLine(bfield, n, x0)
 % Tracks magnetic field line starting at x0 for n boundary-crossings.
 
@@ -30,9 +30,9 @@ f = @(~,x) [interpFun(x,bfield(:,:,:,1));...
 
 
     function [value,isTerminal,direction] = isCross(~,y)
-        value = prod(y).*prod(s(1:3) - y'); % Is negative as soon as we leave box
-        isTerminal = 1;
-        direction = 0;
+        value = y'.*(s(1:3) - y'); % Is negative as soon as we leave box
+        isTerminal = [1 1 1];
+        direction = [0 0 0];
     end
         
 options = odeset('Events',@isCross); % Set ODE options
@@ -46,12 +46,18 @@ end
 disp('Plotting...')
 figure(1); clf; hold on;
 % plot3(x0(1),x0(2),x0(3),'go'); 
+whitebg('black')
+
 for i = 1:n
-    plot3(x{i}(:,1), x{i}(:,2), x{i}(:,3),'-','Color',[i/n .5 1-i/n]);
+    plot3(x{i}(1,1), x{i}(1,2), x{i}(1,3),'go')
+    plot3(x{i}(end,1), x{i}(end,2), x{i}(end,3),'ro')
+    plot3(x{i}(:,1), x{i}(:,2), x{i}(:,3),'-','Color',1-[i/n .5 1-i/n]);
 end
 
+% One idea: Plot a little square of wall at the entry and exit points.
+
 grid on
-whitebg('black')
 xlabel('x'); ylabel('y'); zlabel('z')
 xlim([0 s(1)]); ylim([0 s(2)]); zlim([0 s(3)])
+ax = gca; ax.CameraPosition = [0 1 2];
 end
