@@ -22,7 +22,7 @@ end
 
 
 bz = bfield(:,:,:,3);
-mbz = mean(bz(:)); % Average z-velocity
+mbz = sum(bz(:)./abs(bz(:)))/sum(1./abs(bz(:))); % Average z-velocity
 
 bfield = bfield(indx{:},:);
 

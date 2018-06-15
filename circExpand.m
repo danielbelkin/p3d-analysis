@@ -3,7 +3,7 @@ function v = circExpand(x,m)
 % Returns an array that is x padded with partial copies of itself out to a
 % distance m. 
 % Now works with arrays of arbitrary dimension.
-% Also, will create a version that produces only a matfile.
+% Also, will create a version that produces only indices for  matfile.
 
 s = size(x);
 d = numel(s);

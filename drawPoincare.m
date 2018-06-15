@@ -1,35 +1,43 @@
-function drawPoincare(crossings,t,s)
-% Draws the Poincare section using data returned by Crossings
-% Options: Traditional Poincare section, where we just follow one point
-% around.
-% Or, choose a timestep. Color all the points according to their origins.
-% So, create a npts-by-3 matrix. Rval is x-coordinate of origin, Bval is
-% y-coordinate. Show how it evolves. 
-% Let's just do this the slow way, where we plot each point.
+function x = drawPoincare(bfield, npts, x0)
+% x = drawPoincare(bfield, npts)
+% Draws a poincare section at the midpoint of the z-plane with (very
+% approximately) npts
+%
+% Idea: We should also fill in some points 
 
+s = size(bfield);
 if nargin < 3
-    x = crossings(1,:,:);
-    y = crossings(2,:,:);
-    s = [max(x(:)) max(y(:))];
+    x0 = s(1:3).*rand(1,3);
+end
+zCut = s(3)/2; % The plain at which to cut
+
+indx = cell(1,3);
+for i = 1:3
+    indx{i} = [1:s(i), 1];
 end
 
 
-x0 = crossings(:,1,:);
-xt = crossings(:,t,:); 
+bz = bfield(:,:,:,3);
+mbz = sum(bz(:)./abs(bz(:)))/sum(1./abs(bz(:))); % Average z-velocity
+% Weighted by how much time you spend in the region, which is approximately 
+% proportional to 1/abs(bz).
 
-rVal = 1/2 + sin(pi*x0(1,:)./s(1))'/2;
-gVal = 1/2 + sin(pi*x0(2,:)./s(2))'/2;
-bVal = .5*ones(size(rVal)); % Whatever looks best
-colors = [rVal gVal bVal];
 
-figure(1); clf; hold on;
-whitebg('black')
-for i = 1:size(xt,3)
-    plot(xt(1,1,i),xt(2,1,i),'o','Color',colors(i,:));
+bfield = bfield(indx{:},:);
+
+    function [value,isTerminal,direction] = isCross(~,y)
+        value = mod(y(3),s(3)) - zCut;
+        isTerminal = 0;
+        direction = 0;
+    end
+
+% Define governing functin:
+f = @(~,x) [interp3(bfield(:,:,:,1), mod(x(1),s(1))+1,mod(x(2),s(2))+1,mod(x(3),s(3))+1); ...
+            interp3(bfield(:,:,:,2), mod(x(1),s(1))+1,mod(x(2),s(2))+1,mod(x(3),s(3))+1); ...
+            interp3(bfield(:,:,:,3), mod(x(1),s(1))+1,mod(x(2),s(2))+1,mod(x(3),s(3))+1)];
+
+
+tmax = npts/s(3)/mbz; % Give it about as much time as we expect it to need
+options = odeset('Events',@isCross);
+[~,~,~,x,~] = ode45(f,[0 tmax],x0,options); % Runge-Kutta
 end
-end
-
-
-
-
-

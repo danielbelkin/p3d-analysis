@@ -17,7 +17,7 @@ B = sqrt(sum(bfield.^2,4));
 v = mean(B(:)); % Average velocity
 % bfield = bfield./B;
 % v = 1;
-tmax = 10*max(size(bfield))/v; 
+tmax = 1e3*max(size(bfield))/v; 
 
 bfield = bfield(indx{:},:); % Extend
 interpFun = @(x,b) interp3(b,...
@@ -40,7 +40,9 @@ x = cell(1,n);
 
 for i = 1:n
     [~,x{i}] = ode45(f,[0 tmax],x0,options);
-    x0 = [mod(x{i}(end,1),s(1)); mod(x{i}(end,2),s(2)); mod(x{i}(end,3),s(3))]; % startpoint for next cycle
+    x0 = x{i}(end,:);
+    x0(x0 == 0) = -eps(0); % To ensure proper modulation
+    x0 = [mod(x0(1),s(1)); mod(x0(2),s(2)); mod(x0(3),s(3))]; % startpoint for next cycle
 end
 
 disp('Plotting...')
@@ -53,8 +55,6 @@ for i = 1:n
     plot3(x{i}(end,1), x{i}(end,2), x{i}(end,3),'ro')
     plot3(x{i}(:,1), x{i}(:,2), x{i}(:,3),'-','Color',1-[i/n .5 1-i/n]);
 end
-
-% One idea: Plot a little square of wall at the entry and exit points.
 
 grid on
 xlabel('x'); ylabel('y'); zlabel('z')
