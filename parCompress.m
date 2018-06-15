@@ -1,4 +1,4 @@
-function y = parCompress(x,n,p)
+function y = parCompress(x,n,p,T)
 % Gonna write a parallel compression function
 % idea: Each processor compresses one chunk of the data.
 % Basically parconv, but returning only parts.
@@ -23,10 +23,14 @@ end
 s = size(x,'val');
 if nargin < 3
     % Let's say we split until it's 65536 values by default
-    p = max(0,log2(prod(s)) - 16);
+    p = max(0,log2(prod(s(1:3))) - 16);
     % TODO: Instead, use 
 %     c = parcluster;
 %     p = log2(c.NumWorkers);
+end
+
+if nargin < 4
+    T = s(4); % Number of timesteps to do
 end
 
 
@@ -38,15 +42,19 @@ h = kernel(-w:w);
 h = h.*reshape(h,1,[]).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
 
-sections = splitIndx(s,(size(h,1) - 1)/2, p); % Split the indices
-y = cell(size(sections));
-disp('Splitting data...')
-parfor i = 1:numel(sections)
-    v = convn(x.val(sections{i}{:}),h,'valid');
-    y{i} = single(v(1:n:end,1:n:end,1:n:end)); % And downsample
+sections = splitIndx(s(1:3),(size(h,1) - 1)/2, p); % Split the indices
+frames = cell(1,1,1,nt);
+for t=1:T % For each frame
+    sectResult = cell(size(sections));  % Holds the result from each section
+    disp('Splitting data...')
+    parfor i = 1:numel(sections)
+        v = convn(x.val(sections{i}{:},t),h,'valid');
+        sectResult{i} = single(v(1:n:end,1:n:end,1:n:end)); % And downsample
+    end
+    disp('Recombining data...')
+    frames{t} = cell2mat(sectResult); % Recombine results
 end
-disp('Recombining data...')
-y = cell2mat(y); % Recombine results
+y = cell2mat(frames); % And combine all frames to return.
 end
 
 
