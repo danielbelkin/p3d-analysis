@@ -30,28 +30,28 @@ f = @(~,x) [interpFun(x,bfield(:,:,:,1));...
 
 
     function [value,isTerminal,direction] = isCross(~,y)
-        value = prod(y).*prod(s(1:3) - y'); % Is negative as soon as we leave box
+        value = prod(y).*prod(s(1:3) - y'); % IS THIS RIGHT?
         isTerminal = 1;
         direction = 0;
     end
         
-options = odeset('Events',@isCross); % Set ODE options
+        
+        
+options = odeset('Events',@isCross);
 x = cell(1,n);
-
+figure(1); clf; hold on;
+plot3(x0(1),x0(2),x0(3),'go'); %TEMP
 for i = 1:n
     [~,x{i}] = ode45(f,[0 tmax],x0,options);
     x0 = [mod(x{i}(end,1),s(1)); mod(x{i}(end,2),s(2)); mod(x{i}(end,3),s(3))]; % startpoint for next cycle
-end
-
-disp('Plotting...')
-figure(1); clf; hold on;
-% plot3(x0(1),x0(2),x0(3),'go'); 
-for i = 1:n
     plot3(x{i}(:,1), x{i}(:,2), x{i}(:,3),'-','Color',[i/n .5 1-i/n]);
 end
-
 grid on
 whitebg('black')
 xlabel('x'); ylabel('y'); zlabel('z')
 xlim([0 s(1)]); ylim([0 s(2)]); zlim([0 s(3)])
+% Well, shit. We've got negative initial z values.
 end
+% Ok, so if B is 10x10x10, then x runs from 0 to 9, inclusive. That seems
+% wrong.
+% If B is 3x3x3, then x runs from 
