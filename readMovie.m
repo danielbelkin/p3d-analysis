@@ -24,14 +24,13 @@ function val = readMovie(num, varname,varargin)
 % 
 % To add:
 % Option to downsample or otherwise compress?
-% e.g. I might want to 
 % Option to grab only a few timesteps?
 %
 % Possible alternative approaches:
 % A Tall array?
 % Memory mapping on the original file - but this makes normalization kinda
 % hard
-% 
+
 %% Process inputs
 okargs = {'rdir','wdir', 'skip', 'save'};
 dflts = {'' '' 0 true};

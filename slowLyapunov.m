@@ -23,7 +23,7 @@ stdJ = avgJ;
 tic
 for i = 1:3
     for j = 1:3
-        Jij = cconv3(bfield(:,:,:,i),grad(:,:,:,j))/2; % WRONG, want gradB.
+        Jij = cconvn(bfield(:,:,:,i),grad(:,:,:,j))/2; % WRONG, want gradB.
         avgJ(i,j) = sum(Jij(:).*B(:))./netB; % The weighted average
         stdJ(i,j) = sqrt(sum(Jij(:).^2.*B(:))./netB - avgJ(i,j)^2);
         toc
