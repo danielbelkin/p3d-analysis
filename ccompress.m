@@ -7,13 +7,15 @@ function y = ccompress(x,N)
 % TODO: Conside making this parallelizeable.
 % TODO: Add more options for the kernel, etc
 
+% Argh. Size is wrong. 
+
 % Construct the kernel
 h = normpdf(-N:N,0,N/2);
-h = h.*reshape(h,1,[]).*reshape(h,1,1,[]); % Make it 3d;
+h = h.*reshape(h,[],1).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
 
 % Expand the data
-m = size(h,1);
+m = (size(h,1) - 1)/2;
 s = size(x);
 dim = numel(s);
 indx = cell(1,dim);
@@ -22,7 +24,7 @@ for d = 1:dim
 end
 
 x = convn(x(indx{:}),h,'valid');
-y = single(x(1:N:end,1:N:end,1:N:end)); % This way is faster.
+y = single(x(N/2:N:end,N/2:N:end,N/2:N:end)); % This way is faster.
 end
 
 
