@@ -24,6 +24,9 @@ s = size(x,'val');
 if nargin < 3
     % Let's say we split until it's 65536 values by default
     p = max(0,log2(prod(s)) - 16);
+    % TODO: Instead, use 
+%     c = parcluster;
+%     p = log2(c.NumWorkers);
 end
 
 
@@ -37,10 +40,12 @@ h = single(h); % Keep the precision low
 
 sections = splitIndx(s,(size(h,1) - 1)/2, p); % Split the indices
 y = cell(size(sections));
+disp('Splitting data...')
 parfor i = 1:numel(sections)
     v = convn(x.val(sections{i}{:}),h,'valid');
     y{i} = single(v(1:n:end,1:n:end,1:n:end)); % And downsample
 end
+disp('Recombining data...')
 y = cell2mat(y); % Recombine results
 end
 
