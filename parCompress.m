@@ -6,13 +6,14 @@ function y = parCompress(x,n,p,T)
 % Returned array is single-precision.
 %
 % TODO: Add more options for the kernel, etc
+% Add an option to specify the fieldname?
 
 %% Process inputs
 if ~isa(x,'matlab.io.MatFile')
     error('This function is inefficient with non-matfile inputs. Try ccompress')
 elseif ~any(strcmp(fieldnames(x),'val'))
     error('Matfile must have a fieldname val')
-    % TODO: Add an option to specify the fieldname?
+    % Add an option to specify the fieldname?
 end
 
 s = size(x,'val');
