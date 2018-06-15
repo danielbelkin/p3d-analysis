@@ -43,7 +43,7 @@ h = h.*reshape(h,1,[]).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
 
 sections = splitIndx(s(1:3),(size(h,1) - 1)/2, p); % Split the indices
-frames = cell(1,1,1,nt);
+frames = cell(1,1,1,T);
 for t=1:T % For each frame
     sectResult = cell(size(sections));  % Holds the result from each section
     disp('Splitting data...')
