@@ -1,4 +1,4 @@
-function y = ccompress(x,N)
+function y = ccompress(x,N,T)
 % Y = ccompress(X,N) takes a 3-dimensional array X and downsamples it by a
 % factor N along each dimension. 
 % Default kernel is Gaussian with standard deviation N/2 and width 2*N + 1
@@ -7,7 +7,10 @@ function y = ccompress(x,N)
 % TODO: Conside making this parallelizeable.
 % TODO: Add more options for the kernel, etc
 
-% Argh. Size is wrong. 
+if nargin < 3
+        T = 1:size(x,4);
+end
+    
 
 % Construct the kernel
 h = normpdf(-N:N,0,N/2);
@@ -23,8 +26,11 @@ for d = 1:dim
     indx{d} = [s(d)-m+1:s(d), 1:s(d), 1:m];
 end
 
-x = convn(x(indx{:}),h,'valid');
-y = single(x(N/2:N:end,N/2:N:end,N/2:N:end)); % This way is faster.
+y = zeros([ceil(s/N) numel(T)]);
+for t = T
+    x(:,:,:,t) = convn(x(indx{:},t),h,'valid');
+    y(:,:,:,t) = single(x(1:N:end,1:N:end,1:N:end)); % This way is faster.
+end
 end
 
 

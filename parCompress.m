@@ -26,7 +26,11 @@ if nargin < 3
 end
 
 if nargin < 4
-    T = 1:s(4); % Timesteps to do
+    if size(s) == 4
+        T = 1:s(4); % Timesteps to do
+    else
+        T = 1;
+    end
 end
 
 

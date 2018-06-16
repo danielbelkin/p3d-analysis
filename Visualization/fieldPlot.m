@@ -1,5 +1,5 @@
 function x = fieldPlot(bfield, n, x0)
-% x = fieldLine(bfield, n, x0)
+% x = fieldPlot(bfield, n, x0)
 % Tracks magnetic field line starting at x0 for n boundary-crossings.
 
 s = size(bfield);
@@ -14,7 +14,8 @@ for i = 1:3
 end
 
 B = sqrt(sum(bfield.^2,4));
-v = mean(B(:)); % Average velocity
+% v = mean(B(:)); % Average velocity
+v = 1/mean(1./abs(B(:))); % Average velocity
 % bfield = bfield./B;
 % v = 1;
 tmax = 1e3*max(size(bfield))/v; 

@@ -95,16 +95,7 @@ fclose(fid);
 % Ok, so 3rd argument gives # of bytes to skip. There are 2*nx*ny*nz bytes
 % in every frame. 
 % TODO: Can avoid reshape call. Probably worth doing. 
-% TODO: Columns are lined up incorrectly, I believe. Need to ask Marc about
-% the proper ordering. 
-% Guess: In x-y space, we fill up each y-value(row) from bottom to top,
-% then fill rows up the columns.
-% So if nx = 2048, ny = 1024, then we want to put 2048 values in,
-% then wrap around, then put 2048 values in... etx
-% So, a guess: Column
-%
-% Let's say we want nx = 5, ny = 4, nz = 3
-% So it seems like this is correct, just flipped.
+% Approach: Figure out nt first.
 
 
 toc
