@@ -4,7 +4,7 @@
 
 rdir = '/project/projectdirs/reconn/lorajm/mms3d';
 % wdir = '/global/u2/d/dbelkin/matlab/mms3d-matfiles';
-wdir = '/scratch2/scratchdirs/dbelkin/mms3d-matfiles';
+wdir = '/scratch2/scratchdirs/dbelkin/mms3d-compr';
 
 
 

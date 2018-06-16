@@ -11,7 +11,6 @@ if nargin < 3
         T = 1:size(x,4);
 end
     
-
 % Construct the kernel
 h = normpdf(-N:N,0,N/2);
 h = h.*reshape(h,[],1).*reshape(h,1,1,[]); % Make it 3d;
