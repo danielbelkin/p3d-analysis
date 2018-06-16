@@ -14,7 +14,7 @@ nums = {'004'};
 [indx1,indx2] = meshgrid(1:length(nums),1:length(names));
 
 t0 = tic;
-parfor i = 1:numel(indx1)
+for i = 1:numel(indx1)
     disp(['Starting worker ' num2str(i)]) % Temporary, here for debugging
     readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir,'skip',0,'compr',4);
 end
