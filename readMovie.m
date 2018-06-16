@@ -48,6 +48,8 @@ if ~ischar(varname)
     error('Input VARLIST must be a char array')
 end
 
+disp(['Preparing to read movie.' varname '.' num '...'])
+
 %% Locate the variables we need
 varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
     'ne'; 'jex';'jey'; 'jez'; 'pexx'; 'peyy'; 'pezz'; 'pexy'; 'peyz';
@@ -57,7 +59,7 @@ varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
 idx = find(strcmpi(varnames,varname)); % Index of where desired variable is located in the order
     
 if isempty(idx)
-    error('At least one variable name appears to be wrong')
+    error('Variable name appears to be wrong')
 end
 
 %% Find system size
@@ -77,11 +79,11 @@ nz = nvals(3);
 ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
 nt = size(ranges,4)/numel(varnames);
 nframes = ceil(nt/(skip + 1)); % Number of frames we'll actually read
-
+toc % Marks end of preparing-to-read
 
 %% Read integer data
 
-disp('Reading data...')
+disp('Getting data...')
 filename = [rdir 'movie.' varname '.' num];
 fid = fopen(filename);
 
