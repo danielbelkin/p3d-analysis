@@ -24,6 +24,7 @@ function val = readMovie(num, varname,varargin)
 % hard
 
 %% Process inputs
+tic % Start timing
 okargs = {'rdir','wdir', 'skip', 'save', 'compr'};
 dflts = {'' '' 0 true 1};
 
@@ -75,14 +76,12 @@ nz = nvals(3);
 
 ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
 nt = size(ranges,4)/numel(varnames);
-nframes = ceil(nt/skip);
+nframes = ceil(nt/(skip + 1)); % Number of frames we'll actually read
 
 
 %% Read integer data
 
 disp('Reading data...')
-tic
-
 filename = [rdir 'movie.' varname '.' num];
 fid = fopen(filename);
 
@@ -90,11 +89,12 @@ if fid == -1
     error(['Failed to open ' filename]);
 end
 
-
 val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate
-% We could make val a matfile here.
+% We could make val a matfile here. Likely slower, but necessary if we're
+% not going to compress.
+data = zeros(nx,ny,nz); % If this exceeds maximum array size limit, then you're screwed.
 for i = 1:nframes
-    data = fread(fid,[nx ny nz],[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
+    data(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
     if compr > 1
         val(:,:,:,i) = ccompress(data,compr);
     else
@@ -108,19 +108,14 @@ end
 %      nx,ny,nz,[]);
 
 fclose(fid);
-
-% Ok, so 3rd argument gives # of bytes to skip. There are 2*nx*ny*nz bytes
-% in every frame. 
-% TODO: Can avoid reshape call. Probably worth doing. 
-% Approach: Figure out nt first.
-% OR: Read frame-by-frame. Compress each frame. 
-
-
 toc
+
+
+
+
 
 %% Normalize
 disp('Normalizing data...')
-tic
 
 r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
 A = -diff(r,1,5)*2^-16; % Scale to maximum
@@ -136,12 +131,12 @@ toc
 
 %% Save the files
 if saveq
-    tic
+    disp('Saving data...')
     info = cell2struct(varargin(2:2:end),varargin(1:2:end),2);
     save([wdir varname '.' num '.mat'],'val','info','-v7.3')
-    toc
 end
 
 disp(['Done reading ' filename])
+toc
 end
 
