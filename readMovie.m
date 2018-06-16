@@ -62,6 +62,9 @@ if isempty(idx)
     error('Variable name appears to be wrong')
 end
 
+% Compile information about how the data was processed:
+info = cell2struct(varargin(2:2:end),varargin(1:2:end),2);
+
 %% Find system size
 filename = [rdir 'p3d.stdout.' num];
 fid = fopen(filename);
@@ -79,11 +82,18 @@ nz = nvals(3);
 ranges = single(reshape(dlmread([rdir 'movie.log.' num]),1,1,1,[],2)); % Single-precision determined here 
 nt = size(ranges,4)/numel(varnames);
 nframes = ceil(nt/(skip + 1)); % Number of frames we'll actually read
+
+% Prepare normalization coefficients:
+r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
+A = -diff(r,1,5)*2^-16; % Scale to maximum
+B = r(:,:,:,:,1); % Add in minimum
+
+
 toc % Marks end of preparing-to-read
 
 %% Read integer data
 
-disp('Getting data...')
+
 filename = [rdir 'movie.' varname '.' num];
 fid = fopen(filename);
 
@@ -91,16 +101,21 @@ if fid == -1
     error(['Failed to open ' filename]);
 end
 
-val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate
-% We could make val a matfile here. Likely slower, but necessary if we're
-% not going to compress.
+% val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate
+
+% Matfile version:
+m = matfile([wdir varname '.' num '.mat']);
+m.info = info;
+m.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate
 data = zeros(nx,ny,nz); % If this exceeds maximum array size limit, then you're screwed.
 for i = 1:nframes
+    disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
     data(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
     if compr > 1
-        val(:,:,:,i) = ccompress(data,compr);
+        disp('Compressing...')
+        m.val(:,:,:,i) = A(i)*ccompress(data,compr) + B(i);
     else
-        val(:,:,:,i) = data;
+        m.val(:,:,:,i) = A(i)*data + B(i);
     end
 end
 
@@ -117,13 +132,13 @@ toc
 
 
 %% Normalize
-disp('Normalizing data...')
-
-r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
-A = -diff(r,1,5)*2^-16; % Scale to maximum
-B = r(:,:,:,:,1); % Add in minimum
-val = A.*val + B;
-toc
+% disp('Normalizing data...')
+% 
+% r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
+% A = -diff(r,1,5)*2^-16; % Scale to maximum
+% B = r(:,:,:,:,1); % Add in minimum
+% m.val = A.*m.val + B; % This step won't work.
+% toc
 
 % I strongly suspect that the memory error occurs when we convert from
 % integer to float. 
@@ -132,11 +147,11 @@ toc
 
 
 %% Save the files
-if saveq
-    disp('Saving data...')
-    info = cell2struct(varargin(2:2:end),varargin(1:2:end),2);
-    save([wdir varname '.' num '.mat'],'val','info','-v7.3')
-end
+% if saveq
+%     disp('Saving data...')
+%     info = cell2struct(varargin(2:2:end),varargin(1:2:end),2);
+%     save([wdir varname '.' num '.mat'],'val','info','-v7.3')
+% end
 
 disp(['Done reading ' filename])
 toc
