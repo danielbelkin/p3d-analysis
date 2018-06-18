@@ -10,8 +10,7 @@ function y = parCompress(file,n,p,T)
 % actually be used.
 %
 % TODO: 
-% Change how trailing indices are handled - switch the order of the for
-% loops. Make it match ccompress.
+% Change how trailing indices are handled - make it match ccompress.
 % Use getSection, getTemplate to reduce need for broadcast variables
 % Add more options for the kernel, etc
 % Add smart decision-making about how many processors to use
@@ -36,6 +35,8 @@ end
 
 if nargin < 4
     T = 1:prod(s(4:end)); % Timesteps to do
+else
+    % TODO: Something here.
 end
 
 
@@ -70,15 +71,22 @@ frames = cell(1,1,1,numel(T));
 disp('Splitting data...')
 m = (size(h,1) - 1)/2; % Amount that we need to overlap by
 template = getTemplate(s(1:3),p); % Split the indices
+t0 = tic; % Set timer
 parfor i = 1:p % For each processor
-    data = getSection;
-    v = convn(data,h,'valid');
-    template{i} = single(v(1:n:end,1:n:end,1:n:end)); % And downsample
+    data = getSection(i,file,m,p,':');
+    v = zeros([ceil(s(1:3)/n), numel(T)]);
+    for t=1:T % For each frame
+        v(:,:,:,t) = convn(data(:,:,:,t),h,'valid');
+        disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) 'complete.'])
+        toc(t0)
+    end
+    template{i} = single(v(1:n:end,1:n:end,1:n:end,:)); % Downsample by throwing away most of the data.
+    % This seems very inefficient, but convn is a very fast compiled C
+    % function. I think the only way to get faster is to write my own C
+    % function and compile it 
 end
-frames{t} = cell2mat(sectResult); % Combine sections to form a frame
-disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) 'complete.'])
 
-y = cell2mat(frames); % And combine all frames to form a movie.
+y = cell2mat(template); % And combine all frames to form a movie.
 end
 
 
