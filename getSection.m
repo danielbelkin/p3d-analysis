@@ -60,8 +60,7 @@ for i = 1:nchunks(1)
                 vects{2}{j}
                 vects{3}{k}
                 varargin{:}
-                file.val(vects{1}{i},vects{2}{j},vects{3}{k},varargin{:})
-                data{i,j,k} = ones(3);
+                file.val(64,64,64,varargin{:})
                 error('hmm')
             end
         end
