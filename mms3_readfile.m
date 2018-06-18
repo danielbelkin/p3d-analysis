@@ -16,6 +16,6 @@ nums = {'004'};
 t0 = tic;
 for i = 1:numel(indx1)
     disp(['Starting worker ' num2str(i)]) % Temporary, here for debugging
-    readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir,'skip',0,'compr',4);
+    readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir,'skip',100,'compr',1);
 end
 toc(t0)

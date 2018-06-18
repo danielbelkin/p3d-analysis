@@ -1,14 +1,24 @@
-function y = ccompress(x,N,T)
+function y = ccompress(x,N,varargin)
 % Y = ccompress(X,N) takes a 3-dimensional array X and downsamples it by a
 % factor N along each dimension. 
-% Default kernel is Gaussian with standard deviation N/2 and width 2*N + 1
-% Returned array is single-precision.
+% If X has more than 3 dimensions, this happens only along the first three
+% dimensions.
+% The default kernel is Gaussian with standard deviation N/2 and width 
+% 2*N + 1 
+% The array returned is single-precision.
+% Y = ccompress(X,N,I1...In) compresses an n-dimensional array along
+% indices given by I1...In. For this function, I1...In must be vectors of
+% indices, all of equal length. Be careful about how you use this feature.
 %
-% TODO: Conside making this parallelizeable.
+% For very large datasets, use parCompress.
+%
 % TODO: Add more options for the kernel, etc
-
+% TODO: Change the way trailing indices are handled
+s = size(x);
 if nargin < 3
-        T = 1:size(x,4);
+    T = 1:prod(s(4:end));
+else
+    T = sub2ind(s(4:end),varargin{:}); % Use linear indexing over the last few dimensions    
 end
     
 % Construct the kernel
@@ -18,7 +28,6 @@ h = single(h); % Keep the precision low
 
 % Expand the data
 m = (size(h,1) - 1)/2;
-s = size(x);
 dim = numel(s);
 indx = cell(1,dim);
 for d = 1:dim

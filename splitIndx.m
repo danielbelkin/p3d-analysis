@@ -1,15 +1,17 @@
-function sections = splitIndx(s,m,n)
-% SECTIONS = parCircExpand(S,M,N)
-% is used to break an array of size S into 2^N chunks, each overlapping by
+function sections = splitIndx(s,m,p)
+% SECTIONS = parCircExpand(S,M,P)
+% is used to break an array of size S into P chunks, each overlapping by
 % M elements on every edge. 
-% SECTIONS is a cell array. SECTIONS{P}{D} is the cell array of indices for
-% processor P along dimension D. To access chunk P of a field named .val
-% on a matfile M, use mfileIndx(M,SECTIONS{P})
+% P should be a power of two. If it is not, only 2^floor(log2(p)) sections
+% will be returned. 
 % 
-% Note: If we ever want to break non-matfiles into chuncks for some reason,
-% a more elegant approach is to change the line defineing indx to
-% indx = [s(d)-m+1:s(d), 1:s(d), 1:m]; 
-% Then processor P can access its chunk of X with X(SECTIONS{P}{:}). 
+% SECTIONS is a cell array. SECTIONS{I}{D} is the cell array of indices for
+% processor I along dimension D. To access chunk I of a field named .val
+% on a matfile M, use mfileIndx(M,SECTIONS{I})
+% 
+% TODO: Write a function combining splitIndx and mfileIndx
+
+n = 2^floor(log2(p)); % Use only
 
 if n ~= 0 && any(mod(log2(s),1))
     error('Unlikely to work')
@@ -40,7 +42,7 @@ for d = 1:dim % For each dimension
 end
 
 % ...and flip inside out back to right-side-out.
-sections = cell(split); % No, we want this to be meaningful.
+sections = cell(split); % Shape of sections is meaningful.
 for l = 1:numel(sections)
     sections{l} = cell(1,d);
     for d = 1:dim
