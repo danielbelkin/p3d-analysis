@@ -25,6 +25,14 @@ tic % Start timing
 okargs = {'rdir','wdir', 'skip', 'compr'};
 dflts = {'' '' 0 1};
 
+pp = gcp('nocreate');
+if isempty(pp)
+    procs = 1; % Number of available processors
+else
+    procs = pp.NumWorkers;
+end
+
+
 [rdir, wdir, skip, compr] = internal.stats.parseArgs(okargs,dflts,varargin{:});
 
 if ~isempty(wdir) && ~strcmp(wdir(end),'/')
@@ -100,20 +108,17 @@ end
 file = matfile([wdir name '.' num '.mat'],'Writable',true);
 file.info = info;
 file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
-% data = matfile('temp.mat','Writable',true);
-% data.val = zeros(nx,ny,nz); % If this exceeds maximum array size limit, then you're screwed.
-data = zeros(nx,ny,nz);
+data = matfile([wdir 'temp.mat'],'Writable',true);
+data.val = zeros(nx,ny,nz); % If this exceeds maximum array size limit, then you're screwed.
+% data = zeros(nx,ny,nz);
 for i = 1:nframes
     disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
-    data(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
-    % data.val(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
+    % data(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
+    data.val(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
     if compr > 1
         disp('Compressing...')
-        file.val(:,:,:,i) = A(i)*ccompress(data,compr) + B(i); 
-        % TODO: Consider parallelizing compression.
-        % file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
-        % Need to figure out what procs is.
-        % Need data to be a matfile
+        % file.val(:,:,:,i) = A(i)*ccompress(data,compr) + B(i); 
+        file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
     else
         file.val(:,:,:,i) = A(i)*data + B(i);
     end

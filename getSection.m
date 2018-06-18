@@ -47,7 +47,6 @@ for i = 1:nchunks(1)
     for j = 1:nchunks(2)
         for k = 1:nchunks(3)
             data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},T{:});
-            % PROBLEM: Can't make varargin be ':'
         end
     end
 end
