@@ -12,7 +12,6 @@ function data = getSection(k,file,m,p,varargin)
 
 %% Process inputs
 s = size(file,'val'); % Size of the data file
-dim = numel(s); % Dimension of data file
 n = 2^floor(log2(p)); % 
 
 if n ~= 0 && any(mod(log2(s),1))
@@ -29,22 +28,22 @@ for i = 1:n
 end
 
 %% Find the relevant data
-subs = cell(1,dim); % Subscript indices
+subs = cell(1,3); % Subscript indices
 [subs{:}] = ind2sub(s(1:3),k);
 
-section = cell(1,dim);
-for d = 1:dim
+section = cell(1,3);
+for d = 1:3
     indx = [s(d)-m+1:s(d), 1:s(d), 1:m];
     section{d} = indx(1+s(d)/split(d)*(subs{d}-1):s(d)/split(d)*subs{d} + 2*m);
 end
 
 %% Pull the data from the file
-vects = cell(1,dim); % Holds indices broken by segment.
-for d = 1:dim
+vects = cell(1,3); % Holds indices broken by segment.
+for d = 1:3
     breaks = [0 find(diff(section{d}) < 0) length(section{d})]; % Jumps in data
     vects{d} = cell(1,numel(breaks)-1); % Pre-allocate
     for i = 1:numel(breaks)-1
-        vects{d}{j} = section{d}(1+breaks(i):breaks(i+1)); % Section between the jumps
+        vects{d}{i} = section{d}(1+breaks(i):breaks(i+1)); % Section between the jumps
     end
 end
 
