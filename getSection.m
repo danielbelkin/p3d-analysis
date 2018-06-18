@@ -12,13 +12,7 @@ function data = getSection(k,file,m,p,varargin)
 
 %% Process inputs
 s = size(file,'val'); % Size of the data file
-n = floor(log2(p)); % 
-
-if n ~= 0 && any(mod(log2(s),1))
-    error('Unlikely to work')
-elseif 2^n > prod(s)
-    error(['Cannot split ' num2str(prod(s)) ' elements into ' num2str(2^n) ' boxes.'])
-end
+split = getSplits(s(1:3),p);
 
 if isempty(varargin)
     T = {1:prod(s(4:end))};
@@ -27,16 +21,9 @@ else
 end
     
 
-%% Decide how many times to split along each axis
-split = ones(size(s));
-for i = 1:n
-    [~,j] = max(s./split);
-    split(j) = split(j).*2;
-end
-
 %% Find the relevant data
-subs = cell(1,3); % Subscript indices
-[subs{:}] = ind2sub(s(1:3),k);
+subs = cell(1,3); 
+[subs{:}] = ind2sub(split,k); % Find subscript indices from the linear index k.
 
 section = cell(1,3);
 for d = 1:3

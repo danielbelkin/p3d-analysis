@@ -72,9 +72,8 @@ m = (size(h,1) - 1)/2; % Amount that we need to overlap by
 splits = getSplits(s(1:3),p); % Figure out how to split indices
 template = cell(splits);
 t0 = tic; % Set timer
-for i = 1:p % For each processor (TODO: Make it parFor)
+parfor i = 1:p % For each processor
     data = getSection(i,file,m,p); % Could instead get all available.
-    % Problem: DATA is too small for some reason.
     v = zeros([ceil(s(1:3)./splits), numel(T)]);
     for t=T % For each frame
         out = convn(data(:,:,:,t),h,'valid');
