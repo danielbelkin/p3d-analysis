@@ -81,8 +81,8 @@ nt = size(ranges,4)/numel(varnames);
 nframes = ceil(nt/(skip + 1)); % Number of frames we'll actually read
 
 % Prepare normalization coefficients:
-r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
-A = diff(r,1,5)*2^-16; % Scale to maximum - sign is wrong.  
+r = ranges(:,:,:,idx + (0:nframes - 1)*length(varnames),:); % min-max data for the current variable
+A = diff(r,1,5)*2^-16; % Scale to maximum
 B = r(:,:,:,:,1); % Add in minimum
 
 
