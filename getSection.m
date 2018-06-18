@@ -59,6 +59,8 @@ for i = 1:nchunks(1)
                 vects{1}{i}
                 vects{2}{j}
                 vects{3}{k}
+                varargin{:}
+                data{i,j,k}
                 error('hmm')
             end
         end
