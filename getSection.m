@@ -20,6 +20,13 @@ elseif 2^n > prod(s)
     error(['Cannot split ' num2str(prod(s)) ' elements into ' num2str(2^n) ' boxes.'])
 end
 
+if isempty(varargin)
+    T = {1:prod(s(4:end))};
+else
+    T = varargin;
+end
+    
+
 %% Decide how many times to split along each axis
 split = ones(size(s));
 for i = 1:n
@@ -52,17 +59,8 @@ data = cell(nchunks);
 for i = 1:nchunks(1)
     for j = 1:nchunks(2)
         for k = 1:nchunks(3)
-            try
-                data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},varargin{:});
-            catch
-                size(file,'val')
-                vects{1}{i}
-                vects{2}{j}
-                vects{3}{k}
-                varargin{:}
-                file.val(64,64,64,varargin{:})
-                error('hmm')
-            end
+            data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},T{:});
+            % PROBLEM: Can't make varargin be ':'
         end
     end
 end

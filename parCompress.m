@@ -73,9 +73,9 @@ m = (size(h,1) - 1)/2; % Amount that we need to overlap by
 template = getTemplate(s(1:3),p); % Split the indices
 t0 = tic; % Set timer
 parfor i = 1:p % For each processor
-    data = getSection(i,file,m,p,':');
+    data = getSection(i,file,m,p); % Could instead get all available.
     v = zeros([ceil(s(1:3)/n), numel(T)]);
-    for t=1:T % For each frame
+    for t=T % For each frame
         v(:,:,:,t) = convn(data(:,:,:,t),h,'valid');
         disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) 'complete.'])
         toc(t0)
