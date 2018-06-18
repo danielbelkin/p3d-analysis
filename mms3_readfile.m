@@ -8,7 +8,7 @@ wdir = '/scratch2/scratchdirs/dbelkin/mms3d-compr';
 
 
 
-names = {'bx' 'by' 'bz'};
+names = {'bx'};
 nums = {'004'};
 
 [indx1,indx2] = meshgrid(1:length(nums),1:length(names));
@@ -20,5 +20,6 @@ end
 t0 = tic;
 for i = 1:numel(indx1)
     readMovie(nums{indx1(i)},names{indx2(i)},'rdir',rdir,'wdir',wdir,'skip',0,'compr',4);
+    endSound;
 end
 toc(t0)

@@ -8,12 +8,17 @@ function y = parCompress(file,n,p,T)
 %
 % If P is not a power of two, then only 2^floor(log2(P)) processors will
 % actually be used.
+% With 16 processors and a 2048x1024x512 dataset, this takes about a minute
+% to run.
 %
 % TODO: 
 % Change how trailing indices are handled - matfiles can't do it the way
-% I'd like to. 
+% I'd like to. Consider requiring that we always compress frame-by-frame.
+% For any dataset large enough to require parallelization, it's probably
+% more efficient.
 % Add more options for the kernel, etc
 % Add smart decision-making about how many processors to use
+%
 
 %% Process inputs
 if ~isa(file,'matlab.io.MatFile')
@@ -68,14 +73,12 @@ disp('Splitting data...')
 m = (size(h,1) - 1)/2; % Amount that we need chunks to overlap by
 splits = getSplits(s(1:3),p); % Figure out how to split indices
 template = cell(splits);
-t0 = tic; % Set timer
 parfor i = 1:p % For each processor 
     data = getSection(i,file,m,p); % Could instead get all available.
     v = zeros([ceil(s(1:3)./splits), numel(T)]);
-    for t=T % For each frame
+    for t = T % For each frame
         v(:,:,:,t) = convn(data(:,:,:,t),h,'valid');
-        disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) 'complete.'])
-        toc(t0)
+        % disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) ' complete.'])
     end
     template{i} = single(v(1:n:end,1:n:end,1:n:end,:)); % Downsample by throwing away most of the data.
     % This seems very inefficient, but convn is a very fast compiled C
