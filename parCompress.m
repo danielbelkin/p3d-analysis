@@ -42,7 +42,11 @@ end
 
 
 if nargin < 4
-    T = 1:s(4); % Timesteps to do
+    if numel(s) > 3
+        T = 1:s(4); % Timesteps to do
+    else
+        T = 1;
+    end
 else
     % TODO: Something here.
 end
