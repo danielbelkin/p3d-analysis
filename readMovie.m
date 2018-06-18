@@ -110,6 +110,7 @@ file.info = info;
 file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
 randname = char(randi([97,122],1,10));
 data = matfile([wdir randname],'Writable',true);
+data.val = zeros(nx,ny,nz); % Not sure if this is a good idea or not
 toc % Marks end of preparing-to-read
 if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is terrible.
     for i = 1:nframes
