@@ -116,6 +116,9 @@ for i = 1:nframes
         disp('Compressing...')
         file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
     else
+        size(file,'val')
+        i
+        file.val(1,1,1,1,1,1,1)
         file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
     end
     toc
