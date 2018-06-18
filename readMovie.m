@@ -82,15 +82,13 @@ nframes = ceil(nt/(skip + 1)); % Number of frames we'll actually read
 
 % Prepare normalization coefficients:
 r = ranges(:,:,:,idx + (0:nt-1)*length(varnames)*(skip + 1),:); % min-max data for the current variable
-A = -diff(r,1,5)*2^-16; % Scale to maximum
+A = diff(r,1,5)*2^-16; % Scale to maximum - sign is wrong.  
 B = r(:,:,:,:,1); % Add in minimum
 
 
 toc % Marks end of preparing-to-read
 
-%% Read integer data
-
-
+%% Read and save data
 filename = [rdir 'movie.' name '.' num];
 fid = fopen(filename);
 
@@ -99,18 +97,22 @@ if fid == -1
 end
 
 % Matfile version:
-m = matfile([wdir name '.' num '.mat'],'Writable',true);
-m.info = info;
-m.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
-data = zeros(nx,ny,nz); % If this exceeds maximum array size limit, then you're screwed.
+file = matfile([wdir name '.' num '.mat'],'Writable',true);
+file.info = info;
+file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
+data = matfile('temp.mat','Writable',true);
+data.val = zeros(nx,ny,nz); % If this exceeds maximum array size limit, then you're screwed.
 for i = 1:nframes
     disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
-    data(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
+    data.val(:) = fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip);
     if compr > 1
         disp('Compressing...')
-        m.val(:,:,:,i) = A(i)*ccompress(data,compr) + B(i); 
+        file.val(:,:,:,i) = A(i)*ccompress(data,compr) + B(i); 
+        % TODO: Consider parallelizing compression.
+        % file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
+        % Need to figure out what procs is.
     else
-        m.val(:,:,:,i) = A(i)*data + B(i);
+        file.val(:,:,:,i) = A(i)*data + B(i);
     end
     toc
 end
