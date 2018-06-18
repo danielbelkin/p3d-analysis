@@ -25,13 +25,6 @@ tic % Start timing
 okargs = {'rdir','wdir', 'skip', 'compr'};
 dflts = {'' '' 0 1};
 
-pp = gcp('nocreate');
-if isempty(pp)
-    procs = 1; % Number of available processors
-else
-    procs = pp.NumWorkers;
-end
-
 
 [rdir, wdir, skip, compr] = internal.stats.parseArgs(okargs,dflts,varargin{:});
 
@@ -51,6 +44,15 @@ end
 
 if ~ischar(name)
     error('Input NAME must be a char array')
+end
+
+if compr > 1
+    pp = gcp('nocreate');
+    if isempty(pp)
+        procs = 1; % Number of available processors
+    else
+        procs = pp.NumWorkers;
+    end
 end
 
 disp(['Preparing to read movie.' name '.' num '...'])
@@ -108,21 +110,30 @@ file.info = info;
 file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
 data = matfile([wdir 'temp.mat'],'Writable',true);
 toc % Marks end of preparing-to-read
-for i = 1:nframes
-    disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
+if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is terrible.
+    for i = 1:nframes
+        disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
+        if compr > 1
+            data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz);
+            disp('Compressing...')
+            file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
+        else % If we don't need to compress
+            file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
+        end
+        toc
+    end
+else % If we're only reading one frame
+    disp('Getting data for frame 1 of 1')
     if compr > 1
         data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz);
         disp('Compressing...')
-        file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
-    else
-        size(file,'val')
-        i
-        file.val(:,:,:,i);
-        i
-        file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
+        file.val(:,:,:) = A*parCompress(data,compr,procs) + B;
+    else % If we don't need to compress
+        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
     end
-    toc
+    
 end
+
 
 fclose(fid);
 % data.val = [];
