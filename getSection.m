@@ -52,7 +52,15 @@ data = cell(nchunks);
 for i = 1:nchunks(1)
     for j = 1:nchunks(2)
         for k = 1:nchunks(3)
-            data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},varargin{:});
+            try
+                data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},varargin{:});
+            catch
+                size(file,'val')
+                vects{1}{i}
+                vects{2}{j}
+                vects{3}{k}
+                error('hmm')
+            end
         end
     end
 end
