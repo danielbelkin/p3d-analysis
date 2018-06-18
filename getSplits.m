@@ -1,7 +1,8 @@
-function template = getTemplate(s,p)
+function split = getSplits(s,p)
 % Size is S, P processors available
+% Split each dimension 
 
-n = 2^floor(log2(p)); 
+n = floor(log2(p)); 
 if n ~= 0 && any(mod(log2(s),1))
     error('Unlikely to work')
 elseif 2^n > prod(s)
@@ -9,11 +10,9 @@ elseif 2^n > prod(s)
 end
 
 
-
 split = ones(size(s));
 for i = 1:n
     [~,j] = max(s./split);
     split(j) = split(j).*2;
 end
-template = cell(split);
 end

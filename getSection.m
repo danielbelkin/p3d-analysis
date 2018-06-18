@@ -12,7 +12,7 @@ function data = getSection(k,file,m,p,varargin)
 
 %% Process inputs
 s = size(file,'val'); % Size of the data file
-n = 2^floor(log2(p)); % 
+n = floor(log2(p)); % 
 
 if n ~= 0 && any(mod(log2(s),1))
     error('Unlikely to work')

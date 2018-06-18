@@ -67,16 +67,19 @@ h = h./sum(h(:)); % Renormalize
 % y = cell2mat(frames); % And combine all frames to form a movie.
 
 %% Let's change this around:
-frames = cell(1,1,1,numel(T));
 disp('Splitting data...')
 m = (size(h,1) - 1)/2; % Amount that we need to overlap by
-template = getTemplate(s(1:3),p); % Split the indices
+splits = getSplits(s(1:3),p); % Figure out how to split indices
+template = cell(splits);
 t0 = tic; % Set timer
-parfor i = 1:p % For each processor
+for i = 1:p % For each processor (TODO: Make it parFor)
     data = getSection(i,file,m,p); % Could instead get all available.
-    v = zeros([ceil(s(1:3)/n), numel(T)]);
+    % Problem: DATA is too small for some reason.
+    v = zeros([ceil(s(1:3)./splits), numel(T)]);
     for t=T % For each frame
-        v(:,:,:,t) = convn(data(:,:,:,t),h,'valid');
+        out = convn(data(:,:,:,t),h,'valid');
+         v(:,:,:,t) = out;
+         % The convn should return something of size s(1:3)./splits, right?
         disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) 'complete.'])
         toc(t0)
     end
