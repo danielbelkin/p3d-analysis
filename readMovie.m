@@ -94,8 +94,6 @@ A = diff(r,1,5)*2^-16; % Scale to maximum
 B = r(:,:,:,:,1); % Add in minimum
 
 
-toc % Marks end of preparing-to-read
-
 %% Read and save data
 filename = [rdir 'movie.' name '.' num];
 fid = fopen(filename);
@@ -104,11 +102,12 @@ if fid == -1
     error(['Failed to open ' filename]);
 end
 
-% Matfile version:
+% Initialize files
 file = matfile([wdir name '.' num '.mat'],'Writable',true);
 file.info = info;
 file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
 data = matfile([wdir 'temp.mat'],'Writable',true);
+toc % Marks end of preparing-to-read
 for i = 1:nframes
     disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
     if compr > 1
@@ -118,7 +117,8 @@ for i = 1:nframes
     else
         size(file,'val')
         i
-        file.val(1,1,1,1,1,1,1)
+        file.val(:,:,:,i);
+        i
         file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
     end
     toc
