@@ -10,8 +10,8 @@ function y = parCompress(file,n,p,T)
 % actually be used.
 %
 % TODO: 
-% Change how trailing indices are handled - make it match ccompress.
-% Use getSection, getTemplate to reduce need for broadcast variables
+% Change how trailing indices are handled - matfiles can't do it the way
+% I'd like to. 
 % Add more options for the kernel, etc
 % Add smart decision-making about how many processors to use
 
@@ -26,15 +26,23 @@ end
 s = size(file,'val');
 if nargin < 3
     % Let's say we split until it's 65536 values by default:
-    p = 2^max(0,log2(prod(s(1:3))) - 16);
+    % p = 2^max(0,log2(prod(s(1:3))) - 16);
     % TODO: Instead, use gcp or parcluster to find out how many workers are
     % available. 
+    pp = parcluster;
+    procs = pp.NumWorkers;
+    p = 2^floor(log2(procs));
 else
     p = 2^floor(log2(p)); % We only use a power-of-two number of processors
 end
 
+if isempty(gcp('nocreate'))
+    parpool('local',p) % Start a parallel pool
+end
+
+
 if nargin < 4
-    T = 1:prod(s(4:end)); % Timesteps to do
+    T = 1:s(4); % Timesteps to do
 else
     % TODO: Something here.
 end
@@ -50,25 +58,10 @@ h = single(h); % Keep the precision low
 h = h./sum(h(:)); % Renormalize
 % Consider making this a function instead of a broadcast variable?
 
-%% Convolve
-% frames = cell(1,1,1,numel(T));
-% disp('Splitting data...')
-% sections = splitIndx(s(1:3),(size(h,1) - 1)/2, p); % Split the indices
-% for t = T % For each frame requested
-%     sectResult = cell(size(sections));  % Holds the result from each section
-%     parfor i = 1:p
-%         data = mfileIndx(x,sections{i},t);
-%         v = convn(data,h,'valid');
-%         sectResult{i} = single(v(1:n:end,1:n:end,1:n:end)); % And downsample
-%     end
-%     frames{t} = cell2mat(sectResult); % Combine sections to form a frame
-%     disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) 'complete.'])
-% end
-% y = cell2mat(frames); % And combine all frames to form a movie.
 
-%% Let's change this around:
+%% Convolve
 disp('Splitting data...')
-m = (size(h,1) - 1)/2; % Amount that we need to overlap by
+m = (size(h,1) - 1)/2; % Amount that we need chunks to overlap by
 splits = getSplits(s(1:3),p); % Figure out how to split indices
 template = cell(splits);
 t0 = tic; % Set timer
@@ -76,16 +69,14 @@ parfor i = 1:p % For each processor
     data = getSection(i,file,m,p); % Could instead get all available.
     v = zeros([ceil(s(1:3)./splits), numel(T)]);
     for t=T % For each frame
-        out = convn(data(:,:,:,t),h,'valid');
-         v(:,:,:,t) = out;
-         % The convn should return something of size s(1:3)./splits, right?
+        v(:,:,:,t) = convn(data(:,:,:,t),h,'valid');
         disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) 'complete.'])
         toc(t0)
     end
     template{i} = single(v(1:n:end,1:n:end,1:n:end,:)); % Downsample by throwing away most of the data.
     % This seems very inefficient, but convn is a very fast compiled C
     % function. I think the only way to get faster is to write my own C
-    % function and compile it 
+    % function and compile it. 
 end
 
 y = cell2mat(template); % And combine all frames to form a movie.

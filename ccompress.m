@@ -9,11 +9,13 @@ function y = ccompress(x,N,varargin)
 % Y = ccompress(X,N,I1...In) compresses an n-dimensional array along
 % indices given by I1...In. For this function, I1...In must be vectors of
 % indices, all of equal length. Be careful about how you use this feature.
+% In
 %
 % For very large datasets, use parCompress.
 %
 % TODO: Add more options for the kernel, etc
-% TODO: Change the way trailing indices are handled
+% TODO: Change the way trailing indices are handled. Make it match
+% parCompress, so that they're treated only linearly. 
 s = size(x);
 if nargin < 3
     T = 1:prod(s(4:end));
