@@ -108,7 +108,8 @@ end
 file = matfile([wdir name '.' num '.mat'],'Writable',true);
 file.info = info;
 file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
-data = matfile([wdir 'temp.mat'],'Writable',true);
+randname = char(randi([97,122],1,10));
+data = matfile([wdir randname],'Writable',true);
 toc % Marks end of preparing-to-read
 if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is terrible.
     for i = 1:nframes
@@ -136,7 +137,7 @@ end
 
 
 fclose(fid);
-% data.val = [];
+data.val = [];
 % TODO: Figure out a way to delete temp.mat
 disp(['Done reading ' filename])
 toc

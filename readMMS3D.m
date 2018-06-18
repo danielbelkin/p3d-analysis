@@ -9,7 +9,7 @@ if isempty(gcp('nocreate'))
 end
 
 t0 = tic;
-readMovie(name,num,'rdir',rdir,'wdir',wdir,'skip',0,'compr',4);
+readMovie(num,name,'rdir',rdir,'wdir',wdir,'skip',0,'compr',4);
 endSound;
 toc(t0)
 end
