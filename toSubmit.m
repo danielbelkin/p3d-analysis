@@ -13,6 +13,14 @@ my = load('by.004.mat');
 mz = load('bz.004.mat');
 
 t = 1; % Can be 1:10
-bfield = cat(4,mx.val(:,:,:,t),my.val(:,:,:,t),mz.val(:,:,:,t)); % Should we save this variable?
+%bfield = cat(4,mx.val(:,:,:,t),my.val(:,:,:,t),mz.val(:,:,:,t)); % Should we save this variable?
+pp = parpool('local',16);
 
-for i 
+names = {'bx by bz'};
+val = zeros(512,256,128,3,10);
+for i=1:3
+   m = matfile([names{i} '.004.mat']);
+   val(:,:,:,i,:) = parCompress(m,2,16,1:10);
+end
+save('/global/u2/d/dbelkin/matlab/bfield.004.compr.mat','val','-v7.3');
+    
