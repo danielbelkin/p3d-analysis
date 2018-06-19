@@ -24,6 +24,8 @@ function y = parCompress(file,n,p,T)
 if ~isa(file,'matlab.io.MatFile')
     error('This function is inefficient with non-matfile inputs. Try ccompress')
 elseif ~any(strcmp(fieldnames(file),'val'))
+    file
+    fieldnames(file)
     error('Matfile must have a fieldname val')
     % Add an option to specify the fieldname?
 end
