@@ -25,7 +25,6 @@ tic % Start timing
 okargs = {'rdir','wdir', 'skip', 'compr'};
 dflts = {'' '' 0 1};
 
-
 [rdir, wdir, skip, compr] = internal.stats.parseArgs(okargs,dflts,varargin{:});
 
 if ~isempty(wdir) && ~strcmp(wdir(end),'/')
@@ -68,6 +67,9 @@ idx = find(strcmpi(varnames,name)); % Index of where desired variable is located
 if isempty(idx)
     error('Variable name appears to be wrong')
 end
+
+addpath(pwd); % Add the current directory to the path, just in case
+cd(wdir); % If we don't do this, then the temporary files won't work properly for some reason
 
 % Compile information about how the data was processed:
 info = cell2struct(varargin(2:2:end),varargin(1:2:end),2);
