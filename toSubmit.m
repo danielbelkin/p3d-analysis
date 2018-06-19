@@ -12,7 +12,7 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
-names = {'bx by bz'};
+names = {'bx' 'by' 'bz'};
 val = zeros(512,256,128,3,10);
 for i=1:3
    i
