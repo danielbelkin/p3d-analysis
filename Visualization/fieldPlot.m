@@ -1,6 +1,8 @@
 function x = fieldPlot(bfield, n, x0)
 % x = fieldPlot(bfield, n, x0)
 % Tracks magnetic field line starting at x0 for n boundary-crossings.
+% PROBLEM: Out-of-range points are still sometimes plotted. Reasons
+% unclear. 
 
 s = size(bfield);
 if nargin < 3
