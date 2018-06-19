@@ -17,6 +17,6 @@ val = zeros(512,256,128,3,10);
 for i=1:3
    i
    m = matfile([names{i} '.004.mat']);
-   val(:,:,:,i,:) = parCompress(m,2);
+   val = parCompress(m,2);
+   save(['/global/u2/d/dbelkin/matlab/' names{i} '.004.compr.mat'],'val','-v7.3')
 end
-save('/global/u2/d/dbelkin/matlab/bfield.004.compr.mat','val','-v7.3');
