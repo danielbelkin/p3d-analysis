@@ -2,20 +2,33 @@
 % sure how this works, exactly. I think it can be submitted with 
 % ./matlabCoriSubmit
 %
-% I'll also use this file for interactive, simple runs. It's just faster to
+% I'll also use this file for login-node runs. It's just faster to
 % write them up here.
 
+
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis
-cd /scratch2/scratchdirs/dbelkin/mms3d-compr
+
+
+% Code to read in large amounts of data:
+rdir = '/project/projectdirs/reconn/lorajm/mms3d';
+wdir = '/scratch2/scratchdirs/dbelkin/mms3d-matfiles';
+
+cd(wdir)
+
+names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+pp = parpool('local',numel(names));
+parfor i=1:3
+    readMovie(num,name,'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
+end
 
 
 % Load a bfield snapshot for field-line studies:
-t = 1;
-mx = matfile('bx.004.compr.mat');
-my = matfile('by.004.compr.mat');
-mz = matfile('bz.004.compr.mat');
-
-bfield = cat(4,mx.val(:,:,:,t),my.val(:,:,:,t),mz.val(:,:,:,t));
+% t = 1;
+% mx = matfile('bx.004.compr.mat');
+% my = matfile('by.004.compr.mat');
+% mz = matfile('bz.004.compr.mat');
+% 
+% bfield = cat(4,mx.val(:,:,:,t),my.val(:,:,:,t),mz.val(:,:,:,t));
 
 
 
