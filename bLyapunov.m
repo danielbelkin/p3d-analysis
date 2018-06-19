@@ -1,7 +1,7 @@
 function [lambda, stats] = bLyapunov(Bfield)
 % [LAMBDA, STATS] = bLyapunov(BFIELD)
 % Function to compute lyapunov exponents all in one go.
-% Works quite quickly on compressed data; much to slow for raw data.
+% Works quite quickly on compressed data; much too slow for raw data.
 % Based on the assumption that the ergodic measure is unique. 
 % BFIELD = cat(4,BX,BY,BZ) 
 % This could be parallelized, but it's probably not worth it.
@@ -13,8 +13,7 @@ function [lambda, stats] = bLyapunov(Bfield)
 %         iid
 %   netB, the sum of abs(B) over the region
 %   Lambda, the matrix from which lyapuonv exponents are calculated
-disp('Running slowLyapunov...')
-tic;
+disp('Running bLyapunov...')
 B = sqrt(sum(Bfield.^2,4));
 netB = sum(B(:));
 bfield = Bfield./B;

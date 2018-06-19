@@ -14,6 +14,8 @@ function y = ccompress(x,N,varargin)
 % For very large datasets, use parCompress.
 %
 % TODO: Add more options for the kernel, etc
+% TODO: Make sure kernel is well-behaved under composition. Want
+% conv(h(N),h(N)) = H(2N). 
 % TODO: Change the way trailing indices are handled. Make it match
 % parCompress, so that they're treated only linearly. 
 s = size(x);

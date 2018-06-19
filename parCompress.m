@@ -69,7 +69,7 @@ h = h./sum(h(:)); % Renormalize
 
 
 %% Convolve
-disp('Splitting data...')
+% disp('Splitting data...')
 m = (size(h,1) - 1)/2; % Amount that we need chunks to overlap by
 splits = getSplits(s(1:3),p); % Figure out how to split indices
 template = cell(splits);
