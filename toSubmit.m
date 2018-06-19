@@ -15,10 +15,11 @@ wdir = '/scratch2/scratchdirs/dbelkin/mms3d-matfiles';
 
 cd(wdir)
 
+num = '003';
 names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 pp = parpool('local',numel(names));
-parfor i=1:3
-    readMovie(num,name,'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
+parfor i=1:numel(names)
+    readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
 end
 
 
