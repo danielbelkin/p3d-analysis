@@ -108,6 +108,7 @@ end
 
 % Initialize files
 file = matfile([wdir name '.' num '.mat'],'Writable',true);
+info.isComplete = false;
 file.info = info;
 file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single'); % Pre-allocate. If this exceeds maximum array size limit, there is still hope. 
 
@@ -155,6 +156,7 @@ end
 fclose(fid);
 data.val = [];
 % TODO: Figure out a way to delete temp.mat
+file.info.isComplete = true;
 disp(['Done reading ' filename])
 toc
 end

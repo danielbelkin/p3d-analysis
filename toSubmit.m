@@ -10,15 +10,16 @@ addpath /global/u2/d/dbelkin/matlab/p3d-analysis
 
 
 % Code to read in large amounts of data:
-rdir = '/project/projectdirs/reconn/lorajm/mms3d';
-wdir = '/scratch2/scratchdirs/dbelkin/mms3d-matfiles';
+rdir = '/project/projectdirs/reconn/lorajm/mms2d';
+wdir = '/scratch2/scratchdirs/dbelkin/mms2d-matfiles';
 
 cd(wdir)
 
 num = '003';
-names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'rho'};
 pp = parpool('local',numel(names));
 parfor i=1:numel(names)
+    % readMMS3D(num,names{i});
     readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
 end
 

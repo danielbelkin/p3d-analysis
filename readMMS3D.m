@@ -10,6 +10,5 @@ end
 
 t0 = tic;
 readMovie(num,name,'rdir',rdir,'wdir',wdir,'skip',0,'compr',4);
-endSound;
 toc(t0)
 end
