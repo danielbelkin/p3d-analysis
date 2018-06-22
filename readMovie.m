@@ -156,7 +156,8 @@ end
 fclose(fid);
 data.val = [];
 % TODO: Figure out a way to delete temp.mat
-file.info.isComplete = true;
+info.isComplete = true;
+file.info = info;
 disp(['Done reading ' filename])
 toc
 end
