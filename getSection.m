@@ -28,7 +28,7 @@ subs = cell(1,3);
 section = cell(1,3);
 for d = 1:3
     indx = [s(d)-m+1:s(d), 1:s(d), 1:m];
-    section{d} = indx(1+s(d)/split(d)*(subs{d}-1):s(d)/split(d)*subs{d} + 2*m);
+    section{d} = mod(indx(1+s(d)/split(d)*(subs{d}-1):s(d)/split(d)*subs{d} + 2*m) - 1,s(d)) + 1;
 end
 
 %% Pull the data from the file
