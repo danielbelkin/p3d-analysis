@@ -13,18 +13,8 @@ function y = ccompress(x,N,varargin)
 %
 % TODO: Add more options for the kernel, etc
 % TODO: Make sure kernel is well-behaved under composition. Want
-% conv(h(N),h(N)) = h(2N). I think this is currently not the case.
-% If h(N) is gaussian with variance S2 and width W, then conv(h(N),h(N)) is
-% gaussian with variance 2*S2 and width 2*W - 1.
-% Require S2 = (cN)^2. Then 2*S2 = 2*c^2*N^2, and for h(2N) variance is
-% (2cN)^2, so we want 2*c^2*N^2 = 4*c^2*N^2, which is not possible. 
-% If S2 = c*N, then we have what we want. But this requires std =
-% c*sqrt(N). This seems concerning.
-% Also, we want 2*W(N) - 1 = W(2*N). If W(1) = 3, then W(2) = 5, W(4) = 9,
-% W(8) = 17, W(16) = 33
-% w(N) = 2*N + 1, as we currently do it.
-% H = normpdf(-N:N,0,c*sqrt(N)). What should C be? For n = 1, c = 1 seems
-% good. For n = 100, c = 1 seems too small. More 
+% conv(h(N),h(N)) = h(2N). This requires H(N) = normpdf(-N:N,0,C*sqrt(N))
+% for some C. Seems like for any C, you eventually get bad behavior. 
 % TODO: Change the way trailing indices are handled. 
 
 s = size(x);
