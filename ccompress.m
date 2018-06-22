@@ -31,12 +31,9 @@ h = h.*reshape(h,[],1).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
 
 % Expand the data
-m = (size(h,1) - 1)/2;
 dim = numel(s);
-indx = cell(1,dim);
-for d = 1:dim
-    indx{d} = [s(d)-m+1:s(d), 1:s(d), 1:m];
-end
+s(dim + 1:3) = 1; % Extend to look 3d
+indx = circExpand(s,(size(h,1) - 1)/2);
 
 y = zeros([ceil(s/N) numel(T)]);
 for t = T

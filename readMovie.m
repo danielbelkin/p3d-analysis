@@ -31,7 +31,7 @@ if ~isempty(wdir) && ~strcmp(wdir(end),'/')
     wdir(end+1) = '/';
 end
 
-if ~isempty(wdir) && ~strcmp(rdir(end),'/')
+if ~isempty(rdir) && ~strcmp(rdir(end),'/')
     rdir(end+1) = '/';
 end
 
