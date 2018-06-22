@@ -31,7 +31,7 @@ names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'rho'};
 
 for i=1:length(names)
     m = load([rdir names{i} '.' num '.mat']); % Takes 15s/variable
-    assignin('base',names{i},m.val)
+    assign(names{i},m.val)
 end
 
 v = cat(5,jix,jiy,jiz);
@@ -40,4 +40,8 @@ va = cat(5,bx,by,bz)./sqrt(4*pi*rho);
 KE = 1/2*rho.*sum(v.^2,5);
 ME = 1/2*rho.*sum(va.^2,5);
 HC = 1/2*rho.*sum(va.*v,5);
+end
+
+function assign(var,val)
+    assignin('caller',var,val)
 end
