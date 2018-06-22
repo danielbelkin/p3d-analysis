@@ -1,15 +1,20 @@
-
 function [KE,ME,HC] = getEnergies(num,rdir)
 %  Gonna write a function to look at KE, ME, etc given a folder. 
-% Assume mass ratio large, ion mass = 1
-% Also assume particle charge = 1
-% So that momentum = Ji
+% Assume particle charge = 1
+% Ion mass = 1
+% Electron mass = .01
+% Need to track down electron mass
 % Plan: Compute v, va. Assume time is 4th dimension.
 % KE = 1/2*rho*sum(v.^2,5)
 % ME = 1/2*rho*sum(va.^2, 5)
 % HC = 1/2*rho*sum(v.*va,5)
 % Could also compute U, I guess
+% PROBLEM: KE does not account for KE of each species.
+% There's energy associated with J. In a pair plasma, KE ~ v1^2 +v2^2
+% J ~ v1 - v2, u ~ v1 + v2, so u^2 + j^2 ~ KE
+% How does this change in a non-pair plasma?
 
+me = 1e-2;
 
 if nargin < 1
     num = 0;
@@ -26,7 +31,7 @@ elseif ~ischar(num) || numel(num) ~= 3
     error('Input NUM must be a string or integer')
 end
 
-names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'rho'};
+names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'rho'};
 % names = {'jix' 'jiy' 'jiz'};
 
 for i=1:length(names)
@@ -34,13 +39,23 @@ for i=1:length(names)
     assign(names{i},m.val)
 end
 
-v = cat(5,jix,jiy,jiz);
+v = cat(5,jix - me*jex,jiy - me*jey,jiz - me*jez);
 va = cat(5,bx,by,bz)./sqrt(4*pi*rho);
 
-KE = 1/2*rho.*sum(v.^2,5);
+if any(~isreal(v(:)))
+    error('Imaginary velocity?')
+end
+
+KE = 1/2*rho.*sum(v.^2,5); % These are negative for some reason. Why?
+
+if any(KE(:) < 0)
+    error('Well then.')
+end
+
 ME = 1/2*rho.*sum(va.^2,5);
 HC = 1/2*rho.*sum(va.*v,5);
 end
+
 
 function assign(var,val)
     assignin('caller',var,val)
