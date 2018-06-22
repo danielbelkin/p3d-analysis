@@ -26,12 +26,12 @@ elseif ~ischar(num) || numel(num) ~= 3
     error('Input NUM must be a string or integer')
 end
 
-%names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'rho'};
-names = {'jix' 'jiy' 'jiz'};
+names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'rho'};
+% names = {'jix' 'jiy' 'jiz'};
 
 for i=1:length(names)
     m = load([rdir names{i} '.' num '.mat']); % Takes 15s/variable
-    assignin('caller',names{i},m.val)
+    assignin('base',names{i},m.val)
 end
 
 v = cat(5,jix,jiy,jiz);
