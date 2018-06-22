@@ -22,9 +22,9 @@ function y = ccompress(x,N,varargin)
 % c*sqrt(N). This seems concerning.
 % Also, we want 2*W(N) - 1 = W(2*N). If W(1) = 3, then W(2) = 5, W(4) = 9,
 % W(8) = 17, W(16) = 33
-% W(2^n) = 2*W(2^n-1) - 1
-% W = 2z^-1 W - 1
-% W = 1/(2z^-1 - 1)
+% w(N) = 2*N + 1, as we currently do it.
+% H = normpdf(-N:N,0,c*sqrt(N)). What should C be? For n = 1, c = 1 seems
+% good. For n = 100, c = 1 seems too small. More 
 % TODO: Change the way trailing indices are handled. 
 
 s = size(x);

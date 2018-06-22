@@ -19,7 +19,12 @@ function y = ccompress(x,N,varargin)
 % Require S2 = (cN)^2. Then 2*S2 = 2*c^2*N^2, and for h(2N) variance is
 % (2cN)^2, so we want 2*c^2*N^2 = 4*c^2*N^2, which is not possible. 
 % If S2 = c*N, then we have what we want. But this requires std =
-% c*sqrt(N). This seems con
+% c*sqrt(N). This seems concerning.
+% Also, we want 2*W(N) - 1 = W(2*N). If W(1) = 3, then W(2) = 5, W(4) = 9,
+% W(8) = 17, W(16) = 33
+% w(N) = 2*N + 1, as we currently do it.
+% H = normpdf(-N:N,0,c*sqrt(N)). What should C be? For n = 1, c = 1 seems
+% good. For n = 100, c = 1 seems too small. More 
 % TODO: Change the way trailing indices are handled. 
 
 s = size(x);
@@ -31,6 +36,7 @@ end
     
 % Construct the kernel
 h = normpdf(-N:N,0,N/2);
+% h = normpdf
 h = h.*reshape(h,[],1).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
 
