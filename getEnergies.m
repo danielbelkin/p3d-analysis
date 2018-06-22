@@ -28,7 +28,7 @@ end
 names = {'bx' 'by' 'bz''jex' 'jey' 'jez' 'rho'};
 
 for i=1:length(names)
-    m = load([rdir names{i} '.' num]); % Takes 15s/variable
+    m = load([rdir names{i} '.' num '.mat']); % Takes 15s/variable
     assignin('caller',names{i},m.val)
 end
 
