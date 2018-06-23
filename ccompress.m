@@ -33,12 +33,13 @@ h = single(h); % Keep the precision low
 % Expand the data
 dim = numel(s);
 s(dim + 1:3) = 1; % Extend to look 3d
-indx = circExpand(s,(size(h,1) - 1)/2);
+indx = circExpand(s(1:3),(size(h,1) - 1)/2); 
 
-y = zeros([ceil(s/N) numel(T)]);
+y = zeros([ceil(s(1:3)/N) numel(T)]);
 for t = T
-    x(:,:,:,t) = convn(x(indx{:},t),h,'valid');
-    y(:,:,:,t) = single(x(1:N:end,1:N:end,1:N:end)); % This way is faster.
+     out = convn(x(indx{:},t),h,'valid');
+     x(:,:,:,t) = out;
+    y(:,:,:,t) = single(x(1:N:end,1:N:end,1:N:end,t)); % This way is faster.
 end
 end
 

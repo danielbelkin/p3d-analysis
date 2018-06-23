@@ -16,15 +16,16 @@ wdir = '/scratch2/scratchdirs/dbelkin/mms2d-matfiles';
 cd(wdir)
 
 num = '000';
-% names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
-names = {'ne' 'ni'};
+names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
+% names = {'ne' 'ni'};
 
-if isempty(gcp('nocreate'))
-    pp = parpool('local',numel(names));
-end
+% if isempty(gcp('nocreate'))
+%     pp = parpool('local',numel(names));
+% end
 parfor i=1:numel(names)
     % readMMS3D(num,names{i});
-    readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
+    % readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
+    val = parCompress(names{i}
 end
 
 
