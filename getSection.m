@@ -58,8 +58,8 @@ for i = 1:nchunks(1)
                 % f(vects{2}{j})
                 f(vects{3}{k})
                 k
-                vects{3}(k)
-                diff(vects{3}(k))
+                vects{3}{k}
+                diff(vects{3}{k})
                 % cellfun(f,T)
                 error('bad')
             end
