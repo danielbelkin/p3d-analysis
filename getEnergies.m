@@ -47,6 +47,8 @@ catch
     whos me
     num
     rdir
+    ccc = ni + ne*me;
+    rho = 1;
     error('mmm')
 end
 % "Error: Not enough input arguments"
