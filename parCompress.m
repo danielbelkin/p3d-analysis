@@ -57,9 +57,9 @@ else
     p = 2^floor(log2(p)); % We only use a power-of-two number of processors
 end
 
-% if isempty(gcp('nocreate'))
-%     parpool('local',p) % Start a parallel pool
-% end
+if isempty(gcp('nocreate'))
+    parpool('local',p) % Start a parallel pool
+end
 
 
 if nargin < 4 || strcmp(T,':')
@@ -89,7 +89,7 @@ h = h./sum(h(:)); % Renormalize
 m = (size(h,1) - 1)/2; % Amount that we need chunks to overlap by
 splits = getSplits(s(1:3),p); % Figure out how to split indices
 template = cell(splits);
-for i = 1:p % For each processor 
+parfor i = 1:p % For each processor 
     data = getSection(i,file,field,m,p); 
     v = zeros([ceil(s(1:3)./splits), numel(T)]);
     for t = T % For each frame
