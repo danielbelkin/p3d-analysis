@@ -16,7 +16,8 @@ wdir = '/scratch2/scratchdirs/dbelkin/mms2d-matfiles';
 cd(wdir)
 
 num = '000';
-names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'rho'};
+% names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
+names = {'ne' 'ni'};
 
 if isempty(gcp('nocreate'))
     pp = parpool('local',numel(names));
