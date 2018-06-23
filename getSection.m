@@ -50,7 +50,14 @@ for i = 1:nchunks(1)
     for j = 1:nchunks(2)
         for k = 1:nchunks(3)
             % data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},T{:});
-            data{i,j,k} = eval(['file.' field '(vects{1}{i},vects{2}{j},vects{3}{k},T{:});']);
+            try
+                data{i,j,k} = eval(['file.' field '(vects{1}{i},vects{2}{j},vects{3}{k},T{:});']);
+            catch
+                vects{1}{i}
+                vects{2}{j}
+                vects{3}{k}
+                T{:}
+            end
             % Yeah, this is ugly.
         end
     end
