@@ -37,7 +37,7 @@ end
 %% Pull the data from the file
 vects = cell(1,3); % Holds indices broken by segment.
 for d = 1:3
-    breaks = [0 find(diff(section{d}) < 0) length(section{d})]; % Jumps in data
+    breaks = [0 find(diff(section{d}) <= 0) length(section{d})]; % Jumps in data
     vects{d} = cell(1,numel(breaks)-1); % Pre-allocate
     for i = 1:numel(breaks)-1
         vects{d}{i} = section{d}(1+breaks(i):breaks(i+1)); % Section between the jumps
