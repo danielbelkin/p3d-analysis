@@ -17,10 +17,10 @@ cd(wdir)
 num = '000';
 names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
 
-% if isempty(gcp('nocreate'))
-%     pp = parpool('local',numel(names));
-% end
-parfor i=1:numel(names)
+if isempty(gcp('nocreate'))
+    pp = parpool('local',16);
+end
+for i=1:numel(names)
     % readMMS3D(num,names{i});
     % readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
     file = matfile([rdir names{i} '.' num '.mat']);
