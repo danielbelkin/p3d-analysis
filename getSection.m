@@ -1,4 +1,4 @@
-function data = getSection(k,file,m,p,varargin)
+function data = getSection(k,file,field,m,p,varargin)
 % data = getSection(k,file,m,p)
 % data = getSection(k,file,m,p, I1...In)
 % This function will combine mfileIndx and splitIndx in a more efficient
@@ -11,11 +11,14 @@ function data = getSection(k,file,m,p,varargin)
 % TODO: Make sure that trailing indices are handled appropriately. 
 
 %% Process inputs
-s = size(file,'val'); % Size of the data file
+s = size(file,field); % Size of the data file
 split = getSplits(s(1:3),p);
 
 if isempty(varargin)
-    T = {1:prod(s(4:end))};
+    T = cell(1,length(s)-3);
+    for i = 1:length(s) - 3
+        T{i} = 1:s(i+3);
+    end
 else
     T = varargin;
 end
@@ -46,7 +49,9 @@ data = cell(nchunks);
 for i = 1:nchunks(1)
     for j = 1:nchunks(2)
         for k = 1:nchunks(3)
-            data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},T{:});
+            % data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},T{:});
+            data{i,j,k} = eval(['file.' field '(vects{1}{i},vects{2}{j},vects{3}{k},T{:});']);
+            % Yeah, this is ugly.
         end
     end
 end

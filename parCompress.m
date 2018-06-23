@@ -1,8 +1,7 @@
-function y = parCompress(file,n,p,T)
+function val = parCompress(file,n,p,T,varargin)
 % Y = parCompress(FILE,N,P) takes a matfile FILE with field VAL and
 % downsamples VAL by a factor N along each of the first three dimensions.
 % It uses P processors in parallel. 
-% It's best to start the parallel pool first, I think.
 % Default kernel is Gaussian with standard deviation N/2 and width 2*N + 1
 % Returned array is single-precision.
 %
@@ -11,6 +10,17 @@ function y = parCompress(file,n,p,T)
 % With 16 processors and a 2048x1024x512 dataset, this takes about a minute
 % to run.
 %
+% parCompress(file,n,p,T,'NAME',VALUE) allows you to specify a few more
+% things.
+% T can be ':' or a vector of time values. This downsamples the array along
+% the 4th dimension (without smoothing)
+%
+%
+% Optional name-value pairs: 
+% 'fieldname' = val      Name of the field on FILE to look at
+% 'saveas' = false       Filename to save result under
+% 
+%
 % TODO: 
 % Change how trailing indices are handled - matfiles can't do it the way
 % I'd like to. Consider requiring that we always compress frame-by-frame.
@@ -18,23 +28,28 @@ function y = parCompress(file,n,p,T)
 % more efficient.
 % Add more options for the kernel, etc
 % Add smart decision-making about how many processors to use
-%
+% 
 
 %% Process inputs
+
+okargs = {'fieldname' 'saveas'};
+dflts = {'val' false};
+[field,saveas] = internal.stats.parseArgs(okargs,dflts,varargin{:}); 
+
+
 if ~isa(file,'matlab.io.MatFile')
     error('This function is inefficient with non-matfile inputs. Try ccompress')
-elseif ~any(strcmp(fieldnames(file),'val'))
-    file
-    error('Matfile must have a fieldname val')
-    % Add an option to specify the fieldname?
+elseif ~any(strcmp(fieldnames(file),field))
+    disp('Is this the file you intended to compress?')
+    disp(file)
+    error(['Matfile must have a field named ' field])
 end
 
-s = size(file,'val');
+s = size(file,field);
+dim = numel(s);
+s(dim + 1:3) = 1; % Pad with ones if needed
+
 if nargin < 3
-    % Let's say we split until it's 65536 values by default:
-    % p = 2^max(0,log2(prod(s(1:3))) - 16);
-    % TODO: Instead, use gcp or parcluster to find out how many workers are
-    % available. 
     pp = parcluster;
     procs = pp.NumWorkers;
     p = 2^floor(log2(procs));
@@ -47,15 +62,15 @@ if isempty(gcp('nocreate'))
 end
 
 
-if nargin < 4
-    if numel(s) > 3
+if nargin < 4 || strcmp(T,':')
+    if dim > 3
         T = 1:s(4); % Timesteps to do
     else
         T = 1;
     end
-else
-    % TODO: Something here.
 end
+
+    
 
 
 
@@ -75,7 +90,7 @@ m = (size(h,1) - 1)/2; % Amount that we need chunks to overlap by
 splits = getSplits(s(1:3),p); % Figure out how to split indices
 template = cell(splits);
 parfor i = 1:p % For each processor 
-    data = getSection(i,file,m,p); % Could instead get all available.
+    data = getSection(i,file,field,m,p); 
     v = zeros([ceil(s(1:3)./splits), numel(T)]);
     for t = T % For each frame
         v(:,:,:,t) = convn(data(:,:,:,t),h,'valid');
@@ -87,7 +102,12 @@ parfor i = 1:p % For each processor
     % function and compile it. 
 end
 
-y = cell2mat(template); % And combine all frames to form a movie.
+val = cell2mat(template); % And combine all frames to form a movie.
+
+if saveas
+    save(saveas,'val','-v7,3')
+end
+
 end
 
 
