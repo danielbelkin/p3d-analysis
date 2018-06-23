@@ -31,7 +31,7 @@ elseif ~ischar(num) || numel(num) ~= 3
     error('Input NUM must be a string or integer')
 end
 
-names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'rho'};
+names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
 % names = {'jix' 'jiy' 'jiz'};
 
 for i=1:length(names)
@@ -39,23 +39,11 @@ for i=1:length(names)
     assign(names{i},m.val)
 end
 
+rho = ni + ne*me; % Mass density, not charge density
 v = cat(5,jix - me*jex,jiy - me*jey,jiz - me*jez);
 va = cat(5,bx,by,bz)./sqrt(4*pi*rho);
 
-if any(~isreal(v(:)))
-    error('Imaginary velocity?')
-end
-
 KE = 1/2*rho.*sum(v.^2,5); % These are negative for some reason. Why?
-
-if any(KE(:) < 0)
-    min(v(:))
-    min(v(:).^2)
-    min(rho(:))
-    min(KE(:))
-    error('Well then.') 
-end
-
 ME = 1/2*rho.*sum(va.^2,5);
 HC = 1/2*rho.*sum(va.*v,5);
 end
