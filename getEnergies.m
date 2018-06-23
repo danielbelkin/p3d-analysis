@@ -39,7 +39,17 @@ for i=1:length(names)
     assign(names{i},m.val)
 end
 
-rho = ni + ne*me; % Mass density, not charge density
+try
+    rho = ni + ne*me; % Mass density, not charge density
+catch
+    whos ni
+    whos ne
+    whos me
+    num
+    rdir
+    error('mmm')
+end
+% "Error: Not enough input arguments"
 v = cat(5,jix - me*jex,jiy - me*jey,jiz - me*jez);
 va = cat(5,bx,by,bz)./sqrt(4*pi*rho);
 

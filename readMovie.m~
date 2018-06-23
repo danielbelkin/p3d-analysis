@@ -22,7 +22,7 @@ function readMovie(num, name, varargin)
 % A concern: It's much faster for the first few frames than later frames.
 % Why? 
 %
-% TODO: Extend info parameter to include electron mass, etc
+% TODO: Extend info parameter to include things like m
 
 
 
