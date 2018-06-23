@@ -53,11 +53,14 @@ for i = 1:nchunks(1)
             try
                 data{i,j,k} = eval(['file.' field '(vects{1}{i},vects{2}{j},vects{3}{k},T{:});']);
             catch
-                f = @(x) any(diff(x) ~= 1);
-                f(vects{1}{i})
-                f(vects{2}{j})
+                % f = @(x) any(diff(x) ~= 1);
+                % f(vects{1}{i})
+                % f(vects{2}{j})
                 f(vects{3}{k})
-                cellfun(f,T)
+                k
+                vects{3}(k)
+                diff(vects{3}(k))
+                % cellfun(f,T)
                 error('bad')
             end
             % Yeah, this is ugly.
