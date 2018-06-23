@@ -31,31 +31,16 @@ elseif ~ischar(num) || numel(num) ~= 3
     error('Input NUM must be a string or integer')
 end
 
-% names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
-names = {'ne' 'ni'};
+names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
+% names = {'ne' 'ni'};
+ne = 0; % Necessary, for a stupid reason
 
 for i=1:length(names)
     m = load([rdir names{i} '.' num '.mat']); % Takes 15s/variable
     assign(names{i},m.val)
 end
 
-try
-    rho = ni + ne*me; % Mass density, not charge density
-catch
-    whos ni
-    whos ne
-    whos me
-    ni;
-    ne;
-    me;
-    ne*me;
-    ni + ne*me;
-    ccc = 1;
-    ccc = ni + ne*me;
-    rho = 1;
-    error('mmm')
-end
-% "Error: Not enough input arguments"
+rho = ni + ne*me; % Mass density, not charge density
 v = cat(5,jix - me*jex,jiy - me*jey,jiz - me*jez);
 va = cat(5,bx,by,bz)./sqrt(4*pi*rho);
 
