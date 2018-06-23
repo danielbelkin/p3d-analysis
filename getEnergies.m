@@ -9,7 +9,7 @@ function [KE,ME,HC] = getEnergies(num,rdir)
 % ME = 1/2*rho*sum(va.^2, 5)
 % HC = 1/2*rho*sum(v.*va,5)
 % Could also compute U, I guess
-% PROBLEM: KE does not account for KE of each species.
+% PROBLEM: MHD KE does not account for KE of each species.
 % There's energy associated with J. In a pair plasma, KE ~ v1^2 +v2^2
 % J ~ v1 - v2, u ~ v1 + v2, so u^2 + j^2 ~ KE
 % How does this change in a non-pair plasma?
@@ -49,7 +49,11 @@ end
 KE = 1/2*rho.*sum(v.^2,5); % These are negative for some reason. Why?
 
 if any(KE(:) < 0)
-    error('Well then.')
+    min(v(:))
+    min(v(:).^2)
+    min(rho(:))
+    min(KE(:))
+    error('Well then.') 
 end
 
 ME = 1/2*rho.*sum(va.^2,5);
