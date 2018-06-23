@@ -31,8 +31,8 @@ elseif ~ischar(num) || numel(num) ~= 3
     error('Input NUM must be a string or integer')
 end
 
-names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
-% names = {'jix' 'jiy' 'jiz'};
+% names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
+names = {'ne' 'ni'};
 
 for i=1:length(names)
     m = load([rdir names{i} '.' num '.mat']); % Takes 15s/variable
