@@ -36,7 +36,7 @@ names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
 ne = 0; % Necessary, for a stupid reason
 
 for i=1:length(names)
-    m = load([rdir names{i} '.' num '.mat']); % Takes 15s/variable
+    m = load([rdir names{i} '.' num '.compr.mat']); % Takes 15s/variable
     assign(names{i},m.val)
 end
 

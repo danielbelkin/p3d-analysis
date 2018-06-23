@@ -24,7 +24,7 @@ parfor i=1:numel(names)
     % readMMS3D(num,names{i});
     % readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
     file = matfile([rdir names{i} '.' num '.mat']);
-    parCompress(files,4,16,':','saveas',[wdir names{i} '.' num '.compr.mat']);
+    parCompress(file,4,16,':','saveas',[wdir names{i} '.' num '.compr.mat']);
 end
 
 
