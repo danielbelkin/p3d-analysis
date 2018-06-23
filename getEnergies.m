@@ -45,8 +45,12 @@ catch
     whos ni
     whos ne
     whos me
-    num
-    rdir
+    ni;
+    ne;
+    me;
+    ne*me;
+    ni + ne*me;
+    ccc = 1;
     ccc = ni + ne*me;
     rho = 1;
     error('mmm')
