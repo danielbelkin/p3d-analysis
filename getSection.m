@@ -49,23 +49,8 @@ data = cell(nchunks);
 for i = 1:nchunks(1)
     for j = 1:nchunks(2)
         for k = 1:nchunks(3)
-            % data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},T{:});
-            1+1;
-            1+1;
-            
-            try
-                data{i,j,k} = eval(['file.' field '(vects{1}{i},vects{2}{j},vects{3}{k},T{:});']);
-            catch
-                f = @(x) any(diff(x) ~= 1);
-                c = {vects{1}{i} vects{2}{j} vects{3}{k}};
-                for i = 1:3
-                    if f(c{i})
-                        i
-                        c{i}
-                    end
-                end
-                error('bad')
-            end
+            % data{i,j,k} = file.val(vects{1}{i},vects{2}{j},vects{3}{k},T{:});            
+            data{i,j,k} = eval(['file.' field '(vects{1}{i},vects{2}{j},vects{3}{k},T{:});']);
             % Yeah, this is ugly.
         end
     end

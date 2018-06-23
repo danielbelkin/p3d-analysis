@@ -105,7 +105,7 @@ end
 val = cell2mat(template); % And combine all frames to form a movie.
 
 if saveas
-    save(saveas,'val','-v7,3')
+    save(saveas,'val','-v7.3')
     % TODO: Add an info field
 end
 
