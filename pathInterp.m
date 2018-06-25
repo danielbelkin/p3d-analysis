@@ -1,4 +1,4 @@
-function [x,L] = pathInterp(path,varargin)
+function [x,L] = pathInterp(path,n)
 % takes an arbitrary path through 3-space and upsamples it so that it has n
 % evenly-distributed points.
 % Could also have points be distributed randomly along the path. Not sure
