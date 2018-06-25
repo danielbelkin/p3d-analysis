@@ -21,10 +21,15 @@ if iscell(path)
     end
     L = sum(l);
     for i = 1:numel(path) % Second pass: Do the interpolation.
-        path{i} = pathInterp(path{i},npts*round(l(i)/L)); 
+        % n = npts*ceil(l(i)/L); % Number of points in this segment
+        % Want it to be a poisson distribution with mean l(i)/L?
+        n = poissrnd(l(i)/L);
+        path{i} = pathInterp(path{i},n); 
     end
     size(path) % temp
     path = cell2mat(path(:));
+else
+    path = pathInterp(path,npts); 
 end
 
 nx = nvals(1);
