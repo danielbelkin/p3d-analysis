@@ -21,7 +21,7 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',numel(names));
 end
 tic
-for i=1:numel(names)
+parfor i=1:numel(names)
     % readMMS3D(num,names{i});
     % readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
     % file = matfile([rdir names{i} '.' num '.mat']);
