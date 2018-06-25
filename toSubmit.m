@@ -8,25 +8,11 @@
 
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis
 
-% rdir = '/project/projectdirs/reconn/lorajm/mms2d';
-% rdir = '/scratch2/scratchdirs/dbelkin/mms2d-matfiles/';
-% wdir = '/scratch2/scratchdirs/dbelkin/mms2d-compr/';
-
-% cd(wdir)
-
-% num = '000';
 names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 
-if isempty(gcp('nocreate'))
-    pp = parpool('local',numel(names));
-end
 tic
 parfor i=1:numel(names)
-    % readMMS3D(num,names{i});
-    % readMovie(num,names{i},'rdir',rdir,'wdir',wdir,'skip',0,'compr',1);
-    % file = matfile([rdir names{i} '.' num '.mat']);
-    % parCompress(file,4,16,':','saveas',[wdir names{i} '.' num '.compr.mat']);
-    readHeat3D(names{i});
+    val = load([names{i} '.mat');
 end
 toc
 
@@ -45,6 +31,10 @@ toc
 % if isempty(gcp('nocreate'))
 %     pp = parpool('local',16);
 % end
+
+% rdir = '/project/projectdirs/reconn/lorajm/mms2d';
+% rdir = '/scratch2/scratchdirs/dbelkin/mms2d-matfiles/';
+% wdir = '/scratch2/scratchdirs/dbelkin/mms2d-compr/';
 
 % names = {'bx' 'by' 'bz'};
 % for i=1:3

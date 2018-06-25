@@ -16,8 +16,8 @@ split = getSplits(s(1:3),p);
 if isempty(varargin)
     T = cell(1,length(s)-3);
     for i = 1:length(s) - 3
-        % T{i} = 1:s(i+3);
-        T{i} = ':';
+        T{i} = 1:s(i+3);
+        % T{i} = ':'; % I'm not sure if this works for matfiles
     end
 else
     T = varargin;
