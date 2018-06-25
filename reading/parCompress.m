@@ -34,8 +34,7 @@ function val = parCompress(file,n,p,T,varargin)
 
 okargs = {'fieldname' 'saveas'};
 dflts = {'val' false};
-[field,saveas] = internal.stats.parseArgs(okargs,dflts,varargin{:}); 
-
+[field,saveas] = parseArgs(okargs,dflts,varargin{:}); 
 
 if ~isa(file,'matlab.io.MatFile')
     error('This function is inefficient with non-matfile inputs. Try ccompress')

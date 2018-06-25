@@ -31,7 +31,7 @@ tic % Start timing
 okargs = {'rdir','wdir', 'skip', 'compr'};
 dflts = {'' '' 0 1};
 
-[rdir, wdir, skip, compr] = internal.stats.parseArgs(okargs,dflts,varargin{:});
+[rdir, wdir, skip, compr] = parseArgs(okargs,dflts,varargin{:});
 
 if ~isempty(wdir) && ~strcmp(wdir(end),'/')
     wdir(end+1) = '/';
