@@ -41,8 +41,8 @@ for i=1:length(names)
 end
 
 rho = ni + ne*me; % Mass density, not charge density
-v = cat(5,jix - me*jex,jiy - me*jey,jiz - me*jez);
-va = cat(5,bx,by,bz)./sqrt(4*pi*rho);
+v = cat(5,jix./ni - me*jex./ne,jiy./ni - me*jey./ne,jiz./ni - me*jez./ne);
+va = cat(5,bx,by,bz)./sqrt(rho); % No 4pi needed in code units
 
 KE = 1/2*rho.*sum(v.^2,5); % These are negative for some reason. Why?
 ME = 1/2*rho.*sum(va.^2,5);
