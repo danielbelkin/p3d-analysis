@@ -74,12 +74,13 @@ end
 
 
 %% Construct the kernel
-kernel = @(x) normpdf(x,0,n/2);
+% kernel = @(x) normpdf(x,0,n/2); % requires stats license
+kernel = @(x) exp(-1/2*(2*x/n).^2);
 w = n; % Width = 2*w + 1, actually.
 h = kernel(-w:w);
 h = h.*reshape(h,[],1).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
-h = h./sum(h(:)); % Renormalize
+h = h./sum(h(:)); % Normalize
 % Consider making this a function instead of a broadcast variable?
 
 
@@ -107,7 +108,6 @@ if saveas
     save(saveas,'val','-v7.3')
     % TODO: Add an info field
 end
-
 end
 
 
