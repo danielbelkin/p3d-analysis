@@ -12,7 +12,7 @@ end
 svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
 
 if any(diff(svals) == 0)
-    [diff(svals) path]
+    [diff(svals) path(1:end-1,:)]
     min(diff(svals))
     error('Singularity in speed encountered?')
 end
