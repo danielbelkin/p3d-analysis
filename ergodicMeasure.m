@@ -26,7 +26,8 @@ if iscell(path)
         n = poissrnd(l(i)/L);
         path{i} = pathInterp(path{i},n); 
     end
-    size(path) % temp
+    size(path(:)) % temp
+    size(path{1})
     path = cell2mat(path(:));
 else
     path = pathInterp(path,npts); 
