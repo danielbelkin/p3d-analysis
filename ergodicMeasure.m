@@ -23,6 +23,7 @@ if iscell(path)
     for i = 1:numel(path) % Second pass: Do the interpolation.
         path{i} = pathInterp(path{i},npts*round(l(i)/L)); 
     end
+    size(path) % temp
     path = cell2mat(path(:));
 end
 
@@ -31,6 +32,7 @@ ny = nvals(2);
 nz = nvals(3);
 
 % Make sure it's inside the box
+size(path)
 path(:,1) = mod(path(:,1),nx);
 path(:,2) = mod(path(:,2),ny);
 path(:,3) = mod(path(:,3),nz);
