@@ -1,14 +1,13 @@
 function data = getSection(k,file,field,m,p,varargin)
-% data = getSection(k,file,m,p)
-% data = getSection(k,file,m,p, I1...In)
-% This function will combine mfileIndx and splitIndx in a more efficient
-% way.
-% Accesses section K of matfile FILE with M overlapping points, assuming P
-% processors are available. 
-% Splits along first 3 dimensions only. 
-% 
-% 
-% TODO: Make sure that trailing indices are handled appropriately. 
+% DATA = getSection(K,FILE,FIELD,M,P)
+% Retrieves section K of field FIELD on matfile FILE, assuming P processors
+% are available and M overlapping points are needed.
+% Splits along first 3 dimensions only. To understand how it divides up
+% files, use getSplits.
+%
+% data = getSection(k,FILE,FIELD,m,p, I1...In)
+% splits up FILE.FIELD(:,:,:,I1,I2...In). The trailing indices must follow
+% the usual rules for indexing into matfiles. By default, I1...In = ':'.
 
 %% Process inputs
 s = size(file,field); % Size of the data file
@@ -17,7 +16,8 @@ split = getSplits(s(1:3),p);
 if isempty(varargin)
     T = cell(1,length(s)-3);
     for i = 1:length(s) - 3
-        T{i} = 1:s(i+3);
+        % T{i} = 1:s(i+3);
+        T{i} = ':';
     end
 else
     T = varargin;
