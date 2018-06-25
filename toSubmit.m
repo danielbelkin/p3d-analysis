@@ -13,11 +13,6 @@ addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Reading
 
 load fieldline2.mat
 
-for i = 1:numel(x)
-    x{i} = pathInterp
-
-
-
 % names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 % 
 % tic
