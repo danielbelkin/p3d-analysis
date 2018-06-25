@@ -7,7 +7,7 @@ nx = 512;
 ny = 256;
 nz = 256;
 
-val = dlmread(['test' name '.txt']);
+val = dlmread([rdir 'test' name '.txt']);
 val = val';
 val = reshape(val,nx,ny,nz);
 save([wdir name '.mat'],'val','-v7.3');
