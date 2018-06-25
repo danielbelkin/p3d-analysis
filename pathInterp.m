@@ -9,6 +9,7 @@ if nargin < 2
     n = 10*length(path);
 end
 
+path = double(path);
 svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
 
 if any(diff(svals) == 0)
