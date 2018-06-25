@@ -12,7 +12,8 @@ end
 svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
 
 if any(diff(svals) == 0)
-    path
+    [svals path]
+    min(svals)
     error('Singularity in speed encountered?')
 end
 pathfun = @(s) [interp1(svals,path(:,1),s),...
