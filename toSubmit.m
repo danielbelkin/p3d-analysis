@@ -15,7 +15,7 @@ addpath /global/u2/d/dbelkin/matlab/p3d-analysis
 % cd(wdir)
 
 % num = '000';
-names = {'bx' 'by' 'bz' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez' 'ne' 'ni'};
+names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 
 if isempty(gcp('nocreate'))
     pp = parpool('local',numel(names));

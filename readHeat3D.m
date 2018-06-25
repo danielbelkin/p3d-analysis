@@ -9,6 +9,8 @@ nz = 256;
 
 val = dlmread([rdir 'test' name '.txt']);
 val = val';
+val = val(:);
+val = val(val ~= 0); % Not sure why this is necessary
 val = reshape(val,nx,ny,nz);
 save([wdir name '.mat'],'val','-v7.3');
 end
