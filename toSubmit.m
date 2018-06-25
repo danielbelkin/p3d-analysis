@@ -27,8 +27,8 @@ parfor i=1:numel(names)
     % file = matfile([rdir names{i} '.' num '.mat']);
     % parCompress(file,4,16,':','saveas',[wdir names{i} '.' num '.compr.mat']);
     readHeat3D(names{i});
-    toc
 end
+toc
 
 
 % Load a bfield snapshot for field-line studies:
