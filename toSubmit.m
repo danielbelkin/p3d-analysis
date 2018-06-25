@@ -6,15 +6,25 @@
 % write them up here.
 
 
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Visualization
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Utils
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Reading
 
-names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 
-tic
-parfor i=1:numel(names)
-    val = load([names{i} '.mat');
-end
-toc
+load fieldline2.mat
+
+for i = 1:numel(x)
+    x{i} = pathInterp
+
+
+
+% names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
+% 
+% tic
+% parfor i=1:numel(names)
+%     val = load([names{i} '.mat');
+% end
+% toc
 
 
 % Load a bfield snapshot for field-line studies:

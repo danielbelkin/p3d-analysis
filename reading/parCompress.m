@@ -19,7 +19,7 @@ function val = parCompress(file,n,p,T,varargin)
 % Optional name-value pairs: 
 % 'fieldname' = val      Name of the field on FILE to look at
 % 'saveas' = false       Filename to save result under
-% 
+
 %
 % TODO: 
 % Change how trailing indices are handled - matfiles can't do it the way
@@ -81,6 +81,7 @@ h = kernel(-w:w);
 h = h.*reshape(h,[],1).*reshape(h,1,1,[]); % Make it 3d;
 h = single(h); % Keep the precision low
 h = h./sum(h(:)); % Normalize
+
 % Consider making this a function instead of a broadcast variable?
 
 
@@ -97,9 +98,6 @@ parfor i = 1:p % For each processor
         % disp(['Frame ' num2str(t) ' of ' num2str(numel(T)) ' complete.'])
     end
     template{i} = single(v(1:n:end,1:n:end,1:n:end,:)); % Downsample by throwing away most of the data.
-    % This seems very inefficient, but convn is a very fast compiled C
-    % function. I think the only way to get faster is to write my own C
-    % function and compile it. 
 end
 
 val = cell2mat(template); % And combine all frames to form a movie.
@@ -108,6 +106,10 @@ if saveas
     save(saveas,'val','-v7.3')
     % TODO: Add an info field
 end
+
+% The downsampling seems very inefficient, but convn is a very fast
+% compiled C function. I think the only way to get faster is to write my
+% own C function and compile it. 
 end
 
 
