@@ -13,6 +13,10 @@ addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Reading
 
 load fieldline2.mat
 
+tic; mu = ergodicMeasure(x,[128 64 64]); toc
+info = 'calculated from fieldline2.mat with the default number of points';
+save('mu.mat','mu','info','-v7.3')
+
 % names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 % 
 % tic
