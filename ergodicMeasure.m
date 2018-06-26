@@ -27,7 +27,8 @@ if iscell(path)
         path{i} = pathInterp(path{i},n); 
     end
     size(path(:)) % temp
-    size(path{2})
+    size(path{end})
+    n
     path = cell2mat(path(:));
 else
     path = pathInterp(path,npts); 
