@@ -44,12 +44,11 @@ for i = 1:numel(corners)
         
         k = k+1;
         if k > 1e3
-            warning('Corner resolution is taking too long')
-            sign(isCross(pathfun(smin))) == sign(isCross(pathfun(smax)))
-            keyboard
+            error('Corner resolution is taking too long')
         end
     end
     path = [path(1:corners(i),:); pathfun(s); path(corners(i)+1:end,:)]; % Append the new point
+    keyboard
 end
 
 svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
