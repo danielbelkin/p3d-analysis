@@ -36,7 +36,7 @@ mu = mu/netB; % Normalize
 
 % Construct the gradient operator
 d = cat(3,-ones(3),zeros(3),ones(3)); % This gives 18 times the gradient.
-grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3));
+grad = cat(4,shiftdim(d,1),shiftdim(d,2),shiftdim(d,3)); 
 
 avgJ = zeros(3);
 stdJ = avgJ;
