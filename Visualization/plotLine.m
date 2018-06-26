@@ -30,15 +30,18 @@ for i = 1:numel(corners)
     smin = svals(corners(i));
     smax = svals(corners(i) + 1);
     s = mean([smin smax]); % Start in the middle
+    step = (smax - smin)/2;
     k = 0; % Safety variable
     while 1
         if all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smin))))
-            s = mean([s smax]); % Move right
+            s = s + step; % Move right
         elseif all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smax))))
-            s = mean([s smin]); % Move left
+            s = s - step; % Move left
         else
             break
         end
+        step = step/2;
+        
         k = k+1;
         if k > 1e3
             warning('Corner resolution is taking too long')
