@@ -23,40 +23,50 @@ boxmod = @(x) [mod(x(:,1),nvals(:,1)) mod(x(:,2),nvals(:,2)) mod(x(:,3),nvals(:,
 
 %% Make sure there are no corner shots
 % i.e. the path never crosses more than one wall in a single timestep. 
-corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment
+j = 0;
+corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment    
 
-for i = 1:numel(corners)
-    % Add points to improve resolution around corner shots.
-    smin = svals(corners(i));
-    smax = svals(corners(i) + 1);
-    s = mean([smin smax]); % Start in the middle
-    step = (smax - smin)/2;
-    k = 0; % Safety variable
-    while 1
-        if all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smin))))
-            s = s + step; % Move right
-        elseif all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smax))))
-            s = s - step; % Move left
-        else
-            break
+while numel(corners) ~= 0
+    for i = 1:numel(corners)
+        % Add points to improve resolution around corner shots.
+        smin = svals(corners(i));
+        smax = svals(corners(i) + 1);
+        s = mean([smin smax]); % Start in the middle
+        step = (smax - smin)/2;
+        k = 0; % Safety variable
+        while 1
+            if all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smin))))
+                s = s + step; % Move right
+            elseif all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smax))))
+                s = s - step; % Move left
+            else
+                break
+            end
+            step = step/2;
+            
+            k = k+1;
+            if k > 1e3
+                error('Corner resolution is taking too long')
+            end
         end
-        step = step/2;
-        
-        k = k+1;
-        if k > 1e3
-            error('Corner resolution is taking too long')
-        end
+        path = [path(1:corners(i),:); pathfun(s); path(corners(i)+1:end,:)]; % Append the new point
+        keyboard % Check if we've really resolved the corner.
     end
-    path = [path(1:corners(i),:); pathfun(s); path(corners(i)+1:end,:)]; % Append the new point
-    keyboard
+    
+    svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
+    
+    pathfun = @(s) [interp1(svals,path(:,1),s),...
+        interp1(svals,path(:,2),s),...
+        interp1(svals,path(:,3),s)];
+    % Redefine it to include new points.
+    
+    corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment
+    
+    j = j+1;
+    if j > 1e3
+        error('argh')
+    end
 end
-
-svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
-
-pathfun = @(s) [interp1(svals,path(:,1),s),...
-    interp1(svals,path(:,2),s),...
-    interp1(svals,path(:,3),s)];
-% Redefine it to include new points.
 
 
 %% Break path into sections
