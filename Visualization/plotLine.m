@@ -41,7 +41,9 @@ for i = 1:numel(corners)
         end
         k = k+1;
         if k > 1e3
-            error('Corner resolution is taking too long')            
+            warning('Corner resolution is taking too long')
+            sign(isCross(pathfun(smin))) == sign(isCross(pathfun(smax)))
+            keyboard
         end
     end
     path = [path(1:corners(i),:); pathfun(s); path(corners(i)+1:end,:)]; % Append the new point
