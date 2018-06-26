@@ -31,11 +31,12 @@ if iscell(path)
     count = 0;
     for i = 1:numel(path) % Second pass: Do the interpolation.
         if l(i)
-            n = poissrnd(l(i)/L);
+            n = poissrnd(npts*l(i)/L);
             path{i} = pathInterp(path{i},n); 
             count = count + n;
         end
     end
+    npts
     count
     path = cell2mat(path(:));
 else
