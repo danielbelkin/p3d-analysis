@@ -1,8 +1,9 @@
-function [y,x0] = fieldLine(bfield, d, x0)
+function [x,x0] = fieldLine(bfield, d, x0)
 % x = fieldLine(bfield, d, x0)
 % Tracks magnetic field line starting at x0 for an approximate distance d.
 % If x0 is not specified, a start point is chosen at random. 
 % Not a unit-speed parameterization.
+% Does not modulo it to be inside box.
 
 s = size(bfield);
 if nargin < 3
@@ -27,7 +28,4 @@ f = @(~,x) [interpFun(x,bfield(:,:,:,1));...
     interpFun(x,bfield(:,:,:,3))];
 
 [~,x] = ode45(f,[0 tmax],x0);
-y(:,1) = mod(x(:,1),s(1));
-y(:,2) = mod(x(:,2),s(2));
-y(:,3) = mod(x(:,3),s(3));
 end
