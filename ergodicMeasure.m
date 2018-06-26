@@ -7,40 +7,50 @@ function mu = ergodicMeasure(path,nvals,npts)
 %
 % I suspect this will work best with extremely downsampled data, but we'll
 % see. 
+%
+% You should probably do some smoothing afterwards too. This is basically
+% KDE at that point.
 
 
 %% Process inputs
+if numel(nvals) ~= 3
+    error('Nvals should be [nx ny nz]')
+end
+
 if nargin < 3
-    npts = prod(nvals(1:3)); % Default to one point per grid box
-    % Should maybe make this more like 10?
-    % idk, might not really matter.
+    npts = prod(nvals); % Default to one point per grid box
+    % Should really make this decision based on arc length. Want about .1
+    % or so. 
 end
 
 % Handle inputs that came from fieldPlot.m:
 if iscell(path)
-    l = zeros(size(path));
+    lindx = zeros(size(path));
     for i = 1:numel(path) % First pass: Just compute partial lengths.
         if size(path{i}) > 1
-            [~,l(i)] = pathInterp(path{i},0);
+            [~,lindx(i)] = pathInterp(path{i},0);
         else
-            l(i) = 0;
+            lindx(i) = 0;
             path{i} = []; % Throw away this value. We can't use it.
         end
     end
-    L = sum(l);
+    L = sum(lindx);
     count = 0;
     for i = 1:numel(path) % Second pass: Do the interpolation.
-        if l(i)
-            n = poissrnd(npts*l(i)/L);
+        if lindx(i)
+            n = poissrnd(npts*lindx(i)/L);
             path{i} = pathInterp(path{i},n); 
             count = count + n;
         end
     end
-    npts
-    count
+    npts = count; % This is how many points we actually have
     path = cell2mat(path(:));
 else
     path = pathInterp(path,npts); 
+end
+
+if numel(path) == 0
+    error('Too few points?')
 end
 
 nx = nvals(1);
@@ -48,21 +58,18 @@ ny = nvals(2);
 nz = nvals(3);
 
 % Make sure it's inside the box
-path(:,1) = mod(path(:,1),nx);
-path(:,2) = mod(path(:,2),ny);
-path(:,3) = mod(path(:,3),nz);
-
-if numel(path) == 0
-    error('IDK, man')
-end
+x = floor(mod(path(:,1),nx)) + 1;
+y = floor(mod(path(:,2),ny)) + 1;
+z = floor(mod(path(:,3),nz)) + 1;
 
 %% Find the measure
-I = uint16(0:nx-1);
-J = uint16(0:ny-1);
-K = uint16(0:nz-1);
-[I,J,K] = meshgridn(I,J,K); 
+mu = zeros(nvals);
+for i = 1:size(path,1)
+    mu(x(i),y(i),z(i)) = mu(x(i),y(i),z(i)) + 1; % This way is asymptotically fastest. 
+end
 
-mu = arrayfun(@(i,j,k) sum(i <= path(:,1) & path(:,1) < i+1 ...
-                & j <= path(:,2) & path(:,2) < j+1 ...
-                & k <= path(:,3)  & path(:,3) < k+1),I,J,K);
+% lindx = sub2ind(nvals,x,y,z); % Linear indices
+% mu(lindx) = 1; % Faster if you only want a binary decision
+% mu(lindx) = sum(lindx == lindx'); % Faster for small datasets
+
 end
