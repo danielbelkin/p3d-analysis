@@ -6,20 +6,24 @@ function y = plotLine(path,nvals)
 % Break along those, using linear interpolation to identify endpoints
 % Plot it
 
-%% Construct path function by interpolation
+%% Define some functions
 path = double(path);
 svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
 
+% Construct path by interpolation:
 pathfun = @(s) [interp1(svals,path(:,1),s),...
     interp1(svals,path(:,2),s),...
     interp1(svals,path(:,3),s)];
 
+% Function to detect boundary crossings:
+isCross = @(x) sin(pi*(x./nvals)); 
 
-indicator = @(x) sin(pi*(x./nvals)); % A zero of the indicator indicates a boundary crossing
+% Modulo in a 3D box:
+boxmod = @(x) [mod(x(:,1),nvals(:,1)) mod(x(:,2),nvals(:,2)) mod(x(:,3),nvals(:,3))];
 
 %% Make sure there are no corner shots
 % i.e. the path never crosses more than one wall in a single timestep. 
-corners = find(sum(logical(diff(sign(indicator(path)))),2) == 2); % Find multiple crossings in one segment
+corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment
 
 for i = 1:numel(corners)
     % Add points to improve resolution around corner shots.
@@ -29,9 +33,9 @@ for i = 1:numel(corners)
     k = 0; % Safety variable
     while k < 1000
         k = k+1;
-        if all(indicator(pathfun(s)) == indicator(pathfun(smin)))
+        if all(isCross(pathfun(s)) == isCross(pathfun(smin)))
             s = mean([s smax]); % Move right
-        elseif all(indicator(pathfun(s)) == indicator(pathfun(smax)))
+        elseif all(isCross(pathfun(s)) == isCross(pathfun(smax)))
             s = mean([s smin]); % Move left
         else
             break
@@ -49,10 +53,9 @@ pathfun = @(s) [interp1(svals,path(:,1),s),...
 
 
 %% Break path into sections
-breaks = [1; find(any(diff(sign(indicator(path))),2)) + 1; size(path,1)]; % Identifies sign changes
+breaks = [1; find(any(diff(sign(isCross(path))),2)) + 1; size(path,1)]; % Identifies sign changes
 % breaks(2) is the first point of segment 2
 N = numel(breaks)-1; % Number of chunks to break into
-boxmod = @(x) [mod(x(:,1),nvals(:,1)) mod(x(:,2),nvals(:,2)) mod(x(:,3),nvals(:,3))];
 
 ds = .01; % Arbitrary, should be <<1
 y = cell(1,N);
@@ -61,12 +64,13 @@ y = cell(1,N);
 scross = zeros(1,N-1);
 for i = 1:N-1
     try
-        scross(i) = fzero(@(s) prod(indicator(pathfun(s)),2),svals(breaks(i+1) + [-1 0]));
+        scross(i) = fzero(@(s) prod(isCross(pathfun(s)),2),svals(breaks(i+1) + [-1 0]));
     catch me
         i
         breaks(i+1)
         svals(breaks(i+1) + [-1 0])
-        pathfun(svals(breaks(i+1) + [-1 0]),:)
+        pathfun(svals(breaks(i+1) + [-1 0]))
+        keyboard
         throw(me)
     end
 end
