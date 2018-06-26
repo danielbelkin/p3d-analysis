@@ -41,6 +41,7 @@ for i = 1:N
     end
     % y{i} = boxmod([x1; path(breaks(i) + 1:breaks(i + 1),:); x2]); 
     y{i} = [x1; path(breaks(i):breaks(i + 1) - 1,:); x2]; 
+    find(diff(sign(indicator(y{i}))))
     y{i} = boxmod(y{i}); 
 end
 
