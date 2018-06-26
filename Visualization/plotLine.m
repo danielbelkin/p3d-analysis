@@ -32,23 +32,19 @@ for i = 1:numel(corners)
     s = mean([smin smax]); % Start in the middle
     k = 0; % Safety variable
     while 1
-        if all(isCross(pathfun(s)) == isCross(pathfun(smin)))
+        if all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smin))))
             s = mean([s smax]); % Move right
-        elseif all(isCross(pathfun(s)) == isCross(pathfun(smax)))
+        elseif all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smax))))
             s = mean([s smin]); % Move left
         else
             break
         end
         k = k+1;
         if k > 1e3
-            warning('Corner resolution is taking too long')
-            keyboard
-            
+            error('Corner resolution is taking too long')            
         end
     end
     path = [path(1:corners(i),:); pathfun(s); path(corners(i)+1:end,:)]; % Append the new point
-    disp('Fixed another corner')
-    keyboard
 end
 
 svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
