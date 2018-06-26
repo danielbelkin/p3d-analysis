@@ -16,8 +16,8 @@ pathfun = @(s) [interp1(svals,path(:,1),s),...
 
 %% Break path into sections
 indicator = @(x) prod(x.*(nvals - x),2); % A zero of the indicator indicates a boundary crossing
-breaks = [1; find(diff(sign(indicator(path)))); size(path,1)]; % Identifies sign changes
-% breaks(2) is the last point of segment 1
+breaks = [1; find(diff(sign(indicator(path)))) + 1; size(path,1)]; % Identifies sign changes
+% breaks(2) is the first point of segment 2
 N = numel(breaks)-1; % Number of chunks to break into
 
 boxmod = @(x) [mod(x(:,1),nvals(:,1)) mod(x(:,2),nvals(:,2)) mod(x(:,3),nvals(:,3))];
@@ -28,18 +28,20 @@ y = cell(1,N);
 % Handle middle
 for i = 1:N
     if i ~= 1
-        s1 = fzero(@(s) indicator(pathfun(s)),svals(breaks(i) + [0 1])); % Find entry point
+        s1 = fzero(@(s) indicator(pathfun(s)),svals(breaks(i) + [-1 0])); % Find entry point
         x1 = pathfun(s1 + ds);
     else
         x1 = [];
     end
     if i ~= N        
-        s2 = fzero(@(s) indicator(pathfun(s)),svals(breaks(i + 1) + [0 1])); % Find exit point
-        x2 = pathfun(s2 + ds);
+        s2 = fzero(@(s) indicator(pathfun(s)),svals(breaks(i + 1) + [-1 0])); % Find exit point
+        x2 = pathfun(s2 - ds);
     else
         x2 = [];
     end
-    y{i} = boxmod([x1; path(breaks(i) + 1:breaks(i + 1),:); x2]); 
+    % y{i} = boxmod([x1; path(breaks(i) + 1:breaks(i + 1),:); x2]); 
+    y{i} = [x1; path(breaks(i):breaks(i + 1) - 1,:); x2]; 
+    y{i} = boxmod(y{i}); 
 end
 
 %% Plot the field
