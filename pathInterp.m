@@ -5,6 +5,10 @@ function [x,L] = pathInterp(path,n)
 % which is better. 
 % Could also specify distance instead of 
 
+if length(path) < 2
+    error('Path too short - need at least 2 points to interpolate')
+end
+
 if nargin < 2
     n = 10*length(path);
 end
@@ -22,7 +26,11 @@ pathfun = @(s) [interp1(svals,path(:,1),s),...
 % s = (0:d:svals(end))';
 L = svals(end);
 s = linspace(0,L,n)';
-x = pathfun(s); % Deterministic version - probably good.
+try
+    x = pathfun(s); % Deterministic version - probably good.
+catch
+x = 'aaa';
+end
 end
 
 

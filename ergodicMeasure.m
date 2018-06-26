@@ -17,18 +17,20 @@ end
 if iscell(path)
     l = zeros(size(path));
     for i = 1:numel(path) % First pass: Just compute partial lengths.
-        [~,l(i)] = pathInterp(path{i},0);
+        if size(path{i}) > 1
+            [~,l(i)] = pathInterp(path{i},0);
+        else
+            l(i) = 0;
+            path{i} = []; % Throw away this value. We can't use it.
+        end
     end
     L = sum(l);
     for i = 1:numel(path) % Second pass: Do the interpolation.
-        % n = npts*ceil(l(i)/L); % Number of points in this segment
-        % Want it to be a poisson distribution with mean l(i)/L?
-        n = poissrnd(l(i)/L);
-        path{i} = pathInterp(path{i},n); 
+        if l(i)
+            n = poissrnd(l(i)/L);
+            path{i} = pathInterp(path{i},n); 
+        end
     end
-    size(path(:)) % temp
-    size(path{end})
-    n
     path = cell2mat(path(:));
 else
     path = pathInterp(path,npts); 
@@ -39,10 +41,13 @@ ny = nvals(2);
 nz = nvals(3);
 
 % Make sure it's inside the box
-size(path)
 path(:,1) = mod(path(:,1),nx);
 path(:,2) = mod(path(:,2),ny);
 path(:,3) = mod(path(:,3),nz);
+
+if numel(path) == 0
+    error('IDK, man')
+end
 
 %% Find the measure
 I = uint16(0:nx-1);
