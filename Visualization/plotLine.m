@@ -50,7 +50,6 @@ while numel(corners) ~= 0
             end
         end
         path = [path(1:corners(i),:); pathfun(s); path(corners(i)+1:end,:)]; % Append the new point
-        keyboard % Check if we've really resolved the corner.
     end
     
     svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
@@ -115,8 +114,9 @@ figure(1); clf; hold on;
 whitebg('black')
 
 for i = 1:N
-    plot3(y{i}(1,1), y{i}(1,2), y{i}(1,3),'go')
-    plot3(y{i}(end,1), y{i}(end,2), y{i}(end,3),'ro')
+    % plot3(y{i}(1,1), y{i}(1,2), y{i}(1,3),'go')
+    % plot3(y{i}(end,1), y{i}(end,2), y{i}(end,3),'ro')
+    % End markers are kind of a pain with very long field lines
     plot3(y{i}(:,1), y{i}(:,2), y{i}(:,3),'-','Color',1-[i/N .5 1-i/N]);
 end
 
