@@ -4,6 +4,9 @@ function mu = ergodicMeasure(path,nvals,npts)
 % NZ]. 
 % Uses pathInterp to get a unit-speed path. NPTS is the number of sample
 % points
+%
+% I suspect this will work best with extremely downsampled data, but we'll
+% see. 
 
 
 %% Process inputs
@@ -25,12 +28,15 @@ if iscell(path)
         end
     end
     L = sum(l);
+    count = 0;
     for i = 1:numel(path) % Second pass: Do the interpolation.
         if l(i)
             n = poissrnd(l(i)/L);
             path{i} = pathInterp(path{i},n); 
+            count = count + n;
         end
     end
+    count
     path = cell2mat(path(:));
 else
     path = pathInterp(path,npts); 

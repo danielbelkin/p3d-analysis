@@ -26,11 +26,7 @@ pathfun = @(s) [interp1(svals,path(:,1),s),...
 % s = (0:d:svals(end))';
 L = svals(end);
 s = linspace(0,L,n)';
-try
-    x = pathfun(s); % Deterministic version - probably good.
-catch
-x = 'aaa';
-end
+x = pathfun(s); % Deterministic version - probably good.
 end
 
 
