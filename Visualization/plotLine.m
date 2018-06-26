@@ -65,8 +65,8 @@ for i = 1:N-1
     catch me
         i
         breaks(i+1)
-        svals(breaks(i+1) + [-1 0]
-        pathfun(svals(breaks(i+1) + [-1 0],:)
+        svals(breaks(i+1) + [-1 0])
+        pathfun(svals(breaks(i+1) + [-1 0]),:)
         throw(me)
     end
 end
