@@ -19,7 +19,7 @@ pathfun = @(s) [interp1(svals,path(:,1),s),...
 isCross = @(x) sin(pi*(x./nvals)); 
 
 % Modulo in a 3D box:
-boxmod = @(x) [mod(x(:,1),nvals(:,1)) mod(x(:,2),nvals(:,2)) mod(x(:,3),nvals(:,3))];
+boxmod = @(x) [mod(x(:,1),nvals(1)) mod(x(:,2),nvals(2)) mod(x(:,3),nvals(3))];
 
 %% Make sure there are no corner shots
 % i.e. the path never crosses more than one wall in a single timestep. 
@@ -79,15 +79,7 @@ y = cell(1,N);
 % Pin down crossings
 scross = zeros(1,N-1);
 for i = 1:N-1
-    try
-        scross(i) = fzero(@(s) prod(isCross(pathfun(s)),2),svals(breaks(i+1) + [-1 0]));
-    catch me
-        i
-        breaks(i+1)
-        svals(breaks(i+1) + [-1 0])
-        pathfun(svals(breaks(i+1) + [-1 0]))
-        throw(me)
-    end
+    scross(i) = fzero(@(s) prod(isCross(pathfun(s)),2),svals(breaks(i+1) + [-1 0]));
 end
 
 % Actually split
@@ -117,6 +109,7 @@ for i = 1:N
     % plot3(y{i}(1,1), y{i}(1,2), y{i}(1,3),'go')
     % plot3(y{i}(end,1), y{i}(end,2), y{i}(end,3),'ro')
     % End markers are kind of a pain with very long field lines
+    % TODO: Make this an optional argument or something
     plot3(y{i}(:,1), y{i}(:,2), y{i}(:,3),'-','Color',1-[i/N .5 1-i/N]);
 end
 

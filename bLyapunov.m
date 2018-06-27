@@ -17,8 +17,6 @@ function [lambda, stats] = bLyapunov(Bfield,isIn)
 %   netB, the sum of abs(B) over the region
 %   Lambda, the matrix from which lyapuonv exponents are calculated
 
-disp('Running bLyapunov...')
-
 if nargin < 2
     isIn = 1; % By default, include whole space
 elseif any(isIn(:) > 1)
