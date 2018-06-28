@@ -1,10 +1,8 @@
 function y = plotLine(path,nvals)
-% Plots a single fieldline.
+% y = plotLine(path,nvals)
+% Plots a single fieldline. The line should be a 3xN matrix. 
 % Like fieldPlot, but should hopefully run faster.
-% Plan: Take a fieldline
-% Identify all events (crossings of the boundaries)
-% Break along those, using linear interpolation to identify endpoints
-% Plot it
+
 
 %% Define some functions
 path = double(path);
