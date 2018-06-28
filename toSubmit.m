@@ -16,12 +16,14 @@ bfield = bfield.val;
 wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines';
 cd(wdir);
 
-maxY = zeros(1,16);
+leftMu = 0;
+rightMu = 0;
+for i = 1:length(left)
+    leftMu = leftMu + left{i};
+end
 
-parfor i = 1:16
-    mu{i} = cconvn(mu{i},ones(3,3,3))
-    [~,l] = max(mu{i}(:));
-    [~,maxY(i),~] = ind2sub([128 64 64],l);
+for i = 1:length(right)
+    rightMu = rightMu + right{i};
 end
 
 
