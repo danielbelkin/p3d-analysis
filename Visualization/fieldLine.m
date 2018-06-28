@@ -56,13 +56,15 @@ f = @(~,x) [interpFun(boxmod(x),bfield(:,:,:,1));...
     interpFun(boxmod(x),bfield(:,:,:,3))];
 
 %% Solve the differential equation
-options = odeset('MaxStep',1,... % This may slow things down considerably.
-    'Vectorized','off');
+% options = odeset('MaxStep',1,... % This may slow things down considerably.
+%     'Vectorized','off');
+
+options = odeset('Jacobian',Jfun); % For 23t
 
 % TODO: Set jacobian.
 tic
-[~,x] = ode45(f,[0 tmax],x0,options); %
-% [~,x] = ode23tb(f,[0 tmax],x0,options); % More accurate?
+% [~,x] = ode45(f,[0 tmax],x0,options); %
+[~,x] = ode23t(f,[0 tmax],x0,options); % More accurate?
 % Ode45 is about twice as fast
 % Only use a stiff-equation method if we really need to.
 toc
