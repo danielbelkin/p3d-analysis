@@ -10,6 +10,7 @@ if nargin < 3
     x0 = s(1:3).*rand(1,3);
 end
 
+bfield = double(bfield);
 
 % Prepare to expand:
 indx = cell(1,3);
