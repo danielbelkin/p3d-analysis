@@ -8,8 +8,27 @@
 
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Visualization
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Utils
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Reading
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/reading
 
+bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
+bfield = bfield.val;
+
+wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines';
+cd(wdir);
+
+if isempty(gcp('nocreate'))
+    pp = parpool('local',16);
+end
+
+lines = cell(1,16);
+parfor i=1:16
+    lines{i} = fieldLine(bfield, 100000);
+end
+
+info = 'Created 6/28 with ode23t';
+for i=1:16
+    save([wdir 'fieldline' num2str(i) '.mat'],'val','info','-v7.3')
+end
 
 % names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 % 

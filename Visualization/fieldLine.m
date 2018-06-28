@@ -65,8 +65,8 @@ options = odeset('Jacobian',Jfun); % For 23t
 % TODO: Set jacobian.
 tic
 % [~,x] = ode45(f,[0 tmax],x0,options); %
-[~,x] = ode23t(f,[0 tmax],x0,options); % More accurate?
-% Ode45 is about twice as fast
-% Only use a stiff-equation method if we really need to.
+[~,x] = ode23t(f,[0 tmax],x0,options); 
+% Ode45 is about twice as fast, but it only works well if we hold the step
+% size down. Ode23t ends up being faster because the step can be longer.
 toc
 end
