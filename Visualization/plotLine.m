@@ -1,8 +1,7 @@
 function y = plotLine(path,nvals)
 % y = plotLine(path,nvals)
-% Plots a single fieldline. The line should be a 3xN matrix. 
+% Plots a single fieldline. The line should be a 3xN 
 % Like fieldPlot, but should hopefully run faster.
-
 
 %% Define some functions
 path = double(path);
@@ -18,28 +17,29 @@ isCross = @(x) sin(pi*(x./nvals));
 
 % Modulo in a 3D box:
 boxmod = @(x) [mod(x(:,1),nvals(1)) mod(x(:,2),nvals(2)) mod(x(:,3),nvals(3))];
-
 %% Make sure there are no corner shots
 % i.e. the path never crosses more than one wall in a single timestep. 
 j = 0;
 corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment    
 
 while numel(corners) ~= 0
+    s = zeros(numel(corners),1);
     for i = 1:numel(corners)
         % Add points to improve resolution around corner shots.
         smin = svals(corners(i));
         smax = svals(corners(i) + 1);
-        s = mean([smin smax]); % Start in the middle
+        s(i) = mean([smin smax]); % Start in the middle
         step = (smax - smin)/2;
         k = 0; % Safety variable
         while 1
-            if all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smin))))
-                s = s + step; % Move right
-            elseif all(sign(isCross(pathfun(s))) == sign(isCross(pathfun(smax))))
-                s = s - step; % Move left
+            if all(sign(isCross(pathfun(s(i)))) == sign(isCross(pathfun(smin))))
+                s(i) = s(i) + step; % Move right
+            elseif all(sign(isCross(pathfun(s(i)))) == sign(isCross(pathfun(smax))))
+                s(i) = s(i) - step; % Move left
             else
                 break
             end
+            
             step = step/2;
             
             k = k+1;
@@ -47,21 +47,16 @@ while numel(corners) ~= 0
                 error('Corner resolution is taking too long')
             end
         end
-        path = [path(1:corners(i),:); pathfun(s); path(corners(i)+1:end,:)]; % Append the new point
     end
+    svals = sort([svals; s]);
     
-    svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
+    path = pathfun(svals); % Add all the new points to the path
+    corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment    
     
-    pathfun = @(s) [interp1(svals,path(:,1),s),...
-        interp1(svals,path(:,2),s),...
-        interp1(svals,path(:,3),s)];
-    % Redefine it to include new points.
-    
-    corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment
     
     j = j+1;
-    if j > 1e3
-        error('argh')
+    if j > 10
+        error('plotLine appears to be broken again')
     end
 end
 
