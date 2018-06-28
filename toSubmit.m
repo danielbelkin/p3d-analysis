@@ -16,18 +16,12 @@ bfield = bfield.val;
 wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines';
 cd(wdir);
 
-info = 'Created 6/28 with ode23t';
-for i=1:16
-    val = lines{i};
-    save([wdir 'fieldline' num2str(i) '.mat'],'val','info','-v7.3')
-end
+maxY = zeros(1,16);
 
-
-mu = cell(size(lines));
 parfor i = 1:16
-    tic
-    mu{i} = ergodicMeasure(lines{i},[128 64 64]);
-    toc
+    mu{i} = cconvn(mu{i},ones(3,3,3))
+    [~,l] = max(mu{i}(:));
+    [~,maxY(i),~] = ind2sub([128 64 64],l);
 end
 
 
