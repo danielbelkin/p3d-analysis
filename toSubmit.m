@@ -10,9 +10,6 @@ addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Visualization
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Utils
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis/reading
 
-bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
-bfield = bfield.val;
-
 wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines';
 cd(wdir);
 
@@ -25,10 +22,12 @@ N = 16; % Number of field lines to do
 
 lines = cell(1,N);
 parfor i=1:N
+    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
+    bfield = bfield.val;
     lines{i} = fieldLine(bfield, 1e5);
 end
 
-info = 'Created 7/2 with ode23t, d = 1e5';
+info = 'Created 7/2 with ode23t, t = 1e5';
 for i=1:N
     val = lines{i};
     save([wdir 'fieldline' num2str(i) '.mat'],'val','info','-v7.3')

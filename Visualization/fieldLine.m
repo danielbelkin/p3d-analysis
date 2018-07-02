@@ -1,6 +1,6 @@
-function [x,x0] = fieldLine(bfield, d, x0)
-% x = fieldLine(bfield, d, x0)
-% Tracks magnetic field line starting at x0 for an approximate distance d.
+function [x,x0] = fieldLine(bfield, t, x0)
+% x = fieldLine(bfield, t, x0)
+% Tracks magnetic field line starting at x0 for a time t.
 % If x0 is not specified, a start point is chosen at random. 
 % Not a unit-speed parameterization.
 % Does not modulo it to be inside box.
@@ -28,12 +28,6 @@ indx = cell(1,3);
 for i = 1:3
     indx{i} = [1:s(i), 1];
 end
-
-% Figure out how much time to use:
-v = 1/mean(1./B(:)); % Average velocity, approximately
-% Actually I don't think this form for v makes much sense, but I'm gonna
-% keep using it for consistency 
-tmax = d/v
 
 %% Compute field Jacobian
 deriv = cat(3,-ones(3),zeros(3),ones(3)); % This gives 18 times the gradient.
@@ -74,8 +68,8 @@ options = odeset('Jacobian',Jfun); % For 23t
 
 % TODO: Set jacobian.
 tic
-% [~,x] = ode45(f,[0 tmax],x0,options); %
-[~,x] = ode23t(f,[0 tmax],x0,options); 
+% [~,x] = ode45(f,[0 t],x0,options); %
+[~,x] = ode23t(f,[0 t],x0,options); 
 % Ode45 is about twice as fast, but it only works well if we hold the step
 % size down. Ode23t ends up being faster because the step can be longer.
 toc
