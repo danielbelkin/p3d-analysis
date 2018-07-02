@@ -6,11 +6,22 @@ function [x,x0] = fieldLine(bfield, d, x0)
 % Does not modulo it to be inside box.
 
 s = size(bfield);
-if nargin < 3
-    x0 = s(1:3).*rand(1,3);
-end
-
 bfield = double(bfield);
+B = sqrt(sum(bfield.^2,4));
+
+if nargin < 3
+    % Choose a random initial point with probabiltiy density proportional
+    % to field strength
+    rng('shuffle')
+    v = [0; cumsum(B(:))]./sum(B(:)); % Assign a region of [0,1] to each grid point
+    l = discretize(rand,v); % Choose a grid point with appropriate probability
+    
+    x0 = cell(3,1);
+    [x0{:}] = ind2sub(s(1:3),l); % Map back into 3D
+    x0 = cell2mat(x0);
+    
+    % x0 = s(1:3).*rand(1,3);
+end
 
 % Prepare to expand:
 indx = cell(1,3);
@@ -19,9 +30,10 @@ for i = 1:3
 end
 
 % Figure out how much time to use:
-B = sqrt(sum(bfield.^2,4));
-v = 1/mean(1./abs(B(:))); % Average velocity
-tmax = d/v; 
+v = 1/mean(1./B(:)); % Average velocity, approximately
+% Actually I don't think this form for v makes much sense, but I'm gonna
+% keep using it for consistency 
+tmax = d/v
 
 %% Compute field Jacobian
 deriv = cat(3,-ones(3),zeros(3),ones(3)); % This gives 18 times the gradient.
@@ -41,8 +53,6 @@ Jfun = @(~,x) J(:,:,...
     round(mod(x(1),s(1))) + 1,...
     round(mod(x(2),s(2))) + 1,...
     round(mod(x(3),s(3))) + 1);
-
-% Benchmark time: 3.38 without Jacobian
 
 %% Construct flow by interpolation
 

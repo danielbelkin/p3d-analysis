@@ -16,26 +16,23 @@ bfield = bfield.val;
 wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines';
 cd(wdir);
 
-leftMu = 0;
-rightMu = 0;
-for i = 1:length(left)
-    leftMu = leftMu + left{i};
-end
-
-for i = 1:length(right)
-    rightMu = rightMu + right{i};
+if isempty(gcp('nocreate'))
+    pp = parpool('local',16);
 end
 
 
-% lines = cell(1,16);
-% parfor i=1:16
-%     lines{i} = fieldLine(bfield, 100000);
-% end
-% 
-% info = 'Created 6/28 with ode23t';
-% for i=1:16
-%     save([wdir 'fieldline' num2str(i) '.mat'],'val','info','-v7.3')
-% end
+N = 16; % Number of field lines to do
+
+lines = cell(1,N);
+parfor i=1:N
+    lines{i} = fieldLine(bfield, 1e5);
+end
+
+info = 'Created 7/2 with ode23t, d = 1e5';
+for i=1:N
+    val = lines{i};
+    save([wdir 'fieldline' num2str(i) '.mat'],'val','info','-v7.3')
+end
 
 % names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 % 
