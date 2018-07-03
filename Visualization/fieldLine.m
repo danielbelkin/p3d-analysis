@@ -21,6 +21,7 @@ if nargin < 3
     x0 = cell2mat(x0);
     
     % x0 = s(1:3).*rand(1,3);
+    clear B v % Does Matlab garbage collection do this automatically?
 end
 
 % Prepare to expand:
@@ -66,11 +67,11 @@ f = @(~,x) [interpFun(boxmod(x),bfield(:,:,:,1));...
 
 options = odeset('Jacobian',Jfun); % For 23t
 
-% TODO: Set jacobian.
 tic
 % [~,x] = ode45(f,[0 t],x0,options); %
-[~,x] = ode23t(f,[0 t],x0,options); 
-% Ode45 is about twice as fast, but it only works well if we hold the step
-% size down. Ode23t ends up being faster because the step can be longer.
+[~,x] = ode23t(f,[0 t],x0,options);
 toc
+
+% Ode45 is fastest, but it only works well if we hold the step
+% size down. Ode23t ends up being faster because the step can be longer.
 end

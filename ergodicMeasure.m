@@ -57,7 +57,7 @@ nx = nvals(1);
 ny = nvals(2);
 nz = nvals(3);
 
-% Make sure it's inside the box
+% Make sure it's an integer inside the box
 x = floor(mod(path(:,1),nx)) + 1;
 y = floor(mod(path(:,2),ny)) + 1;
 z = floor(mod(path(:,3),nz)) + 1;
@@ -71,5 +71,6 @@ end
 % lindx = sub2ind(nvals,x,y,z); % Linear indices
 % mu(lindx) = 1; % Faster if you only want a binary decision
 % mu(lindx) = sum(lindx == lindx'); % Faster for small datasets
+% Consider using discretize instead?
 
 end

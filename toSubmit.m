@@ -17,21 +17,20 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
-
-N = 16; % Number of field lines to do
-
-lines = cell(1,N);
-parfor i=1:N
-    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
-    bfield = bfield.val;
-    lines{i} = fieldLine(bfield, 1e5);
-end
-
-info = 'Created 7/2 with ode23t, t = 1e5';
-for i=1:N
-    val = lines{i};
-    save([wdir 'fieldline' num2str(i) '.mat'],'val','info','-v7.3')
-end
+% N = 16; % Number of field lines to do
+% 
+% lines = cell(1,N);
+% parfor i=1:N
+%     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
+%     bfield = bfield.val;
+%     lines{i} = fieldLine(bfield, 1e5);
+% end
+% 
+% info = 'Created 7/2 with ode23t, t = 1e5';
+% for i=1:N
+%     val = lines{i};
+%     save([wdir 'fieldline' num2str(i + 16) '.mat'],'val','info','-v7.3')
+% end
 
 % names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 % 
