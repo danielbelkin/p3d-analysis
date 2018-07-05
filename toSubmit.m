@@ -5,7 +5,7 @@
 % I'll also use this file for login-node runs. It's just faster to
 % write them up here.
 
-% wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
+wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
 % cd(wdir);
 
 if isempty(gcp('nocreate'))
@@ -21,7 +21,7 @@ parfor i=1:N
     lines{i} = fieldLine(bfield.val, 1e5,x0(i,:));
 end
 
-save('section5.mat','lines')
+save([wdir 'section5.mat'],'lines')
 
 
 % xc = cell(N,1);
