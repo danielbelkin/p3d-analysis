@@ -60,8 +60,12 @@ while numel(corners) ~= 0
     svals = sort([svals; s]);
     
     path = pathfun(svals); % Add all the new points to the path
-    corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment    
-    
+    try
+        corners = find(sum(logical(diff(sign(isCross(path)))),2) == 2); % Find multiple crossings in one segment
+    catch
+        keyboard
+        error('aaaaaaa')
+    end
     
     j = j+1;
     if j > 10
