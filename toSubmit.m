@@ -5,8 +5,8 @@
 % I'll also use this file for login-node runs. It's just faster to
 % write them up here.
 
-wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
-cd(wdir);
+% wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
+% cd(wdir);
 
 if isempty(gcp('nocreate'))
     pp = parpool('local',16);
