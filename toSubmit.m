@@ -23,7 +23,7 @@ x0 = [zeros(1,32)' (1:32)' zeros(1,32)'];
 lines = cell(1,N);
 parfor i=1:N
     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
-    lines{i} = fieldLine(val, 1e4,x0(i,:));
+    lines{i} = fieldLine(bfield.val, 1e4,x0(i,:));
 end
 
 save('section2.mat','lines')
