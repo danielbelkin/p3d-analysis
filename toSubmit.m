@@ -17,7 +17,7 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
-N = 16*4; % Number of field lines to do
+N = 54; % Number of field lines to do
 
 lines = cell(1,N);
 parfor i=1:N
@@ -26,10 +26,10 @@ parfor i=1:N
     lines{i} = fieldLine(bfield, 1e4);
 end
 
-info = 'Created 7/2 with ode23t, t = 1e4';
+info = 'Created 7/5 with ode23t, t = 1e4';
 for i=1:N
     val = lines{i};
-    save([wdir 'fieldline' num2str(i + 16) '.mat'],'val','info','-v7.3')
+    save([wdir 'fieldline' num2str(i + 46) '.mat'],'val','info','-v7.3')
 end
 
 % names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
