@@ -24,18 +24,18 @@ N = 32; % Number of field lines to do
 % save('section4.mat','lines')
 
 
-xc = cell(N,1);
-parfor i = 1:N
-    y = plotLine(lines{i},[128 64 64],'figure',false);
-    xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
-    xc{i} = cell2mat(xc{i}(:));
-end
+% xc = cell(N,1);
+% parfor i = 1:N
+%     y = plotLine(lines{i},[128 64 64],'figure',false);
+%     xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
+%     xc{i} = cell2mat(xc{i}(:));
+% end
 
 figure(1); clf; hold on
 
 for i = 1:N
     v = xc{i};
-    plot(v(:,1),v(:,2),'.','Color',[sin(2*pi*i/N).^2 0 cos(2*pi*i/N).^2])
+    plot(v(:,1),v(:,2),'.','Color',[i/N 0 1-i/N])
 end
 
 
