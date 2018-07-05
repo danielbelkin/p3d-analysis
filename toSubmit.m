@@ -35,7 +35,7 @@ figure(1); clf; hold on
 
 for i = 1:N
     v = xc{i};
-    plot(v(:,1),v(:,2),'.','Color',[sin(2*pi*i/N) 0 cos(2*pi*i/N)])
+    plot(v(:,1),v(:,2),'.','Color',[sin(2*pi*i/N).^2 0 cos(2*pi*i/N).^2])
 end
 
 
