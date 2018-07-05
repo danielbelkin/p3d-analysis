@@ -23,9 +23,11 @@ end
 % 
 % save('section2.mat','lines')
 
+load section2.mat
+
 xc = cell(32,1);
 parfor i = 1:32
-    y = plotLine(lines{i},[128 64 64],'figure',false);
+    y = plotLine(lines{i} + 1,[128 64 64],'figure',false);
     xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
     xc{i} = cell2mat(xc{i}(:));
 end

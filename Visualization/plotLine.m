@@ -52,7 +52,11 @@ while numel(corners) ~= 0
             if k > 1e3
                 [smin s(i) smax]
                 warning('Corner resolution is taking too long')
-                break
+                break 
+                % The problem: This is based on the assumption that all
+                % corner shots are caused by low resolution. If you really
+                % hit the edge dead on, then what? Then I guess it doesn't
+                % matter, really. In those cases we should give up. 
             end
         end
     end
@@ -68,7 +72,8 @@ while numel(corners) ~= 0
     
     j = j+1;
     if j > 10
-        error('plotLine appears to be broken again')
+        warning('Giving up on corner resolution...')
+        break
     end
 end
 
