@@ -12,25 +12,25 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
-% N = 32; % Number of field lines to do
-% x0 = [zeros(1,32)' (1:32)' zeros(1,32)'];
-% 
-% lines = cell(1,N);
-% parfor i=1:N
-%     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
-%     lines{i} = fieldLine(bfield.val, 1e4,x0(i,:));
-% end
-% 
-% save('section2.mat','lines')
+N = 64; % Number of field lines to do
+x0 = [ones(1,N)' (1:N)' ones(1,N)'];
 
-load section2.mat
-
-xc = cell(32,1);
-parfor i = 1:32
-    y = plotLine(lines{i} + 1,[128 64 64],'figure',false);
-    xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
-    xc{i} = cell2mat(xc{i}(:));
+lines = cell(1,N);
+parfor i=1:N
+    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
+    lines{i} = fieldLine(bfield.val, 1e4,x0(i,:));
 end
+
+save('section3.mat','lines')
+
+% load section2.mat
+% 
+% xc = cell(32,1);
+% parfor i = 1:32
+%     y = plotLine(lines{i} + 1,[128 64 64],'figure',false);
+%     xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
+%     xc{i} = cell2mat(xc{i}(:));
+% end
 
 
 
