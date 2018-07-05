@@ -12,7 +12,7 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
-N = 71; % Number of field lines to do
+N = 29; % Number of field lines to do
 x0 = [ones(1,N)' (25:.5:39)' ones(1,N)'];
 
 lines = cell(1,N);
