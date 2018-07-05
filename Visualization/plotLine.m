@@ -1,7 +1,13 @@
-function y = plotLine(path,nvals)
+function y = plotLine(path,nvals,varargin)
 % y = plotLine(path,nvals)
 % Plots a single fieldline. The line should be a 3xN 
 % Like fieldPlot, but should hopefully run faster.
+
+%%
+okargs = {'figure'};
+dflts = {1};
+
+[fig] = parseArgs(okargs,dflts,varargin{:});
 
 %% Define some functions
 path = double(path);
@@ -94,19 +100,21 @@ for i = 1:N
 end
 
 %% Plot the field
-disp('Plotting...')
-figure(1); clf; hold on;
-whitebg('black')
-
-for i = 1:N
-    % plot3(y{i}(1,1), y{i}(1,2), y{i}(1,3),'go')
-    % plot3(y{i}(end,1), y{i}(end,2), y{i}(end,3),'ro')
-    % End markers are kind of a pain with very long field lines
-    % TODO: Make this an optional argument or something
-    plot3(y{i}(:,1), y{i}(:,2), y{i}(:,3),'-','Color',1-[i/N .5 1-i/N]);
+if fig
+    disp('Plotting...')
+    figure(fig); clf; hold on;
+    whitebg('black')
+    
+    for i = 1:N
+        % plot3(y{i}(1,1), y{i}(1,2), y{i}(1,3),'go')
+        % plot3(y{i}(end,1), y{i}(end,2), y{i}(end,3),'ro')
+        % End markers are kind of a pain with very long field lines
+        % TODO: Make this an optional argument or something
+        plot3(y{i}(:,1), y{i}(:,2), y{i}(:,3),'-','Color',1-[i/N .5 1-i/N]);
+    end
+    
+    grid on
+    xlabel('x'); ylabel('y'); zlabel('z')
+    xlim([0 nvals(1)]); ylim([0 nvals(2)]); zlim([0 nvals(3)])
+    ax = gca; ax.CameraPosition = [0 0 0];
 end
-
-grid on
-xlabel('x'); ylabel('y'); zlabel('z')
-xlim([0 nvals(1)]); ylim([0 nvals(2)]); zlim([0 nvals(3)])
-ax = gca; ax.CameraPosition = [0 0 0];
