@@ -49,7 +49,10 @@ while numel(corners) ~= 0
             step = step/2;
             
             k = k+1;
-            if k > 1e3
+            if k > 1e4
+                smin
+                smax
+                s(i)
                 error('Corner resolution is taking too long')
             end
         end
