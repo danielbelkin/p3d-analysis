@@ -6,7 +6,6 @@
 % write them up here.
 
 
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis
 
 % rdir = '/project/projectdirs/reconn/lorajm/mms2d';
 % rdir = '/scratch2/scratchdirs/dbelkin/mms2d-matfiles/';

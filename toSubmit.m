@@ -35,7 +35,7 @@ figure(1); clf; hold on
 
 for i = 1:N
     v = xc{i};
-    plot(v(:,1),v(:,2),'.','Color',[i/N 0 1-i/N])
+    plot(v(:,1),v(:,2),'.','Color',[.5 i/N 1-i/N])
 end
 
 
