@@ -32,6 +32,14 @@ for i=1:N
     save([wdir 'fieldline' num2str(i + 46) '.mat'],'val','info','-v7.3')
 end
 
+% len = cellfun(@(x) sum(sqrt(sum(diff(x).^2,2))),lines); 
+% for i=1:numel(lines)
+%   mu = mu + len(i)*ergodicMeasure(lines{i},[128 64 64]);
+% end
+
+
+
+
 % names = {'bx' 'by' 'bz' 'ex' 'ey' 'ez'};
 % 
 % tic

@@ -31,23 +31,23 @@ for i = 1:3
 end
 
 %% Compute field Jacobian
-deriv = cat(3,-ones(3),zeros(3),ones(3)); % This gives 18 times the gradient.
-grad = cat(4,shiftdim(deriv,1),shiftdim(deriv,2),shiftdim(deriv,3)); 
-
-J = zeros([3 3 s(1:3)]);
-for i = 1:3
-    for j = 1:3
-        out = cconvn(bfield(:,:,:,i),grad(:,:,:,j))/18;
-        J(i,j,:,:,:) = reshape(out,[1 1 s(1:3)]);
-    end
-end
-
-J = J(:,:,indx{:});
-
-Jfun = @(~,x) J(:,:,...
-    round(mod(x(1),s(1))) + 1,...
-    round(mod(x(2),s(2))) + 1,...
-    round(mod(x(3),s(3))) + 1);
+% deriv = cat(3,-ones(3),zeros(3),ones(3)); % This gives 18 times the gradient.
+% grad = cat(4,shiftdim(deriv,1),shiftdim(deriv,2),shiftdim(deriv,3)); 
+% 
+% J = zeros([3 3 s(1:3)]);
+% for i = 1:3
+%     for j = 1:3
+%         out = cconvn(bfield(:,:,:,i),grad(:,:,:,j))/18;
+%         J(i,j,:,:,:) = reshape(out,[1 1 s(1:3)]);
+%     end
+% end
+% 
+% J = J(:,:,indx{:}); % Problem: Got an out-of-memory error here.
+% 
+% Jfun = @(~,x) J(:,:,...
+%     round(mod(x(1),s(1))) + 1,...
+%     round(mod(x(2),s(2))) + 1,...
+%     round(mod(x(3),s(3))) + 1);
 
 %% Construct flow by interpolation
 
@@ -65,7 +65,8 @@ f = @(~,x) [interpFun(boxmod(x),bfield(:,:,:,1));...
 % options = odeset('MaxStep',1,... % This may slow things down considerably.
 %     'Vectorized','off');
 
-options = odeset('Jacobian',Jfun); % For 23t
+% options = odeset('Jacobian',Jfun); % For 23t
+options = odeset;
 
 tic
 % [~,x] = ode45(f,[0 t],x0,options); %
