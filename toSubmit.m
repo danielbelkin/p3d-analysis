@@ -12,17 +12,16 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
-N = 100; % Number of field lines to do
+N = 32; % Number of field lines to do
 lambda = cell(1,N);
 parfor i=1:N
-    line = load(['fieldline' num2str(i) '.mat']);
-    mu = ergodicMeasure(line.val,[128 64 64]);
+    % line = load(['fieldline' num2str(i) '.mat']);
+    lines = load('section5.mat')
+    mu = ergodicMeasure(lines{i},[128 64 64]);
     
     field = load('../bfield.compr.mat')
     lambda{i} = bLyapunov(field.val,mu);
 end
-
-
 
 
 
