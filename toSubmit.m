@@ -6,13 +6,30 @@
 % write them up here.
 
 wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
-% cd(wdir);
+cd(wdir);
 
 if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
 N = 16; % Number of field lines to do
+lambda = cell(1,N);
+parfor i=1:N
+    line = load(['fieldline' num2str(i) '.mat']);
+    mu = ergodicMeasure(line.val,[128 64 64]);
+    
+    field = load('../bfield.compr.mat')
+    lambda{i} = bLyapunov(field.val,mu);
+end
+
+
+
+
+
+
+
+
+
 % x0 = [ones(1,N)' (1:4:64)' ones(1,N)'];
 % 
 % lines = cell(1,N);
@@ -20,22 +37,24 @@ N = 16; % Number of field lines to do
 %     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.mat');
 %     lines{i} = fieldLine(bfield.val, 1e4,x0(i,:));
 % end
+%
+% Time taken: 1 hour for most, 2 hours for longest.
 % 
 % save([wdir 'section6.mat'],'lines')
 
-xc = cell(N,1);
-parfor i = 1:N
-    y = plotLine(lines{i},[512 256 256],'figure',false);
-    xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
-    xc{i} = cell2mat(xc{i}(:));
-end
-
-figure(1); clf; hold on
-
-for i = 1:N
-    v = xc{i};
-    plot(v(:,1),v(:,2),'.','Color',[.5 i/N 1-i/N])
-end
+% xc = cell(N,1);
+% parfor i = 1:N
+%     y = plotLine(lines{i},[512 256 256],'figure',false);
+%     xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
+%     xc{i} = cell2mat(xc{i}(:));
+% end
+% 
+% figure(1); clf; hold on
+% 
+% for i = 1:N
+%     v = xc{i};
+%     plot(v(:,1),v(:,2),'.','Color',[.5 i/N 1-i/N])
+% end
 
 
 % info = 'Created 7/5 with ode23t, t = 1e4';
