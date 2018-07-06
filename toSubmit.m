@@ -23,10 +23,9 @@ N = 16; % Number of field lines to do
 % 
 % save([wdir 'section6.mat'],'lines')
 
-
 xc = cell(N,1);
 parfor i = 1:N
-    y = plotLine(lines{i},[128 64 64],'figure',false);
+    y = plotLine(lines{i},[512 256 256],'figure',false);
     xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
     xc{i} = cell2mat(xc{i}(:));
 end
