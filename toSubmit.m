@@ -12,31 +12,31 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
 
-N = 29; % Number of field lines to do
-x0 = [ones(1,N)' (25:.5:39)' ones(1,N)'];
+% N = 29; % Number of field lines to do
+% x0 = [ones(1,N)' (25:.5:39)' ones(1,N)'];
+% 
+% lines = cell(1,N);
+% parfor i=1:N
+%     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
+%     lines{i} = fieldLine(bfield.val, 1e5,x0(i,:));
+% end
+% 
+% save([wdir 'section5.mat'],'lines')
 
-lines = cell(1,N);
-parfor i=1:N
-    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
-    lines{i} = fieldLine(bfield.val, 1e5,x0(i,:));
+
+xc = cell(N,1);
+parfor i = 1:N
+    y = plotLine(lines{i},[128 64 64],'figure',false);
+    xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
+    xc{i} = cell2mat(xc{i}(:));
 end
 
-save([wdir 'section5.mat'],'lines')
+figure(1); clf; hold on
 
-
-% xc = cell(N,1);
-% parfor i = 1:N
-%     y = plotLine(lines{i},[128 64 64],'figure',false);
-%     xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
-%     xc{i} = cell2mat(xc{i}(:));
-% end
-% 
-% figure(1); clf; hold on
-% 
-% for i = 1:N
-%     v = xc{i};
-%     plot(v(:,1),v(:,2),'.','Color',[.5 i/N 1-i/N])
-% end
+for i = 1:N
+    v = xc{i};
+    plot(v(:,1),v(:,2),'.','Color',[.5 i/N 1-i/N])
+end
 
 
 % info = 'Created 7/5 with ode23t, t = 1e4';
