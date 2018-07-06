@@ -16,7 +16,7 @@ N = 32; % Number of field lines to do
 lambda = cell(1,N);
 parfor i=1:N
     % line = load(['fieldline' num2str(i) '.mat']);
-    lines = load('section5.mat')
+    lines = load('section4.mat')
     mu = ergodicMeasure(lines{i},[128 64 64]);
     
     field = load('../bfield.compr.mat')
