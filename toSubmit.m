@@ -5,23 +5,41 @@
 % I'll also use this file for login-node runs. It's just faster to
 % write them up here.
 
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Visualization
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Utils
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/reading
+
 wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
 cd(wdir);
 
 if isempty(gcp('nocreate'))
-    pp = parpool('local',16);
+    pp = parpool('local',128);
 end
 
-N = 32; % Number of field lines to do
-lambda = cell(1,N);
+N = 128; % Number of field lines to do
 parfor i=1:N
-    % line = load(['fieldline' num2str(i) '.mat']);
-    lines = load('section4.mat')
-    mu = ergodicMeasure(lines.lines{i},[128 64 64]);
-    
-    field = load('../bfield.compr.mat')
-    lambda{i} = bLyapunov(field.val,mu);
+    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.mat');
+    lines{i} = fieldLine(bfield.val, 1e5);
 end
+
+info = 'Created 7/6 with ode23t, t = 1e5';
+save([wdir 'lines1.mat'],'lines','info')
+
+
+
+
+
+
+% lambda = cell(1,N);
+% parfor i=1:N
+%     % line = load(['fieldline' num2str(i) '.mat']);
+%     lines = load('section4.mat')
+%     mu = ergodicMeasure(lines.lines{i},[128 64 64]);
+%     
+%     field = load('../bfield.compr.mat')
+%     lambda{i} = bLyapunov(field.val,mu);
+% end
 
 
 
