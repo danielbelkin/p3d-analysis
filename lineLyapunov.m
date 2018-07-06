@@ -1,9 +1,9 @@
 function lambda = lineLyapunov(path,Bfield)
-% Plan: Compute Jacobian at every point on field (in a 3x3 cell array)
-% Then use linear interpolation to compute each element at every point on
-% the path
-% Then average along the path with a cellfun
-% Then find eigenvalues
+% lambda = lineLyapunov(path,Bfield)
+% Computes field Jacobian everywhere, then averages it along path
+% Path must be unit-speed at the moment (TODO: Add pathInterp feature)
+% 
+%
 
 disp('Running lineLyapunov...')
 
