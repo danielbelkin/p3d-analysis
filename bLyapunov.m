@@ -29,13 +29,13 @@ bfield = Bfield./B; % Unit vector field
 if nargin < 2
     mu = B(:); % Just use field
 elseif islogical(measure)
-    mu = B(:).*measure; % Treat it as isIn
+    mu = B(:).*measure(:); % Treat it as isIn
 else
-    mu = measure; % Treat it as the measure
+    mu = measure(:); % Treat it as the measure
 end
 
-mu = mu/sum(mu(:)); % Normalize
-netB = sum(mu(:)); % Be careful about interpretation
+mu = mu/sum(mu); % Normalize
+netB = sum(mu); % Be careful about interpretation
 
 
 % Construct the gradient operator
