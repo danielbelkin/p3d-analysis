@@ -13,6 +13,9 @@ addpath /global/u2/d/dbelkin/matlab/p3d-analysis/reading
 wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
 cd(wdir);
 
+disp('Running...')
+
+
 if isempty(gcp('nocreate'))
     pp = parpool('local',32);
 end
