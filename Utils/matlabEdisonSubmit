@@ -1,9 +1,8 @@
 #!/bin/bash -l
 #SBATCH -p regular
 #SBATCH -N 1
-#SBATCH -c 32
-#SBATCH -C haswell
+#SBATCH -c 24
 #SBATCH -t 08:00:00
 cd $SLURM_SUBMIT_DIR   # optional, since this is the default behavior
 module load matlab
-srun -n 1 -c 32 matlab -nodisplay -r toSubmit -logfile toSubmit.log
+srun -n 1 -c 24 matlab -nodisplay -r toSubmit -logfile toSubmit.log
