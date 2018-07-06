@@ -14,7 +14,7 @@ wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
 cd(wdir);
 
 if isempty(gcp('nocreate'))
-    pp = parpool('local',128);
+    pp = parpool('local',32);
 end
 
 N = 128; % Number of field lines to do
@@ -25,11 +25,6 @@ end
 
 info = 'Created 7/6 with ode23t, t = 1e5';
 save([wdir 'lines1.mat'],'lines','info')
-
-
-
-
-
 
 % lambda = cell(1,N);
 % parfor i=1:N
