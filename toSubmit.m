@@ -17,7 +17,7 @@ lambda = cell(1,N);
 parfor i=1:N
     % line = load(['fieldline' num2str(i) '.mat']);
     lines = load('section4.mat')
-    mu = ergodicMeasure(lines.val{i},[128 64 64]);
+    mu = ergodicMeasure(lines.lines{i},[128 64 64]);
     
     field = load('../bfield.compr.mat')
     lambda{i} = bLyapunov(field.val,mu);
