@@ -1,4 +1,4 @@
-function [lambda, stats] = bLyapunov(Bfield,isIn)
+function [lambda, stats] = bLyapunov(Bfield,measure)
 % [LAMBDA, STATS] = bLyapunov(BFIELD)
 % Function to compute lyapunov exponents all in one go.
 % Works quite quickly on compressed data; much too slow for raw data.
@@ -6,8 +6,10 @@ function [lambda, stats] = bLyapunov(Bfield,isIn)
 % BFIELD = cat(4,BX,BY,BZ) 
 % This could be parallelized, but it's probably not worth it.
 %
-% [LAMBDA, STATS] = bLyapunov(BFIELD,isIn) allows you to add a logical isIn
-% which specifies a region. Use ergodicMeasure to generate it. 
+% [LAMBDA, STATS] = bLyapunov(BFIELD,MEASURE) gives more control over the
+% region used. If MEASURE is a logical, bLyapunov computes a based on B for
+% only the region specified by MEASURE. If MEASURE is a numeric array, it
+% is assumed to be proportional to the desired ergodic measure. 
 % 
 % Stats contain: 
 %   avgJ, the weighted average Jacobian
@@ -17,19 +19,23 @@ function [lambda, stats] = bLyapunov(Bfield,isIn)
 %   netB, the sum of abs(B) over the region
 %   Lambda, the matrix from which lyapuonv exponents are calculated
 
-if nargin < 2
-    isIn = 1; % By default, include whole space
-elseif any(isIn(:) > 1)
-    isIn = isIn > 0; % Only use the logical. 
-end
+% okargs = {'isIn' 'mu'};
+% defaults = {1 false};
+% [isIn,mu] = parseArgs(okargs, defaults, varargin{:});
 
 B = sqrt(sum(Bfield.^2,4));
 bfield = Bfield./B; % Unit vector field
-mu = B(:).*isIn(:); % Compute unnormalized measure
-netB = sum(mu);
-mu = mu/netB; % Normalize
 
+if nargin < 2
+    mu = B(:); % Just use field
+elseif islogical(measure)
+    mu = B(:).*measure; % Treat it as isIn
+else
+    mu = measure; % Treat it as the measure
+end
 
+mu = mu/sum(mu(:)); % Normalize
+netB = sum(mu(:)); % Be careful about interpretation
 
 
 % Construct the gradient operator
@@ -60,5 +66,6 @@ if nargout == 2
     stats.stdJ = stdJ;
     stats.netB = netB;
 end
+
 disp('Done')
 end
