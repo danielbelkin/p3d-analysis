@@ -17,17 +17,17 @@ disp('Running...')
 
 
 if isempty(gcp('nocreate'))
-    pp = parpool('local',32);
+    pp = parpool('local',16);
 end
 
-N = 128; % Number of field lines to do
+N = 16; % Number of field lines to do
 parfor i=1:N
     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.mat');
     lines{i} = fieldLine(bfield.val, 1e5);
 end
 
-info = 'Created 7/6 with ode23t, t = 1e5';
-save([wdir 'lines1.mat'],'lines','info')
+info = 'Created 7/9 with ode23t, t = 1e5';
+save([wdir 'lines2.mat'],'lines','info')
 
 % lambda = cell(1,N);
 % parfor i=1:N
