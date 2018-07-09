@@ -17,10 +17,10 @@ disp('Running...')
 
 
 if isempty(gcp('nocreate'))
-    pp = parpool('local',32);
+    pp = parpool('local',16);
 end
 
-N = 32; % Number of field lines to do
+N = 16; % Number of field lines to do
 parfor i=1:N
     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.mat');
     lines{i} = fieldLine(bfield.val, 1e5);
