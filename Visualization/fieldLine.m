@@ -68,6 +68,7 @@ f = @(~,x) [interpFun(boxmod(x),bfield(:,:,:,1));...
 % options = odeset('Jacobian',Jfun); % For 23t
 options = odeset;
 
+disp('Starting trace...')
 tic
 % [~,x] = ode45(f,[0 t],x0,options); %
 [~,x] = ode23t(f,[0 t],x0,options);

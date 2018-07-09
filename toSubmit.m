@@ -22,7 +22,7 @@ end
 
 N = 16; % Number of field lines to do
 parfor i=1:N
-    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.mat');
+    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
     lines{i} = fieldLine(bfield.val, 1e5);
 end
 
