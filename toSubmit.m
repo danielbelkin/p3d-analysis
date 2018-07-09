@@ -27,9 +27,13 @@ parfor i=1:N
 end
 
 info = 'Created 7/9 with ode23t, t = 1e5';
-save([wdir 'lines2.mat'],'lines','info')
+save([wdir 'lines3.mat'],'lines','info')
 
-% Question: Can we look at c
+% Question: Can we look at correlations between lines?
+% mu{i} = ergodicMeausre(lines(i)
+% mu{i} = mu{i}(:);
+% r = corrcoef(cell2mat(mu(:)'));
+
 
 % lambda = cell(1,N);
 % parfor i=1:N
