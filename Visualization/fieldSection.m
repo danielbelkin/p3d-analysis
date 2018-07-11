@@ -16,7 +16,8 @@ isCross = @(x) sin(pi*x(:,3)/nvals(3)); % Detects boundary crossings
 % Function to keep a path inside the box:
 boxmod = @(x) [mod(x(:,1),nvals(1)) mod(x(:,2),nvals(2)) mod(x(:,3),nvals(3))];
 
-try gcp
+try 
+    gcp
     xc = cell(numel(lines),1);
     parfor i = 1:numel(lines)
         xc{i} = boxmod(findCross(lines{i},isCross)); % Break into sections
@@ -25,7 +26,9 @@ catch
     xc = cellfun(@(x) boxmod(findCross(x,isCross)), lines,'UniformOutput',false);
 end
 
-cfun = @(x0) sin(pi*x0./nvals).^2; % Determines color pattern
+% cfun = @(x0) sin(pi*x0./nvals).^2; % Determines color pattern
+x0 = cellfun(@(x) x(1,:),xc);
+cfun = @(x) (x - min(x0))./(max(x0) - min(x0)); % Linear 
 
 figure(1); clf; hold on
 for i = 1:numel(lines)
@@ -34,29 +37,17 @@ end
 end
 
 
-
-
 function y = findCross(path,isCross)
 % Function to find crossings
 
-path = double(path);
-svals = [0; cumsum(sum(diff(path).^2,2))]; % Arc-length at each point
-
-% Construct parametric path by interpolation:
-pathfun = @(s) [interp1(svals,path(:,1),s),...
-    interp1(svals,path(:,2),s),...
-    interp1(svals,path(:,3),s)];
+path = double(path); % Make sure it's a double
+% Parameterize the curve by an arbitrary scalar s:
+pathfun = @(s) [interp1(path(:,1),s),...
+    interp1(path(:,2),s),...
+    interp1(path(:,3),s)];
 
 %% Break path into sections
-breaks = [1; find(diff(sign(isCross(path)))) + 1; size(path,1)]; % Identifies sign changes
-N = numel(breaks)-1; % Number of chunks to break into
-
-
-% Pin down crossings
-scross = zeros(N-1,1);
-for i = 1:N-1
-    scross(i) = fzero(@(s) isCross(pathfun(s)),svals(breaks(i+1) + [-1 0]));
-end
-
-y = pathfun(scross); % All it takes, right?
+breaks = [1; find(diff(sign(isCross(path)))) + 1; size(path,1)]; % Identify intervals in which isCross changes sign
+scross = arrayfun(@(i) fzero(@(s) isCross(pathfun(s)),[i-1 i]),breaks(2:end-1)); % Find the s-value of the zero
+y = pathfun(scross); % Convert s back into cartesian coordinates
 end

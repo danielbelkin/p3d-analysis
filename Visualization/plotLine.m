@@ -2,6 +2,7 @@ function y = plotLine(path,nvals,varargin)
 % y = plotLine(path,nvals)
 % Plots a single fieldline. The line should be a 3xN 
 % Like fieldPlot, but should hopefully run faster.
+% Could be made faster by using ideas from fieldSection/findCross.
 
 %%
 okargs = {'figure'};
