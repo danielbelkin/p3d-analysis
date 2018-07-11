@@ -1,6 +1,8 @@
-function lle = localLyapunov(bfield)
+function lle = localLyapunov(Bfield)
+s = size(Bfield);
 
-s = size(bfield);
+B = sqrt(sum(Bfield.^2,4));
+bfield = Bfield./B; % Unit vector field
 
 % Construct the gradient operator
 d = cat(3,-ones(3),zeros(3),ones(3)); % This gives 18 times the gradient.
