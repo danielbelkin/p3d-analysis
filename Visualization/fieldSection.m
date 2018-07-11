@@ -1,25 +1,31 @@
-function fieldSection(lines,nvals)
+function xc = fieldSection(lines,nvals)
 % fieldSection(lines,nvals)
-% Just uses the intersections with the edges
-% Could be made faster by writing a special function instead of plotLine
+% TODO: Add optional arguments for:
+%   isCross function handle
+%   cfun function handle
+%   figure to plot to
+% TODO: Add parallelization?
 
 if ~iscell(lines)
     lines = {lines};
 end
 
-% Function to detect boundary crossings:
-isCross = @(x) sin(pi*x(:,3)/nvals(3)); % TODO: Make this an optional argument
+isCross = @(x) sin(pi*x(:,3)/nvals(3)); % Detects boundary crossings
+
 
 % Function to keep a path inside the box:
 boxmod = @(x) [mod(x(:,1),nvals(1)) mod(x(:,2),nvals(2)) mod(x(:,3),nvals(3))];
 
-
-xc = cell(numel(lines),1);
-for i = 1:numel(lines)
-    xc{i} = boxmod(findCross(lines{i},isCross)); % Break into sections
+try gcp
+    xc = cell(numel(lines),1);
+    parfor i = 1:numel(lines)
+        xc{i} = boxmod(findCross(lines{i},isCross)); % Break into sections
+    end
+catch
+    xc = cellfun(@(x) boxmod(findCross(x,isCross)), lines,'UniformOutput',false);
 end
 
-cfun = @(x0) sin(pi*x0./nvals).^2; % TODO: Make this an optional argument
+cfun = @(x0) sin(pi*x0./nvals).^2; % Determines color pattern
 
 figure(1); clf; hold on
 for i = 1:numel(lines)

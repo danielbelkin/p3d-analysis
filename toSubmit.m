@@ -64,20 +64,6 @@ save([wdir 'lines3.mat'],'lines','info')
 % 
 % save([wdir 'section6.mat'],'lines')
 
-% xc = cell(N,1);
-% parfor i = 1:N
-%     y = plotLine(lines{i},[512 256 256],'figure',false);
-%     xc{i} = cellfun(@(x) x(1,:),y,'UniformOutput',false);
-%     xc{i} = cell2mat(xc{i}(:));
-% end
-% 
-% figure(1); clf; hold on
-% 
-% for i = 1:N
-%     v = xc{i};
-%     plot(v(:,1),v(:,2),'.','Color',[.5 i/N 1-i/N])
-% end
-
 
 % info = 'Created 7/5 with ode23t, t = 1e4';
 % for i=1:N
