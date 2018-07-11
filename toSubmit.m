@@ -19,6 +19,7 @@ disp('Running...')
 if isempty(gcp('nocreate'))
     pp = parpool('local',16);
 end
+% PROBLEM: Way too slow. Next time, request only 12 workers.
 
 N = 16; % Number of field lines to do
 parfor i=1:N

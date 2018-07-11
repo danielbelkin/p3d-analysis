@@ -4,6 +4,8 @@ function x = drawPoincare(bfield, npts, x0)
 % approximately) npts
 %
 % Idea: We should also fill in some points 
+% TODO: Rewrite this to take a field line instead
+% INCOMPLETE
 
 s = size(bfield);
 if nargin < 3
