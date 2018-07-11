@@ -27,7 +27,8 @@ catch
 end
 
 % cfun = @(x0) sin(pi*x0./nvals).^2; % Determines color pattern
-x0 = cellfun(@(x) x(1,:),xc);
+x0 = cellfun(@(x) x(1,:),xc,'UniformOutput',false);
+x0 = cell2mat(x0(:));
 cfun = @(x) (x - min(x0))./(max(x0) - min(x0)); % Linear 
 
 figure(1); clf; hold on
