@@ -17,12 +17,12 @@ for i = 1:3
 end
 
 Jval = zeros(3,3);
-lle = zeros(s(1:3));
+lle = zeros(s(1:3),3);
 for i = 1:s(1)
     for j = 1:s(2)
         for k = 1:s(3)
             Jval(:) = J(i,j,k,:,:);
-            lle(i,j,k) = max(real(eig(Jval)));
+            lle(i,j,k,:) = real(eig(Jval));
         end
     end
 end
