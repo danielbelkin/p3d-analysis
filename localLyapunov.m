@@ -22,7 +22,7 @@ for i = 1:s(1)
     for j = 1:s(2)
         for k = 1:s(3)
             Jval(:) = J(i,j,k,:,:);
-            lle(i,j,k,:) = real(eig(Jval));
+            lle(i,j,k,:) = eig(1/2*logm(expm(Jval)*expm(Jval)'));
         end
     end
 end
