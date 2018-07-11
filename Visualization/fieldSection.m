@@ -17,7 +17,7 @@ isCross = @(x) sin(pi*x(:,3)/nvals(3)); % Detects boundary crossings
 boxmod = @(x) [mod(x(:,1),nvals(1)) mod(x(:,2),nvals(2)) mod(x(:,3),nvals(3))];
 
 try 
-    gcp
+    gcp;
     xc = cell(numel(lines),1);
     parfor i = 1:numel(lines)
         xc{i} = boxmod(findCross(lines{i},isCross)); % Break into sections
