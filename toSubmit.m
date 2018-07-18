@@ -5,30 +5,33 @@
 % I'll also use this file for login-node runs. It's just faster to
 % write them up here.
 
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Visualization
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Utils
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis/reading
+addpath ~/matlab/p3d-analysis
+run setup.m
 
-wdir = '/scratch2/scratchdirs/dbelkin/heat3d/fieldlines/';
+rdir = [scratch 'd6_11_gem1/staging'];
+
+wdir = [scratch 'gem-matfiles'];
 cd(wdir);
-
-disp('Running...')
 
 
 if isempty(gcp('nocreate'))
-    pp = parpool('local',16);
-end
-% PROBLEM: Way too slow. Next time, request only 12 workers.
-
-N = 16; % Number of field lines to do
-parfor i=1:N
-    bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
-    lines{i} = fieldLine(bfield.val, 1e5);
+    pp = parpool('local',12);
 end
 
-info = 'Created 7/9 with ode23t, t = 1e5';
-save([wdir 'lines3.mat'],'lines','info')
+names = {'bx' 'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+parfor i=1:length(names)
+    readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+end
+
+%
+% N = 16; % Number of field lines to do
+% parfor i=1:N
+%     bfield = load('/scratch2/scratchdirs/dbelkin/heat3d/bfield.compr.mat');
+%     lines{i} = fieldLine(bfield.val, 1e5);
+% end
+% 
+% info = 'Created 7/9 with ode23t, t = 1e5';
+% save([wdir 'lines3.mat'],'lines','info')
 
 % Question: Can we look at correlations between lines?
 % mu{i} = ergodicMeausre(lines(i)
