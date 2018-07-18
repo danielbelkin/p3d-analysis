@@ -20,7 +20,7 @@ end
 
 names = {'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 num = 'tot';
-parfor i=1:length(names)
+for i=1:length(names)
     try
         readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
     catch
