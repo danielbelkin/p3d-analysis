@@ -21,7 +21,7 @@ cd(wdir);
 % names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 names = {'ne' 'ni'};
 num = 'tot';
-parfor i=1:length(names)
+for i=1:length(names)
     try
         readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
     catch
