@@ -18,9 +18,10 @@ cd(wdir);
 %     pp = parpool('local',9);
 % end
 
-names = {'bx' 'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+names = {'ne' 'ni'};
 num = 'tot';
-for i=1:length(names)
+parfor i=1:length(names)
     try
         readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
     catch
