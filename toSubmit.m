@@ -18,10 +18,15 @@ if isempty(gcp('nocreate'))
     pp = parpool('local',12);
 end
 
-names = {'bx' 'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+names = {'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 num = 'tot';
-for i=1:length(names)
-    readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+parfor i=1:length(names)
+    try
+        readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+    catch
+        disp('Error!')
+        disp(names{i})
+    end
 end
 
 %
