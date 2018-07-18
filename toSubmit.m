@@ -14,9 +14,9 @@ wdir = [scratch 'gem-matfiles'];
 cd(wdir);
 
 
-if isempty(gcp('nocreate'))
-    pp = parpool('local',9);
-end
+% if isempty(gcp('nocreate'))
+%     pp = parpool('local',9);
+% end
 
 names = {'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 num = 'tot';
