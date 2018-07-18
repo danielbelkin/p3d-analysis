@@ -18,7 +18,7 @@ cd(wdir);
 %     pp = parpool('local',9);
 % end
 
-names = {'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+names = {'bx' 'by' 'bz' 'ne' 'ni' 'jiz' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 num = 'tot';
 for i=1:length(names)
     try
