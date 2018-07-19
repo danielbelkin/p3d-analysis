@@ -3,7 +3,7 @@
 
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Visualization
 addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Utils
-addpath /global/u2/d/dbelkin/matlab/p3d-analysis/reading
+addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Reading
 
 % Some directory definitions I might want:
 scratch = '/scratch2/scratchdirs/dbelkin/';
