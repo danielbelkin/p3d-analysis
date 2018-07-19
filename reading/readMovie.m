@@ -152,6 +152,12 @@ else % If we're only reading one frame
 end
 
 
+if ~feof(fid)
+    warning('Something wrong with reading?')
+    c = fread(fid,10,'*uint16=>single');
+    disp(c)
+end
+
 fclose(fid);
 data.val = [];
 % TODO: Figure out a way to delete temp.mat
