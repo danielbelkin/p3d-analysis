@@ -29,7 +29,7 @@ function readMovie(num, name, varargin)
 %% Process inputs
 tic % Start timing
 okargs = {'rdir','wdir', 'skip', 'compr'};
-dflts = {'' '' 0 1};
+dflts = {pwd pwd 0 1};
 
 [rdir, wdir, skip, compr] = parseArgs(okargs,dflts,varargin{:});
 
@@ -136,7 +136,8 @@ if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is ter
             disp('Compressing...')
             file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
         else % If we don't need to compress
-            file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
+            file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint8=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
+            % TEMPORARILY CHANGED
         end
         toc
     end
@@ -147,8 +148,7 @@ else % If we're only reading one frame
         disp('Compressing...')
         file.val(:,:,:) = A*parCompress(data,compr,procs) + B;
     else % If we don't need to compress
-        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint8=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
-        % TEMPORARY, TODO: Change back to uint16, probably
+        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
     end
 end
 
