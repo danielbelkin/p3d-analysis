@@ -8,6 +8,29 @@
 addpath ~/matlab/p3d-analysis
 run setup.m
 
+
+
+
+
+
+rdir = [scratch 'd6_11_gem1/staging'];
+wdir = [scratch 'gem-matfiles'];
+cd(wdir);
+
+
+% if isempty(gcp('nocreate'))
+%     pp = parpool('local',9);
+% end
+
+% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+names = {'bx' 'by' 'bz'};
+num = 'tot';
+for i=1:length(names)
+    readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+end
+
+
+
 cd([scratch 'gem-matfiles'])
 names = {'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 for i=1:numel(names)
@@ -26,23 +49,6 @@ mu = (ni + ne)./sum(sum(ni+ne,1),2); % Probability measure
 avg = @(x) sum(sum(x.*mu,1),2); % Not sure how best to weight this
 vcov = @(x,y) avg(sum(x.*y,5)) - sum(avg(x).*avg(y),5);
 r = @(x,y) vcov(x,y)./sqrt(vcov(x,x).*vcov(y,y));
-
-
-% rdir = [scratch 'd6_11_gem1/staging'];
-% 
-% wdir = [scratch 'gem-matfiles'];
-% cd(wdir);
-
-
-% if isempty(gcp('nocreate'))
-%     pp = parpool('local',9);
-% end
-
-% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-% num = 'tot';
-% for i=1:length(names)
-%     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
-% end
 
 %
 % N = 16; % Number of field lines to do
