@@ -21,7 +21,9 @@ je = cat(5,jex,jey,jez);
 vi = ji./ni;
 ve = je./ne;
 
-avg = @(x) mean(mean(x.*(ni+ne),1),2); % Not sure how best to weight this
+mu = (ni + ne)./sum(sum(ni+ne,1),2); % Probability measure
+
+avg = @(x) sum(sum(x.*mu,1),2); % Not sure how best to weight this
 vcov = @(x,y) avg(sum(x.*y,5)) - sum(avg(x).*avg(y),5);
 r = @(x,y) vcov(x,y)./sqrt(vcov(x,x).*vcov(y,y));
 
