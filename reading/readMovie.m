@@ -23,6 +23,7 @@ function readMovie(num, name, varargin)
 % Why? 
 %
 % TODO: Extend info parameter to include electron mass, etc
+% TODO: Automatically adapt between int16 ("double-byte") and uint16
 
 
 
@@ -30,6 +31,8 @@ function readMovie(num, name, varargin)
 tic % Start timing
 okargs = {'rdir','wdir', 'skip', 'compr'};
 dflts = {pwd pwd 0 1};
+
+type = 'int16'; % CHANGE MANUALLY AS NEEDED
 
 [rdir, wdir, skip, compr] = parseArgs(okargs,dflts,varargin{:});
 
@@ -100,8 +103,17 @@ nframes = ceil(nt/(skip + 1)); % Number of frames we'll actually read
 
 % Prepare normalization coefficients:
 r = ranges(:,:,:,idx + (0:nframes - 1)*length(varnames),:); % min-max data for the current variable
+
+
+% Scaling formula:
+% (maxval - minval)*(x + minint)/(maxint - minint) + minval
+% (maxval - minval)/(maxint - minint) * x + (maxval - minval)/(maxint - minint) * minint + minval
+% A = (maxval - minval)/(maxint - minint)
+% B = A * minint + minval
+
+
 A = diff(r,1,5)*2^-16; % Scale to maximum
-B = r(:,:,:,:,1); % Add in minimum
+B = r(:,:,:,:,1) -2^15*A; % Add in minimum
 
 
 %% Read and save data
@@ -121,7 +133,7 @@ file.val = zeros(ceil(nx/compr),ceil(ny/compr),ceil(nz/compr),nframes,'single');
 rng('shuffle')
 randname = char(randi([97,122],1,5));
 if exist(['temp_' randname '.mat'],'file')
-    error(['File temp_' randname '.mat already exists'])
+    error(['File temp_' ra1ndname '.mat already exists'])
 end
 
 if compr > 1
@@ -129,28 +141,30 @@ if compr > 1
     data.val = zeros(nx,ny,nz); % Used for parCompress
 end
 
+format = [num2str(nx*ny*nz) '*' type '=>single'];
+
 toc % Marks end of preparing-to-read
 if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is terrible.
     for i = 1:nframes
         disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
         if compr > 1
             % This one line consumes nearly all of the time:
-            data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz); 
+            data.val = reshape(fread(fid,nx*ny*nz,format,2*nx*ny*nz*skip),nx,ny,nz); 
             disp('Compressing...')
             file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
         else % If we don't need to compress
-            file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
+            file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,format,2*nx*ny*nz*skip),nx,ny,nz) + B(i);
         end
         toc
     end
 else % If we're only reading one frame
     disp('Getting data for frame 1 of 1')
     if compr > 1
-        data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz);
+        data.val = reshape(fread(fid,nx*ny*nz,format,2*nx*ny*nz*skip),nx,ny,nz);
         disp('Compressing...')
         file.val(:,:,:) = A*parCompress(data,compr,procs) + B;
     else % If we don't need to compress
-        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
+        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,format,2*nx*ny*nz*skip),nx,ny,nz) + B;
     end
 end
 
