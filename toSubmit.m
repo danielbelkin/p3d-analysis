@@ -11,7 +11,7 @@ run setup.m
 cd([scratch 'gem-matfiles'])
 names = {'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 for i=1:numel(names)
-    load([names{i} '.tot.mat');
+    load([names{i} '.tot.mat']);
     assignin('base',names{i},val)
 end
 
