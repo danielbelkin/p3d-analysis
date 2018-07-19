@@ -8,10 +8,28 @@
 addpath ~/matlab/p3d-analysis
 run setup.m
 
-rdir = [scratch 'd6_11_gem1/staging'];
+cd([scratch 'gem-matfiles'])
+names = {'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+for i=1:numel(names)
+    load([names{i} '.tot.mat');
+    assignin('base',names{i},val)
+end
 
-wdir = [scratch 'gem-matfiles'];
-cd(wdir);
+ji = cat(5,jix,jiy,jiz);
+je = cat(5,jex,jey,jez);
+
+vi = ji./ni;
+ve = je./ne;
+
+avg = @(x) mean(mean(x.*(ni+ne),1),2); % Not sure how best to weight this
+vcov = @(x,y) avg(sum(x.*y,5)) - sum(avg(x).*avg(y),5);
+r = @(x,y) vcov(x,y)./sqrt(vcov(x,x).*vcov(y,y));
+
+
+% rdir = [scratch 'd6_11_gem1/staging'];
+% 
+% wdir = [scratch 'gem-matfiles'];
+% cd(wdir);
 
 
 % if isempty(gcp('nocreate'))
@@ -19,16 +37,10 @@ cd(wdir);
 % end
 
 % names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-names = {'ne' 'ni'};
-num = 'tot';
-for i=1:length(names)
-    try
-        readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
-    catch
-        disp('Error!')
-        disp(names{i})
-    end
-end
+% num = 'tot';
+% for i=1:length(names)
+%     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+% end
 
 %
 % N = 16; % Number of field lines to do
