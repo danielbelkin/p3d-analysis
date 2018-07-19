@@ -124,8 +124,11 @@ if exist(['temp_' randname '.mat'],'file')
     error(['File temp_' randname '.mat already exists'])
 end
 
-data = matfile([wdir 'temp_' randname '.mat'],'Writable',true);
-data.val = zeros(nx,ny,nz); % Not sure if this is a good idea or not
+if compr > 1
+    data = matfile([wdir 'temp_' randname '.mat'],'Writable',true);
+    data.val = zeros(nx,ny,nz); % Used for parCompress
+end
+
 toc % Marks end of preparing-to-read
 if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is terrible.
     for i = 1:nframes
@@ -160,7 +163,7 @@ end
 
 fclose(fid);
 data.val = [];
-% TODO: Figure out a way to delete temp.mat
+% TODO: Figure out a way to delete temp file
 info.isComplete = true;
 file.info = info;
 disp(['Done reading ' filename])
