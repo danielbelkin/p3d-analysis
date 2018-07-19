@@ -23,7 +23,7 @@ cd(wdir);
 % end
 
 % names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-names = {'bx' 'by' 'bz'};
+names = {'bx'};
 num = 'tot';
 for i=1:length(names)
     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
