@@ -133,12 +133,6 @@ if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is ter
         if compr > 1
             % This one line consumes nearly all of the time:
             data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz); 
-            % Could avoid the call to 'reshape', but it probably isn't
-            % worth it.
-            % Crazy idea: Parallelize the reading.
-            % Cons: A shit-ton of index math, might not be any faster (if
-            % only one processor can open the file at a time)
-            % Pros: Might be a lot faster. 
             disp('Compressing...')
             file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
         else % If we don't need to compress
@@ -153,9 +147,9 @@ else % If we're only reading one frame
         disp('Compressing...')
         file.val(:,:,:) = A*parCompress(data,compr,procs) + B;
     else % If we don't need to compress
-        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
+        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint8=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
+        % TEMPORARY, TODO: Change back to uint16, probably
     end
-    
 end
 
 
