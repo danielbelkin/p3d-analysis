@@ -106,14 +106,14 @@ r = ranges(:,:,:,idx + (0:nframes - 1)*length(varnames),:); % min-max data for t
 
 
 % Scaling formula:
-% (maxval - minval)*(x + minint)/(maxint - minint) + minval
-% (maxval - minval)/(maxint - minint) * x + (maxval - minval)/(maxint - minint) * minint + minval
+% (maxval - minval)*(x - minint)/(maxint - minint) + minval
+% (maxval - minval)/(maxint - minint) * x - (maxval - minval)/(maxint - minint) * minint + minval
 % A = (maxval - minval)/(maxint - minint)
-% B = A * minint + minval
+% B = minval - A * minint
 
 
-A = diff(r,1,5)*2^-16; % Scale to maximum
-B = r(:,:,:,:,1) -2^15*A; % Add in minimum
+A = diff(r,1,5)/2^16; % Scale to maximum
+B = r(:,:,:,:,1) + 2^15*A; % Add in minimum
 
 
 %% Read and save data
