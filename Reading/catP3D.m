@@ -21,7 +21,7 @@ if ~isempty(rdir) && ~strcmp(rdir(end),'/')
 end
 
 for i=1:length(varnames)    
-    eval(['!rm ' wdir 'movie.' varnames{i} '.tot'])
-    eval(['!cat ' rdir 'movie.' varnames{i} '.??? > ' wdir 'movie.' varnames{i} '.tot'])
+    % eval(['!rm ' wdir 'movie.' varnames{i} '.tot'])
+    eval(['!cat ' rdir 'movie.' varnames{i} '.0?? > ' wdir 'movie.' varnames{i} '.tot'])
 end
 end
