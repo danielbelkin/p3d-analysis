@@ -8,3 +8,4 @@ addpath /global/u2/d/dbelkin/matlab/p3d-analysis/Reading
 % Some directory definitions I might want:
 scratch = '/scratch2/scratchdirs/dbelkin/';
 p3d = '/global/u2/d/dbelkin/matlab/p3d-analysis/';
+proj = '/global/project/projectdirs/reconn/';

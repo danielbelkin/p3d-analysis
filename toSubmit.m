@@ -8,31 +8,22 @@
 addpath ~/matlab/p3d-analysis
 run setup.m
 
-
-
-
-
-
-rdir = [scratch 'd6_11_gem1/staging'];
+rdir = [proj 'all'];
 wdir = [scratch 'gem-matfiles'];
 cd(wdir);
-
 
 if isempty(gcp('nocreate'))
     pp = parpool('local',12);
 end
 
 names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-% names = {'bx'};
 num = 'tot';
 parfor i=1:length(names)
     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
 end
 
 
-
-cd([scratch 'gem-matfiles'])
-names = {'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
 for i=1:numel(names)
     load([names{i} '.tot.mat']);
     assignin('base',names{i},val)
@@ -43,6 +34,10 @@ je = cat(5,jex,jey,jez);
 
 vi = ji./ni;
 ve = je./ne;
+
+rho = ni + .04*ne;
+bfield = cat(5,bx,by,bz);
+va = bfield./sqrt(rho);
 
 mu = (ni + ne)./sum(sum(ni+ne,1),2); % Probability measure
 
