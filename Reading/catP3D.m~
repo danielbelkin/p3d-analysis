@@ -1,0 +1,26 @@
+function catP3D(varargin)
+% Function to automatically collate p3d output files
+% TODO: Add option to copy them over from list of directories
+
+varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
+    'ne'; 'jex';'jey'; 'jez'; 'pexx'; 'peyy'; 'pezz'; 'pexy'; 'peyz';
+    'pexz'; 'ni'; 'jix'; 'jiy'; 'jiz'; 'pixx'; 'piyy';'pizz'; 'pixy';
+    'piyz'; 'pixz'; 'log'};
+
+
+okargs = {'rdir' 'wdir' 'vars'};
+dflts = {pwd pwd varnames};
+[rdir,wdir,varnames] = parseArgs(okargs,dflts,varargin{:});
+
+if iscell(rdir)
+    for j=1:length(rdir)
+        for i = 1:length(
+       eval(['!mv ' rdir '/movie.' varnames{i} '.??? > ' wdir '/movie.' varnames{i} '.tot'])
+end
+
+
+for i=1:length(varnames)    
+    eval(['!rm ' wdir '/movie.' varnames{i} '.tot'])
+    eval(['!cat ' wdir '/movie.' varnames{i} '.??? > ' wdir '/movie.' varnames{i} '.tot'])
+end
+end
