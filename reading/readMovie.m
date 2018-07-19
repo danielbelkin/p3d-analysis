@@ -135,29 +135,28 @@ if nframes > 1 % Yes, this is terrible. Everything about matfile indexing is ter
         disp(['Getting data for frame ' num2str(i) ' of ' num2str(nframes)])
         if compr > 1
             % This one line consumes nearly all of the time:
-            data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz); 
+            data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz); 
             disp('Compressing...')
             file.val(:,:,:,i) = A(i)*parCompress(data,compr,procs) + B(i);
         else % If we don't need to compress
-            file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
+            file.val(:,:,:,i) = A(i)*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B(i);
         end
         toc
     end
 else % If we're only reading one frame
     disp('Getting data for frame 1 of 1')
     if compr > 1
-        data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz);
+        data.val = reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz);
         disp('Compressing...')
         file.val(:,:,:) = A*parCompress(data,compr,procs) + B;
     else % If we don't need to compress
-        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*uint16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
+        file.val(:,:,:) = A*reshape(fread(fid,nx*ny*nz,[num2str(nx*ny*nz) '*int16=>single'],2*nx*ny*nz*skip),nx,ny,nz) + B;
     end
 end
 
-
+c = fread(fid,1,'int16');
 if ~feof(fid)
     warning('Something wrong with reading?')
-    c = fread(fid,10,[num2str(10) '*uint16=>single']);
     disp(c)
 end
 

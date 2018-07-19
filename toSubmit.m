@@ -18,14 +18,14 @@ wdir = [scratch 'gem-matfiles'];
 cd(wdir);
 
 
-% if isempty(gcp('nocreate'))
-%     pp = parpool('local',9);
-% end
+if isempty(gcp('nocreate'))
+    pp = parpool('local',12);
+end
 
-% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-names = {'bx'};
+names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+% names = {'bx'};
 num = 'tot';
-for i=1:length(names)
+parfor i=1:length(names)
     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
 end
 
