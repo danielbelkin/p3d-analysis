@@ -157,7 +157,7 @@ end
 
 if ~feof(fid)
     warning('Something wrong with reading?')
-    c = fread(fid,10,'*uint16=>single');
+    c = fread(fid,10,[num2str(10) '*uint16=>single']);
     disp(c)
 end
 
