@@ -15,10 +15,10 @@ pi = mi*vi + afield; % q = 1
 Ne = sum(ne(:));
 Ni = sum(ni(:));
 
-KE = 1/2/me*sum(ne.*pe(:).^2)/Ne + 1/2/mi*sum(ni.*pi(:).^2)/Ni; % Average kinetic energy
-ME = -1/2/me*sum(ne.*afield.^2)/Ne -1/2/mi*sum(ni.*afield.^2)/Ni; % Average magnetic energy
+KE = 1/2/me*ne.*pe.^2/Ne + 1/2/mi*ni.*pi.^2/Ni; % Average kinetic energy
+ME = -1/2/me*ne.*afield.^2/Ne -1/2/mi*ni.*afield.^2/Ni; % Average magnetic energy
 
-E = KE + ME; % Average total energy per particle
+E = sum(KE(:) + ME(:)); % Average total energy per particle
 Ze = sum(exp(1/2/me/E*afield(:).^2)); % Partition function for electrons
 Zi = sum(exp(1/2/mi/E*afield(:).^2)); % Partition function for ions
 % These are partial partition functions. They neglect the momentum-space

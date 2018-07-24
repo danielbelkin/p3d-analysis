@@ -8,7 +8,6 @@ n = size(h); % Want to make sure it's at least length 3?
 d = length(size(h));
 
 indx = circExpand(s(1:d),(n-1)/2); 
-size(indx)
 indx(d+1:length(s)) = {':'};
 
 x = convn(x(indx{:}),h,'valid');
