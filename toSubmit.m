@@ -12,15 +12,15 @@ rdir = [proj 'gem_orig/all'];
 wdir = [scratch 'gem-matfiles'];
 cd(wdir);
 
-if isempty(gcp('nocreate'))
-    pp = parpool('local',12);
-end
+% if isempty(gcp('nocreate'))
+%     pp = parpool('local',12);
+% end
 
-names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-num = 'tot';
-parfor i=1:length(names)
-    readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
-end
+% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+% num = 'tot';
+% parfor i=1:length(names)
+%     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+% end
 
 
 names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
@@ -35,15 +35,16 @@ je = cat(5,jex,jey,jez);
 vi = ji./ni;
 ve = je./ne;
 
-rho = ni + .04*ne;
+me = .04;
+rho = ni + me*ne;
 bfield = cat(5,bx,by,bz);
 va = bfield./sqrt(rho);
 
-mu = (ni + ne)./sum(sum(ni+ne,1),2); % Probability measure
-
-avg = @(x) sum(sum(x.*mu,1),2); % Not sure how best to weight this
-vcov = @(x,y) avg(sum(x.*y,5)) - sum(avg(x).*avg(y),5);
-r = @(x,y) vcov(x,y)./sqrt(vcov(x,x).*vcov(y,y));
+% mu = (ni + ne)./sum(sum(ni+ne,1),2); % Probability measure
+% 
+% avg = @(x) sum(sum(x.*mu,1),2); % Not sure how best to weight this
+% vcov = @(x,y) avg(sum(x.*y,5)) - sum(avg(x).*avg(y),5);
+% r = @(x,y) vcov(x,y)./sqrt(vcov(x,x).*vcov(y,y));
 
 %
 % N = 16; % Number of field lines to do
