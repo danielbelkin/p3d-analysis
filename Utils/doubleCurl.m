@@ -1,0 +1,19 @@
+function c = doubleCurl(v)
+% Faster version of double-curl
+% Requires only 9 convolutions, cf 12 for curl(curl())
+dx = [-1; 0; 1];
+dy = reshape(dx,1,3);
+dz = reshape(dx,1,1,3);
+c = zeros(size(v));
+c(:,:,:,:,1) = cconvn(v(:,:,:,:,2), conv(dy,dx)) + ...
+    cconvn(v(:,:,:,:,1), -conv(dy,dy)-conv(dz,dz)) + ...
+    cconvn(v(:,:,:,:,3), conv(dz,dx));
+
+c(:,:,:,:,2) = cconvn(v(:,:,:,:,1), conv(dy,dx)) + ...
+    cconvn(v(:,:,:,:,2), -conv(dx,dx)-conv(dz,dz)) + ...
+    cconvn(v(:,:,:,:,3), conv(dz,dy));
+
+c(:,:,:,:,3) = cconvn(v(:,:,:,:,1), conv(dz,dx)) + ...
+    cconvn(v(:,:,:,:,3), -conv(dx,dx)-conv(dy,dy)) + ...
+    cconvn(v(:,:,:,:,2), conv(dz,dy));
+end
