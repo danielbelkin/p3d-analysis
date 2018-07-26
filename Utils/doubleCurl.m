@@ -2,7 +2,7 @@ function c = doubleCurl(v)
 % Faster version of double-curl
 % Requires only 9 convolutions, cf 12 for curl(curl())
 % Assumes 5-D formatting
-dx = [-1; 0; 1];
+dx = [-1; 0; 1]; % This is twice the curl.
 dy = reshape(dx,1,3);
 dz = reshape(dx,1,1,3);
 c = zeros(size(v));
