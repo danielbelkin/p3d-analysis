@@ -7,10 +7,7 @@ jfield = ni.*vi - ne.*ve;
 % disp('Using n = 20 for vectorPotential')
 
 
-afield = vectorPotential(jfield);
-% Might want to write a version that does fourier-space circular
-% convolution instead.
-% or a version of paralell convolution optimized for large kernels?
+afield = vectorPotential2(jfield);
 
 pe = me*ve - afield; % Assuming q = -1. 
 pi = mi*vi + afield; % q = 1
