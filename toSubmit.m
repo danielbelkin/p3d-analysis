@@ -32,12 +32,16 @@ end
 ji = cat(5,jix,jiy,jiz);
 je = cat(5,jex,jey,jez);
 
+clear jix jiy jiz jex jey jez
+
 vi = ji./ni;
 ve = je./ne;
 
 me = .04;
 rho = ni + me*ne;
 bfield = cat(5,bx,by,bz);
+clear bx by bz
+
 va = bfield./sqrt(rho);
 
 % mu = (ni + ne)./sum(sum(ni+ne,1),2); % Probability measure

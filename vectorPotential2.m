@@ -2,12 +2,12 @@ function A = vectorPotential2(J)
 % A = vectorPotential2(J)
 % Uses fourier transform methods
 % WARNING: Scale may be wrong.
+% WARNING: I know it works component-wise. Haven't yet tested it on vector
+% inputs. 
 %
 % But really, we want to be able to do this with vector currents. Need to
 % check that it still works with the extra dimensions.
-% (And it would be slightly faster to construct an fft3 instead of using fftn, I
-% suspect)
-%
+
 
 freqs = @(s) [0:floor(s/2) ceil(s/2)-1:-1:1]; % I think this is right
 

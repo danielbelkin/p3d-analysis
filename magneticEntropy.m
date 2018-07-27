@@ -1,10 +1,13 @@
 function S = magneticEntropy(ve,vi,ne,ni,me,mi)
+% S = magneticEntropy(ve,vi,ne,ni,me,mi)
 % TODO: Check units on energies, canonical momentum in Gaussian formulation
-% TODO: Find out what n should be to get an accurate vector potential
-% Could write something fancy with an adaptive kernel size
+
 jfield = ni.*vi - ne.*ve;
-afield = vectorPotential(jfield,20); % I have no clue what an appropriate m is.
-disp('Using n = 20')
+% afield = vectorPotential(jfield,20); % I have no clue what an appropriate m is.
+% disp('Using n = 20 for vectorPotential')
+
+
+afield = vectorPotential(jfield);
 % Might want to write a version that does fourier-space circular
 % convolution instead.
 % or a version of paralell convolution optimized for large kernels?
