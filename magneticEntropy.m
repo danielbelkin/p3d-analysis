@@ -1,6 +1,7 @@
-function S = magneticEntropy(ve,vi,ne,ni,me,mi)
+function [S,KE,ME] = magneticEntropy(ve,vi,ne,ni,me,mi)
 % S = magneticEntropy(ve,vi,ne,ni,me,mi)
 % TODO: Check units on energies, canonical momentum in Gaussian formulation
+%TODO: 
 
 if nargin < 6
     mi = 1;
@@ -28,7 +29,10 @@ Ni = sum(ni(:));
 KE = 1/2*me*sum(ve.^2,5).*ne/Ne + 1/2*mi*sum(vi.^2,5).*ni/Ni; % KE per particle
 ME = qe.*sum(ve.*afield,5).*ne/Ne + qi.*sum(vi.*afield,5).*ni/Ni; % ME per particle
 
-E = sum(KE(:) + ME(:)); % Average total energy per particle
+KE = sum(KE(:));
+ME = sum(ME(:));
+
+E = KE + ME; % Average total energy per particle
 Ze = sum(exp(1/2/me/E*qe^2*sum(afield(:).^2,5))); % Partition function for electrons
 Zi = sum(exp(1/2/mi/E*qi^2*sum(afield(:).^2,5))); % Partition function for ions
 % These are partial partition functions. They neglect the momentum-space
