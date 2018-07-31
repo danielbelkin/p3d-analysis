@@ -32,8 +32,8 @@ KE = sum3(KE);
 ME = sum3(ME);
 
 E = KE + ME; % Average total energy per particle
-Ze = sum3(exp(1/2/me/E*qe^2*dot(A,A))); % Partition function for electrons
-Zi = sum3(exp(1/2/mi/E*qi^2*dot(A,A))); % Partition function for ions
+Ze = sum3(exp(qe^2/(2*me)/E.*dot(A,A))); % Partition function for electrons
+Zi = sum3(exp(qi^2/(2*mi)/E.*dot(A,A))); % Partition function for ions
 % These are partial partition functions. They neglect the momentum-space
 % part, which is constant in time.
 
