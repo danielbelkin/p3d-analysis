@@ -1,4 +1,6 @@
 function A = vectorPotential(J,m)
+% A = vectorPotential(J,m)
+% Obselete, use vectorPotential2
 % Calculates a vector potential using Biot-Savart formula.
 % Units are weird and arbitrary.
 % TODO: Write a procedure to select m adaptively?
