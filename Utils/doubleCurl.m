@@ -4,7 +4,7 @@ function c = doubleCurl(v)
 % Assumes 5-D formatting
 % Useful in periodic coordinates - built-in curl function is faster if
 % edges not important
-dx = [-1; 0; 1]/2; % This is twice the curl.
+dx = [-1; 0; 1]/2/sqrt(5); % Not sure why this works
 dy = reshape(dx,1,3);
 dz = reshape(dx,1,1,3);
 c = zeros(size(v));
