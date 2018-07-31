@@ -44,6 +44,9 @@ clear bx by bz
 
 va = bfield./sqrt(rho);
 
+
+
+
 % mu = (ni + ne)./sum(sum(ni+ne,1),2); % Probability measure
 % 
 % avg = @(x) sum(sum(x.*mu,1),2); % Not sure how best to weight this
