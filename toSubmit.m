@@ -35,7 +35,7 @@ je = cat(5,jex,jey,jez);
 clear jix jiy jiz jex jey jez
 
 vi = ji./ni;
-ve = je./ne;
+ve = -je./ne;
 
 me = .04;
 rho = ni + me*ne;

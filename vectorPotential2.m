@@ -7,6 +7,7 @@ function A = vectorPotential2(J)
 %
 % But really, we want to be able to do this with vector currents. Need to
 % check that it still works with the extra dimensions.
+% Problem: What if some boundaries are conducting walls, not periodic?
 
 
 freqs = @(s) 2*pi/s*[0:floor(s/2) ceil(s/2)-1:-1:1]; % I think this is right

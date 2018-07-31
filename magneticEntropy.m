@@ -37,7 +37,6 @@ Zi = sum3(exp(qi^2/(2*mi)/E.*dot(A,A))); % Partition function for ions
 % These are partial partition functions. They neglect the momentum-space
 % part, which is constant in time.
 
-
 S = log(Ze) + log(Zi);
 end
 
