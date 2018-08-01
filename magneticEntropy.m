@@ -41,11 +41,11 @@ E = KE + ME; % Average total energy per particle
 A2 = dot(A,A);
 Xe = qe^2/(2*me)/E.*A2;
 X0e = max(Xe(:)); % Normalize to this
-Se = log(sum3(exp(Xe-X0e))) + X0e;
+Se = log1p(sum3(exp(Xe-X0e))) + X0e;
 
 Xi = qi^2/(2*mi)/E.*A2;
 X0i = max(Xi(:)); % Normalize to this
-Si = log(sum3(exp(Xi-X0i))) + X0i;
+Si = log1p(sum3(exp(Xi-X0i))) + X0i;
 
 
 S = Se + Si;
