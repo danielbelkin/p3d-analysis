@@ -50,6 +50,7 @@ Si = log(sum3(exp(Xi-X0i))) + X0i;
 
 % There are many ways we could choose the normalization constant - does it
 % matter?
+% TODO: Figure this out
 
 S = Se + Si;
 end
