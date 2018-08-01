@@ -8,6 +8,7 @@ if nargin < 6
 end
 
 sum3 = @(x) sum(sum(sum(x,1),2),3);
+max3 = @(x) max(max(max(x,1),2),3);
 dot = @(x,y) sum(x.*y,5);
 
 qe = -1;
@@ -40,13 +41,15 @@ E = KE + ME; % Average total energy per particle
 
 A2 = dot(A,A);
 Xe = qe^2/(2*me)/E.*A2;
-X0e = max(Xe(:)); % Normalize to this
-Se = log1p(sum3(exp(Xe-X0e))) + X0e;
+X0e = max3(Xe); % Normalize to this at each time
+Se = log(sum3(exp(Xe-X0e))) + X0e;
 
 Xi = qi^2/(2*mi)/E.*A2;
-X0i = max(Xi(:)); % Normalize to this
-Si = log1p(sum3(exp(Xi-X0i))) + X0i;
+X0i = max3(Xi); % Normalize to this at each time
+Si = log(sum3(exp(Xi-X0i))) + X0i;
 
+% There are many ways we could choose the normalization constant - does it
+% matter?
 
 S = Se + Si;
 end
