@@ -15,7 +15,7 @@ qi = 1;
 
 J = qi.*ni.*vi + qe.*ne.*ve;
 
-A = vectorPotential2(J);
+A = gemVectorPotential(J); % For GEM Challenge data
 
 Ne = sum3(ne);
 Ni = sum3(ni);
