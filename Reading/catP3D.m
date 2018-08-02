@@ -1,6 +1,15 @@
 function catP3D(varargin)
+% catP3D('NAME',VALUE)
 % Function to automatically collate p3d output files
-% TODO: Add option to copy them over from list of directories
+% NAME can be:
+%   rdir
+%   wdir
+%   vars, a cell array of variables to cat
+% 
+% Tops out at movie.*.099, not movie.*.999 - I don't anticipate this being
+% a problem. 
+
+
 
 varnames = {'rho'; 'jx'; 'jy'; 'jz'; 'bx'; 'by'; 'bz'; 'ex'; 'ey'; 'ez';
     'ne'; 'jex';'jey'; 'jez'; 'pexx'; 'peyy'; 'pezz'; 'pexy'; 'peyz';
