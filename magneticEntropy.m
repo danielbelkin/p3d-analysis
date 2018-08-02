@@ -8,7 +8,7 @@ if nargin < 6
 end
 
 sum3 = @(x) sum(sum(sum(x,1),2),3);
-max3 = @(x) max(max(max(x,1),2),3);
+max3 = @(x) max(max(max(x,[],1),[],2),[],3);
 dot = @(x,y) sum(x.*y,5);
 
 qe = -1;
