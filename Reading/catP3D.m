@@ -8,6 +8,7 @@ function catP3D(varargin)
 % 
 % Tops out at movie.*.099, not movie.*.999 - I don't anticipate this being
 % a problem. 
+% Also copies p3d.stdout.000 to p3d.stdout.tot
 
 
 
@@ -33,4 +34,6 @@ for i=1:length(varnames)
     % eval(['!rm ' wdir 'movie.' varnames{i} '.tot'])
     eval(['!cat ' rdir 'movie.' varnames{i} '.0?? > ' wdir 'movie.' varnames{i} '.tot'])
 end
+!cp p3d.stdout.000 p3d.stdout.tot
+
 end

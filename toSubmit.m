@@ -8,45 +8,45 @@
 addpath ~/matlab/p3d-analysis
 run setup.m
 
-rdir = [proj 'gem_guide'];
-wdir = [scratch 'gem-guide-matfiles'];
+rdir = [proj 'gem_orig'];
+wdir = [scratch 'gem-matfiles'];
 cd(wdir);
 
 
 
 %% Reading
-if isempty(gcp('nocreate'))
-    pp = parpool('local',12);
-end
-
-names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-num = 'tot';
-parfor i=1:length(names)
-    readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
-end
+% if isempty(gcp('nocreate'))
+%     pp = parpool('local',12);
+% end
+% 
+% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+% num = 'tot';
+% parfor i=1:length(names)
+%     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+% end
 
 
 %% Loading variables
-% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-% for i=1:numel(names)
-%     load([names{i} '.tot.mat']);
-%     assignin('base',names{i},val)
-% end
-% 
-% ji = cat(5,jix,jiy,jiz);
-% je = cat(5,jex,jey,jez);
-% 
-% clear jix jiy jiz jex jey jez
-% 
-% vi = ji./ni;
-% ve = -je./ne;
-% 
-% me = .04;
-% rho = ni + me*ne;
-% bfield = cat(5,bx,by,bz);
-% clear bx by bz
-% 
-% va = bfield./sqrt(rho);
+names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+for i=1:numel(names)
+    load([names{i} '.tot.mat']);
+    assignin('base',names{i},val)
+end
+
+ji = cat(5,jix,jiy,jiz);
+je = cat(5,jex,jey,jez);
+
+clear jix jiy jiz jex jey jez
+
+vi = ji./ni;
+ve = -je./ne;
+
+me = .04;
+rho = ni + me*ne;
+bfield = cat(5,bx,by,bz);
+clear bx by bz
+
+va = bfield./sqrt(rho);
 
 
 %% Misc
