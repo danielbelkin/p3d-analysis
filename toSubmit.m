@@ -9,7 +9,7 @@ addpath ~/matlab/p3d-analysis
 run setup.m
 
 rdir = [proj 'gem_orig/all'];
-wdir = [scratch 'gem-matfiles'];
+wdir = [scratch 'gem-guide-matfiles'];
 cd(wdir);
 
 
