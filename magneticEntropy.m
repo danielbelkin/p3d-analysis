@@ -1,4 +1,4 @@
-function [S,KE,ME] = magneticEntropy(ve,vi,ne,ni,me,mi)
+function [S,KE,ME,Se,Si] = magneticEntropy(ve,vi,ne,ni,me,mi)
 % S = magneticEntropy(ve,vi,ne,ni,me,mi)
 % TODO: Check units on energies, canonical momentum in Gaussian formulation
 %TODO: 
@@ -33,6 +33,7 @@ KE = sum3(KE);
 ME = sum3(ME);
 
 E = KE + ME; % Average total energy per particle
+E = E(1); % Try this
 % Ze = sum3(exp(qe^2/(2*me)/E.*dot(A,A))); % Partition function for electrons
 % Zi = sum3(exp(qi^2/(2*mi)/E.*dot(A,A))); % Partition function for ions
 % These are partial partition functions. They neglect the momentum-space
@@ -40,7 +41,7 @@ E = KE + ME; % Average total energy per particle
 % S = log(Ze) + log(Zi);
 
 A2 = dot(A,A);
-Xe = qe^2/(2*me)/E.*A2;
+Xe = qe^2/(2*me)/E.*A2; 
 X0e = max3(Xe); % Normalize to this at each time
 Se = log(sum3(exp(Xe-X0e))) + X0e;
 
