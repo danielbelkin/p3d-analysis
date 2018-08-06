@@ -8,22 +8,22 @@
 addpath ~/matlab/p3d-analysis
 run setup.m
 
-rdir = [proj 'gem_guide2'];
+% rdir = [proj 'gem_orig'];
 wdir = [scratch 'gem-matfiles'];
 cd(wdir);
 
 
 
 %% Reading
-% if isempty(gcp('nocreate'))
-%     pp = parpool('local',12);
-% end
-% 
-% names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
-% num = 'tot';
-% parfor i=1:length(names)
-%     readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
-% end
+if isempty(gcp('nocreate'))
+    pp = parpool('local',12);
+end
+
+names = {'bx' 'by' 'bz' 'ne' 'ni' 'jix' 'jiy' 'jiz' 'jex' 'jey' 'jez'};
+num = 'tot';
+parfor i=1:length(names)
+    readMovie(num,names{i},'rdir',rdir,'wdir',wdir);
+end
 
 
 %% Loading variables
